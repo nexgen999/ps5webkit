@@ -8,3 +8,5 @@ or
 go to : https://nexgen999.github.io/ps5webkit
 
 load evox or pldmgr
+
+https://github.com/jordyidk/slopkit
