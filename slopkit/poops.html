@@ -3,10 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>slopkit</title>
-<link rel="preload" href="cat.jpg" as="image">
-<link rel="preload" href="mmhmm-cats-ps5.gif" as="image">
-
 <script>(function () {
     var pending = [];
     window.__jbEarly = pending;
@@ -32,190 +28,91 @@
     });
 })();
 </script>
-
+<title>W2JB</title>
 <style>
-  html, body { margin: 0; padding: 0; min-height:100%;
-    background: radial-gradient(circle at 50% 28%, #18233a 0, #0c111b 44%, #07090e 100%);
-    color: #d8dee9; }
-  body { box-sizing:border-box; min-height:100vh;
-    font: 22px/1.35 "Consolas", "DejaVu Sans Mono", monospace;
-    padding: 24px 20px; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; }
-  h1 { font-size: 30px; margin: 0 0 2px; color: #eceff4; font-weight: 600; }
-  .sub { font-size: 18px; color: #7c8795; margin: 0 0 12px; }
-  #stage { font-size: 24px; padding: 9px 13px; border-radius: 6px;
-           margin-bottom: 12px; background: #1b2430; border-left: 8px solid #5e81ac; }
-  #stage.ok  { background: #16281c; border-left-color: #47c76a; color: #b8f0c6; }
-  #stage.bad { background: #1b2430; border-left-color: #5e81ac; color: #d8dee9; }
-  #danger, #reboot, #verdict { display:none !important; }
-
-  #reboot { display: none; font-size: 34px; font-weight: 800; padding: 20px 18px;
-            margin-bottom: 14px; border-radius: 8px; background: #4a0d10;
-            border: 5px solid #ff5566; color: #ffe3e6; white-space: pre-wrap;
-            line-height: 1.25; }
-  #reboot.on { display:none; }
-  #reboot.fine { display:none; }
-
-  #verdict { display: none; font-size: 26px; font-weight: 700; padding: 16px 18px;
-             margin-bottom: 14px; border-radius: 8px; background: #101a26;
-             border: 4px solid #6d7788; color: #dfe7f0; white-space: pre-wrap;
-             line-height: 1.3; }
-  #verdict.on   { display:none; }
-  #verdict.good { background: #0f2c17; border-color: #47c76a; color: #d4f7de; }
-  #verdict.bad  { background: #101a26; border-color: #6d7788; color: #dfe7f0; }
-  #verdict.warn { background: #2e2413; border-color: #ebcb8b; color: #f6e6bd; }
-  #vitals { display: none; font-size: 24px; padding: 10px 14px; margin-bottom: 12px;
-            border-radius: 6px; background: #17212e; border-left: 8px solid #ebcb8b;
-            color: #e8dcb6; white-space: pre-wrap; }
-  #vitals.on { display: block; }
-  #cfg { font-size: 22px; color: #9fb1c3; background: #131922; padding: 10px 13px;
-         border-radius: 6px; margin-bottom: 12px; white-space: pre-wrap; }
-  #scr, #early { font-size: 15px; color: #6d7788; margin: 0 0 10px;
-                 white-space: pre; overflow: hidden; min-height: 1.3em; }
-  #nav { display:none !important; margin: 0 0 14px; }
-  #nav a { display: inline-block; margin: 0 12px 8px 0; padding: 10px 18px;
-           background: #1b2430; border: 2px solid #3b4756; border-radius: 6px;
-           color: #d8dee9; text-decoration: none; font-size: 20px; }
-  #nav a.primary { border-color: #5e81ac; background: #223146; color: #cfe3ff; }
-  #nav a.hot { border-color: #52647c; background: #202d40; color: #dce8f7; }
-
-  #nav a.one { display: block; font-size: 30px; font-weight: 700;
-               padding: 20px 26px; margin: 0 0 12px;
-               border-color: #5e81ac; background: #223146; color: #cfe3ff; }
-  #nav a.one.hot { border-color: #52647c; background: #202d40; color: #dce8f7; }
-
-  body.quiet #nav a.extra { display: none; }
-  #nav a:focus { outline: 3px solid #ebcb8b; }
-  #arm { font-size: 26px; padding: 24px 6px; color: #ebcb8b; }
-  #wrap { overflow-x: auto; }
-  table { border-collapse: collapse; width: 100%; min-width: 640px; }
-  thead th { position: sticky; top: 0; background: #131922; color: #8fa1b3;
-             text-align: left; font-size: 17px; padding: 8px 10px;
-             border-bottom: 2px solid #2a3340; z-index: 2; }
-  td { padding: 9px 10px; vertical-align: top; border-bottom: 1px solid #1d232c; }
-  td.n  { width: 2.6em; color: #55606e; font-size: 17px; }
-  td.k  { width: 12em; color: #cfd8e3; font-weight: 700; }
-  td.k .cls { display: block; color: #61708a; font-weight: 400; font-size: 15px; }
-  td.st { width: 4.6em; font-weight: 700; font-size: 25px; }
-  td.st.PASS { color: #47c76a; }
-  td.st.FAIL { color: #cfd8e3; }
-  td.st.SKIP { color: #8f7a3f; }
-  td.st.RUN  { color: #ebcb8b; }
-  td.d { color: #aeb8c6; font-size: 19px; word-break: break-word;
-         white-space: pre-wrap; }
-  td.d .why  { color: #aeb8c6; }
-  td.d .note { color: #7fb7d4; display: block; font-size: 17px; }
-  td.d .pu   { color: #6b7a8c; display: block; font-size: 15px; margin-top: 3px; }
-  td.d .ev   { color: #5a6472; display: block; font-size: 15px; margin-top: 3px; }
-  #tally { margin-top: 18px; font-size: 30px; font-weight: 700; }
-  #summary { margin-top: 10px; font-size: 20px; color: #9fb1c3;
-             white-space: pre-wrap; }
-
-  #dt { position: fixed; top: 10px; right: 12px; z-index: 9;
-        font: 700 18px ui-monospace, Menlo, Consolas, monospace;
-        padding: 10px 16px; border-radius: 6px; cursor: pointer;
-        background: #1b2430; border: 2px solid #3b4756; color: #9fb1c3; }
-  #dt:focus { outline: 3px solid #ebcb8b; }
-  body.quiet #dt { color: #61708a; }
-
-  body.quiet h1,
-  body.quiet .sub,
-  body.quiet #cfg,
-  body.quiet #summary,
-  body.quiet #tally,
-  body.quiet #wrap,
-  body.quiet #early,
-  body.quiet #vitals,
-  body.quiet #verdict,
-  body.quiet #danger,
-  body.quiet #stage,
-  body.quiet td.d .pu,
-  body.quiet td.d .ev                     { display: none; }
-
-  body.quiet #reboot { font-size: 26px; }
-
-  body.quiet #scr {
-        box-sizing: border-box; width:88vw; max-width:680px; height:150px;
-        overflow: auto; font-size: 14px; line-height: 1.3; color: #b8c4d2;
-        background: rgba(12,18,28,.88); border: 1px solid #344258;
-        box-shadow: 0 18px 42px rgba(0,0,0,.34), inset 0 1px rgba(255,255,255,.04);
-        border-radius: 14px; padding: 13px 15px; margin: 10px auto 0; }
-
-  body.loader-ready #scr { display:none; }
-
-  body.quiet tr:not(.r-FAIL) td.d .note   { display: none; }
-
-  body.quiet tr:not(.r-FAIL) td.d > span:first-child {
-        display: -webkit-box; display: box; overflow: hidden;
-        -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
-
-  body.quiet #stage { font-size: 34px; }
-
-  #cat { box-sizing:border-box; display:block; margin:0 auto 12px;
-         width:150px; height:150px; max-width:34vw; max-height:34vw;
-         border:4px solid #343c49; border-radius:18px;
-         box-shadow:0 24px 70px rgba(0,0,0,.5); overflow:hidden; }
-  #cat img { display:block; width:100%; height:100%; object-fit:cover; }
-  #cat.ok  { border-color:#16c60c; }
-  #cat.bad { border-color:#e74856; }
-  #failureMessage { display:none; margin:0 auto 12px; color:#ff6473;
-    font-size:25px; font-weight:800; text-align:center; letter-spacing:.02em; }
-  #failureMessage.on { display:block; }
-
-  body.loader-ready { justify-content:flex-start; overflow-y:auto; padding-top:22px; }
-  body.loader-ready #cat { width:112px; height:112px; margin-bottom:6px; }
-  body.loader-ready #nav { display:none !important; }
-  #payloadMenu { display:none; width:330px; max-width:86vw; margin:4px auto 24px; }
-  #payloadMenu.on { display:block; }
-  #payloadMenu .menuTitle { display:block; width:330px; height:56px;
-    max-width:100%; margin:0 0 10px; }
-  #payloadMenu .payloadTile {
-    box-sizing:border-box; display:block; width:330px; max-width:100%;
-    margin:0 0 10px; padding:0; border:0; border-radius:13px;
-    background:transparent; text-decoration:none !important;
-  }
-  #payloadMenu .payloadTile:focus { outline:3px solid #fff; outline-offset:2px; }
-  #payloadMenu .payloadTile img { display:block; width:330px; height:72px;
-    max-width:100%; margin:0 auto; }
-  #payloadMenu .payloadTile.busy { opacity:.42; }
-
-  #wrap { display:none !important; }
+  html,body{margin:0;padding:0;background:#000;color:#b8c0cc;
+    font:14px/1.45 ui-monospace,Menlo,Consolas,monospace}
+  #deck{max-width:720px;margin:12px auto;padding:0 12px}
+  #stage{margin:8px 0;padding:8px 10px;border:1px solid #333;color:#e8eef6}
+  #stage.ok{border-color:#2a7;color:#7dffb2}
+  #stage.bad{border-color:#a33;color:#ff8a9a}
+  #liveStrip,#vitals,#cfg,#reboot,#verdict,#danger,#badge,#failureMessage{margin:6px 0;color:#8a93a3}
+  #failureMessage{display:none;color:#ff8a9a;font-weight:700}
+  #failureMessage.on{display:block}
+  #badge{display:none}#badge.on{display:block;color:#7dffb2}
+  #scr,#early{white-space:pre-wrap;word-break:break-word;font-size:12px;color:#7a8494;max-height:40vh;overflow:auto}
+  #payloadMenu{display:none;margin-top:12px}
+  #payloadMenu.on{display:block}
+  #payloadMenu .menuTitle{margin:0 0 8px;color:#9ab}
+  #payloadMenu .payloadTile{display:block;margin:6px 0;padding:10px;border:1px solid #333;
+    color:#dfe6f0;text-decoration:none}
+  #payloadMenu .payloadTile.busy{opacity:.4;pointer-events:none}
+  #payloadMenu .payloadTile[data-state="sending"]{border-color:#5af}
+  #payloadMenu .payloadTile[data-state="sent"]{border-color:#2a7;color:#7dffb2}
+  #payloadMenu .payloadTile[data-state="failed"]{border-color:#a33;color:#ff8a9a}
+  #payloadMenu .payloadTile img,.legacy,.stage-rail,#reactor,.field,.scan,.beam,.brand-row,#dt{display:none!important}
+  #retryInject{display:none;margin:10px 0;padding:10px 14px;background:#111;color:#ff8a9a;border:1px solid #a33}
+  #retryInject.on{display:inline-block}
+  .drawer-toggle{margin:8px 0;padding:6px 10px;background:#111;color:#9ab;border:1px solid #333}
+  #deepDrawer{display:none}#deepDrawer.on{display:block}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{border-bottom:1px solid #222;padding:4px 6px;text-align:left}
+  #arm{margin:12px 0;padding:10px;border:1px solid #333}
+  #nav a{display:inline-block;margin:4px 8px 4px 0;color:#7eb6ff}
 </style>
 </head>
 <body class="quiet">
-<div id="failureMessage">UNLUCKY &mdash; YOU NEED TO REBOOT</div>
-<div id="cat">
-  <img id="catImage" src="mmhmm-cats-ps5.gif" alt="">
+<div id="deck">
+  <div id="failureMessage">UNLUCKY — REBOOT REQUIRED</div>
+  <h1 class="legacy">poops</h1>
+  <div id="reactor" class="reactor" hidden aria-hidden="true"></div>
+  <div id="reboot"></div>
+  <div id="verdict"></div>
+  <div id="danger"></div>
+  <div id="stage">starting…</div>
+  <div id="liveStrip" aria-live="polite"></div>
+  <div class="stage-rail" id="stageRail" hidden>
+    <span class="stage-chip" data-chip="webkit">WebKit</span>
+    <span class="stage-chip" data-chip="rop">ROP</span>
+    <span class="stage-chip" data-chip="kernel">Kernel</span>
+    <span class="stage-chip" data-chip="elfldr">elfldr</span>
+    <span class="stage-chip" data-chip="evox">evox</span>
+  </div>
+  <div id="badge">ONLINE · PAYLOAD MANAGER</div>
+  <div id="vitals"></div>
+  <div id="cfg"></div>
+  <pre id="early"></pre>
+  <pre id="scr"></pre>
+  <button type="button" class="drawer-toggle" id="drawerToggle">LOG</button>
+  <div id="deepDrawer">
+    <div id="wrap">
+      <table>
+        <thead><tr><th>#</th><th>test</th><th>st</th><th>result</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div id="tally"></div>
+    <div id="summary"></div>
+  </div>
+  <div id="payloadMenu">
+    <div class="menuTitle">PAYLOADS</div>
+    <a class="payloadTile primary" href="#" data-name="evox.elf" data-key="evox"
+       data-state="default"><span>evox</span><span class="meta">auto</span></a>
+    <a class="payloadTile" href="#" data-name="ftpsrv-ps5.elf" data-key="ftp"
+       data-state="default"><span>FTP</span><span class="meta">aux</span></a>
+    <a class="payloadTile" href="#" data-name="gdbsrv-ps5.elf" data-key="gdb"
+       data-state="default"><span>GDB</span><span class="meta">aux</span></a>
+    <a class="payloadTile" href="#" data-name="klogsrv-ps5.elf" data-key="klog"
+       data-state="default"><span>Klog</span><span class="meta">aux</span></a>
+    <a class="payloadTile" href="#" data-name="shsrv-ps5.elf" data-key="shell"
+       data-state="default"><span>Shell</span><span class="meta">aux</span></a>
+    <a class="payloadTile" href="#" data-name="websrv-ps5.elf" data-key="web"
+       data-state="default"><span>Web</span><span class="meta">aux</span></a>
+  </div>
+  <button type="button" id="retryInject">RETRY evox INJECT</button>
+  <div id="nav"></div>
+  <div id="arm" hidden>Not armed. Redirecting…</div>
 </div>
-<h1>poops</h1>
-<div id="reboot"></div>
-<div id="verdict"></div>
-<div id="danger"></div>
-<div id="stage">idle</div>
-<div id="vitals"></div>
-<div id="cfg"></div>
-<pre id="early"></pre>
-<pre id="scr"></pre>
-<div id="payloadMenu">
-  <img class="menuTitle" data-src="../ui/payload-menu-title.png" alt="">
-  <a class="payloadTile" href="#" data-name="ftpsrv-ps5.elf" data-key="ftp"><img data-src="../ui/payload-ftp-default.png" alt=""></a>
-  <a class="payloadTile" href="#" data-name="gdbsrv-ps5.elf" data-key="gdb"><img data-src="../ui/payload-gdb-default.png" alt=""></a>
-  <a class="payloadTile" href="#" data-name="klogsrv-ps5.elf" data-key="klog"><img data-src="../ui/payload-klog-default.png" alt=""></a>
-  <a class="payloadTile" href="#" data-name="shsrv-ps5.elf" data-key="shell"><img data-src="../ui/payload-shell-default.png" alt=""></a>
-  <a class="payloadTile" href="#" data-name="websrv-ps5.elf" data-key="web"><img data-src="../ui/payload-web-default.png" alt=""></a>
-</div>
-<div id="nav"></div>
-<div id="arm" hidden>Open this page with <b>?go=1</b> to arm it. Nothing runs
-otherwise.</div>
-<div id="wrap">
-<table>
-  <thead><tr><th>#</th><th>test</th><th>st</th><th>result</th></tr></thead>
-  <tbody id="rows"></tbody>
-</table>
-</div>
-<div id="tally"></div>
-<div id="summary"></div>
-
 <div id="console" hidden></div>
 
 <script src="rop.js"></script>
@@ -254,6 +151,12 @@ async function loadPoopsModules() {
 const Q = new URLSearchParams(location.search);
 const ARMED = Q.get("go") === "1";
 const CLEARLATCH = Q.get("clear") === "1";
+/* Lite host: opening this page without arm params auto-starts JB */
+if (!ARMED && !CLEARLATCH) {
+    location.replace(location.pathname
+        + "?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1");
+    throw new Error("redirecting to armed URL");
+}
 
 const AUTOCLEAR = Q.get("auto") === "1";
 const FROM = Q.get("from") || "";
@@ -398,13 +301,14 @@ function screenMark(tag, extra) {
 
 function catState(tag, extra) {
     try {
-        const c = document.getElementById("cat");
-        if (!c) return;
-        if (elfldrSpawned) { c.className = "ok"; return; }
+        if (elfldrSpawned) {
+            setReactorState("ok");
+            return;
+        }
         if (tag !== "POOPS-COMPLETE") return;
         const m = /-fail=(\d+)/.exec(extra || "");
         const failed = m ? parseInt(m[1], 10) : 1;
-        c.className = failed === 0 ? "ok" : "bad";
+        setReactorState(failed === 0 ? "ok" : "bad");
     } catch (e) { }
 }
 
@@ -468,8 +372,10 @@ const payloadMenuEl = document.getElementById("payloadMenu");
 const rowByKey = new Map();
 let payloadSendBusy = false;
 const PAYLOAD_PORT = 9021;
+const PAYLOAD_CONNECT_ATTEMPTS = 20;
+const PAYLOAD_CONNECT_GAP_MS = 150;
 const PAYLOAD_BUFFER_SIZE = 0x10000;
-const PAYLOAD_MAX_SIZE = 0x200000;
+const PAYLOAD_MAX_SIZE = 0x400000;
 let payloadSendStore = null;
 let payloadSockaddrStore = null;
 let payloadSocketOptionStore = null;
@@ -480,23 +386,15 @@ function showPayloadMenu() {
     navEl.textContent = "";
     navEl.style.display = "none";
     payloadMenuEl.className = "on";
-    const title = payloadMenuEl.getElementsByClassName("menuTitle")[0];
-    if (title && !title.getAttribute("src"))
-        title.setAttribute("src", title.getAttribute("data-src"));
     const tiles = payloadMenuEl.getElementsByTagName("a");
-    for (let i = 0; i < tiles.length; ++i) {
-        const image = tiles[i].getElementsByTagName("img")[0];
-        if (image && !image.getAttribute("src"))
-            image.setAttribute("src", image.getAttribute("data-src"));
-    }
     if (tiles.length) try { tiles[0].focus(); } catch (e) { }
 }
 
 function setPayloadTileState(tile, state) {
-    const image = tile.getElementsByTagName("img")[0];
-    const key = tile.getAttribute("data-key");
-    if (image && key)
-        image.setAttribute("src", "../ui/payload-" + key + "-" + state + ".png");
+    if (!tile) return;
+    tile.setAttribute("data-state", state || "default");
+    const meta = tile.getElementsByClassName("meta")[0];
+    if (meta) meta.textContent = state && state !== "default" ? state : (tile.className.indexOf("primary") >= 0 ? "auto" : "aux");
 }
 
 function payloadIsListed(name) {
@@ -563,7 +461,7 @@ async function sendPayloadToElfldr(name) {
     if (!bytes.length)
         throw new Error("payload is empty");
     if (bytes.length > PAYLOAD_MAX_SIZE)
-        throw new Error("payload is larger than the 2 MiB limit");
+        throw new Error("payload is larger than the 4 MiB limit");
     if (bytes.length < 4 || bytes[0] !== 0x7f || bytes[1] !== 0x45
         || bytes[2] !== 0x4c || bytes[3] !== 0x46)
         throw new Error("payload does not start with the ELF signature");
@@ -573,33 +471,70 @@ async function sendPayloadToElfldr(name) {
     let sent = 0;
     let failure = null;
     let closeWarning = null;
+    const sleepMs = (ms) => new Promise((r) => setTimeout(r, ms));
     try {
-        let result = await sys(SYS_SOCKET, 2, 1, 0);
-        if (result.failed || result.s32 < 0)
-            throw payloadSyscallError("socket", result);
-        fd = result.s32;
-        track(fd);
+        let lastConnectError = null;
+        for (let attempt = 1; attempt <= PAYLOAD_CONNECT_ATTEMPTS; ++attempt) {
+            let result = await sys(SYS_SOCKET, 2, 1, 0);
+            if (result.failed || result.s32 < 0)
+                throw payloadSyscallError("socket", result);
+            fd = result.s32;
+            track(fd);
 
-        result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x0800,
-            payloadSocketOptionStore.ptr, 4);
-        if (result.failed || result.s32 !== 0)
-            throw payloadSyscallError("setsockopt SO_NOSIGPIPE", result);
+            result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x0800,
+                payloadSocketOptionStore.ptr, 4);
+            if (result.failed || result.s32 !== 0)
+                throw payloadSyscallError("setsockopt SO_NOSIGPIPE", result);
 
-        result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x1005,
-            payloadSendTimeoutStore.ptr, 0x10);
-        if (result.failed || result.s32 !== 0)
-            throw payloadSyscallError("setsockopt SO_SNDTIMEO", result);
+            result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x1005,
+                payloadSendTimeoutStore.ptr, 0x10);
+            if (result.failed || result.s32 !== 0)
+                throw payloadSyscallError("setsockopt SO_SNDTIMEO", result);
 
-        result = await sys(SYS_CONNECT, fd, payloadSockaddrStore.ptr, 0x10);
-        if (result.failed || result.s32 !== 0)
-            throw payloadSyscallError("connect to 127.0.0.1:9021", result);
+            result = await sys(SYS_CONNECT, fd, payloadSockaddrStore.ptr, 0x10);
+            if (!result.failed && result.s32 === 0) {
+                if (attempt > 1)
+                    flushMark("ELF-CONNECT-OK", "attempt=" + attempt
+                        + "-of-" + PAYLOAD_CONNECT_ATTEMPTS
+                        + "-port=" + PAYLOAD_PORT);
+                lastConnectError = null;
+                break;
+            }
+
+            lastConnectError = payloadSyscallError(
+                "connect to 127.0.0.1:" + PAYLOAD_PORT
+                    + " (attempt " + attempt + "/" + PAYLOAD_CONNECT_ATTEMPTS + ")",
+                result);
+            flushMark("ELF-CONNECT-RETRY", "attempt=" + attempt
+                + "-of-" + PAYLOAD_CONNECT_ATTEMPTS
+                + "-why=" + clean(lastConnectError.message));
+
+            try {
+                const closeRes = await sys(SYS_CLOSE, fd);
+                if (!closeRes.failed && closeRes.s32 === 0)
+                    untrack(fd);
+                else
+                    throw payloadSyscallError("close after connect miss", closeRes);
+            } catch (closeErr) {
+                payloadSenderBlocked = "payload sending is blocked until reboot because "
+                    + "socket fd " + fd + " was not confirmed closed after a connect miss";
+                throw closeErr;
+            }
+            fd = -1;
+            if (attempt === PAYLOAD_CONNECT_ATTEMPTS)
+                throw lastConnectError;
+            await sleepMs(PAYLOAD_CONNECT_GAP_MS);
+        }
+        if (fd < 0)
+            throw lastConnectError || new Error("connect to 127.0.0.1:"
+                + PAYLOAD_PORT + " failed");
 
         while (sent < bytes.length) {
             const blockSize = Math.min(PAYLOAD_BUFFER_SIZE, bytes.length - sent);
             payloadSendStore.u8.set(bytes.subarray(sent, sent + blockSize), 0);
             let blockSent = 0;
             while (blockSent < blockSize) {
-                result = await sys(SYS_WRITE, fd,
+                let result = await sys(SYS_WRITE, fd,
                     payloadSendStore.ptr.add32(blockSent), blockSize - blockSent);
                 if (result.failed || result.s32 <= 0)
                     throw payloadSyscallError("write at byte "
@@ -650,43 +585,63 @@ async function sendPayloadToElfldr(name) {
         closeWarning: closeWarning };
 }
 
+function payloadTileBaseClass(tile) {
+    return tile && /\bprimary\b/.test(tile.className)
+        ? "payloadTile primary" : "payloadTile";
+}
+
 async function sendPayloadInPlace(name, tile) {
-    if (payloadSendBusy) return;
+    if (payloadSenderBlocked) {
+        flushMark("ELF-SEND-SKIPPED", "blocked=" + clean(payloadSenderBlocked));
+        return false;
+    }
+    if (payloadSendBusy) return false;
     payloadSendBusy = true;
     const tiles = payloadMenuEl.getElementsByTagName("a");
     for (let i = 0; i < tiles.length; ++i)
-        tiles[i].className = "payloadTile busy";
-    tile.className = "payloadTile";
-    setPayloadTileState(tile, "sending");
+        tiles[i].className = payloadTileBaseClass(tiles[i]) + " busy";
+    if (tile) {
+        tile.className = payloadTileBaseClass(tile);
+        setPayloadTileState(tile, "sending");
+    }
+    let ok = false;
     try {
         const result = await sendPayloadToElfldr(name);
-        tile.className = "payloadTile";
-        setPayloadTileState(tile, "sent");
+        if (tile) {
+            tile.className = payloadTileBaseClass(tile);
+            setPayloadTileState(tile, "sent");
+        }
         flushMark("ELF-SENT", "name=" + clean(result.name) + "-bytes="
             + result.bytes + "-target=" + clean(result.target)
             + "-port=" + result.port);
         if (result.closeWarning)
             flushMark("ELF-SOCKET-CLOSE-WARN", "name=" + clean(result.name)
                 + "-why=" + clean(result.closeWarning.message || result.closeWarning));
+        ok = true;
     } catch (error) {
-        tile.className = "payloadTile";
-        setPayloadTileState(tile, "failed");
+        if (tile) {
+            tile.className = payloadTileBaseClass(tile);
+            setPayloadTileState(tile, "failed");
+        }
         flushMark("ELF-SEND-FAILED", "name=" + clean(name) + "-why="
             + clean(error && error.message ? error.message : error));
+        ok = false;
     } finally {
         if (payloadSenderBlocked) {
             payloadSendBusy = true;
             for (let i = 0; i < tiles.length; ++i)
-                tiles[i].className = "payloadTile busy";
+                tiles[i].className = payloadTileBaseClass(tiles[i]) + " busy";
             setCatResult(false);
             flushMark("ELF-SENDER-BLOCKED", clean(payloadSenderBlocked));
         } else {
             payloadSendBusy = false;
             for (let i = 0; i < tiles.length; ++i)
-                if (tiles[i] !== tile) tiles[i].className = "payloadTile";
-            try { tile.focus(); } catch (e) { }
+                if (tiles[i] !== tile)
+                    tiles[i].className = payloadTileBaseClass(tiles[i]);
+            try { if (tile) tile.focus(); } catch (e) { }
         }
     }
+    return ok;
 }
 
 {
@@ -701,11 +656,156 @@ async function sendPayloadInPlace(name, tile) {
     }
 }
 
+let evoxAutoStarted = false;
+async function autoInjectevox() {
+    if (evoxAutoStarted) return;
+    evoxAutoStarted = true;
+    const tile = payloadMenuEl.querySelector('[data-name="evox.elf"]');
+    const retry = document.getElementById("retryInject");
+    setReactorState("inject");
+    setStageChip("evox", "on");
+    stage("INJECTING evox (waiting for :9021)", "");
+    flushMark("evox-AUTO-START", "name=evox.elf-connectAttempts="
+        + PAYLOAD_CONNECT_ATTEMPTS);
+    const ok = await sendPayloadInPlace("evox.elf",
+        tile || payloadMenuEl.getElementsByTagName("a")[0]);
+    if (ok) {
+        setReactorState("online");
+        setStageChip("evox", "done");
+        stageEl.textContent = "PAYLOAD MANAGER ONLINE";
+        stageEl.className = "ok";
+        syncStageChips("evox online", "ok");
+        flushMark("evox-AUTO-OK", "name=evox.elf");
+        if (retry) retry.className = "";
+    } else if (payloadSenderBlocked) {
+        setReactorState("bad");
+        setStageChip("evox", "fail");
+        stageEl.textContent = "evox BLOCKED — REBOOT REQUIRED";
+        stageEl.className = "bad";
+        if (retry) {
+            retry.className = "";
+            retry.textContent = "REBOOT REQUIRED";
+            retry.disabled = true;
+        }
+        flushMark("evox-AUTO-BLOCKED", clean(payloadSenderBlocked));
+    } else {
+        setReactorState("inject-fail");
+        setStageChip("evox", "fail");
+        stageEl.textContent = "evox INJECT FAILED — RETRY OR REBOOT";
+        stageEl.className = "bad";
+        if (retry) {
+            retry.disabled = false;
+            retry.textContent = "RETRY evox INJECT";
+            retry.className = "on";
+        }
+        flushMark("evox-AUTO-FAIL", "name=evox.elf");
+    }
+}
+
+{
+    const retry = document.getElementById("retryInject");
+    if (retry) {
+        retry.onclick = function () {
+            if (payloadSenderBlocked) {
+                stageEl.textContent = "evox BLOCKED — REBOOT REQUIRED";
+                stageEl.className = "bad";
+                flushMark("evox-RETRY-DENIED", clean(payloadSenderBlocked));
+                return;
+            }
+            if (payloadSendBusy) {
+                flushMark("evox-RETRY-BUSY", "sender-still-busy");
+                return;
+            }
+            evoxAutoStarted = false;
+            retry.className = "";
+            autoInjectevox();
+        };
+    }
+    const diag = document.getElementById("dt");
+    if (diag) {
+        diag.onclick = function () {
+            document.body.classList.toggle("debug");
+            if (diag) diag.textContent = document.body.classList.contains("debug") ? "HIDE" : "DIAG";
+        };
+    }
+    const drawerToggle = document.getElementById("drawerToggle");
+    const deepDrawer = document.getElementById("deepDrawer");
+    if (drawerToggle && deepDrawer) {
+        drawerToggle.onclick = function () {
+            const on = deepDrawer.className === "on";
+            deepDrawer.className = on ? "" : "on";
+            drawerToggle.textContent = on ? "DEEP LOG" : "HIDE DEEP LOG";
+        };
+    }
+}
+
+function setReactorState(mode) {
+    const reactor = document.getElementById("reactor");
+    const badge = document.getElementById("badge");
+    const retry = document.getElementById("retryInject");
+    if (!reactor) return;
+    reactor.className = "reactor" + (mode ? " " + mode : "");
+    if (badge) badge.className = mode === "online" ? "on" : "";
+    if (retry) retry.className = mode === "inject-fail" ? "on" : "";
+}
+
+function setStageChip(name, state) {
+    const chip = document.querySelector('#stageRail [data-chip="' + name + '"]');
+    if (!chip) return;
+    chip.className = "stage-chip" + (state ? " " + state : "");
+}
+
+function syncStageChips(text, cls) {
+    const t = String(text || "").toLowerCase();
+    if (/webkit|primitive|deserializer|exploit attempt/.test(t))
+        setStageChip("webkit", cls === "bad" ? "fail" : "on");
+    if (/prepare|rop|gadget|module base|worker/.test(t)) {
+        setStageChip("webkit", "done");
+        setStageChip("rop", cls === "bad" ? "fail" : "on");
+    }
+    if (/stage|kernel|poops|kqueue|pipe|jail|setuid/.test(t)) {
+        setStageChip("webkit", "done");
+        setStageChip("rop", "done");
+        setStageChip("kernel", cls === "bad" ? "fail" : "on");
+    }
+    if (/elf loader|elfldr|stage5|loader ready/.test(t)) {
+        setStageChip("webkit", "done");
+        setStageChip("rop", "done");
+        setStageChip("kernel", "done");
+        setStageChip("elfldr", cls === "bad" ? "fail" : "on");
+    }
+    if (/evox|payload manager|inject/.test(t)) {
+        setStageChip("elfldr", "done");
+        setStageChip("evox", cls === "bad" ? "fail" : (cls === "ok" ? "done" : "on"));
+    }
+}
+
 function stage(text, cls) {
     if (cls === "bad") setCatResult(false);
     if (elfldrSpawned && cls === "bad") return;
     stageEl.textContent = text;
     stageEl.className = cls || "";
+    syncStageChips(text, cls);
+    const live = document.getElementById("liveStrip");
+    if (live) {
+        const tone = cls === "ok" ? "ok" : (cls === "bad" ? "hot" : "hot");
+        live.innerHTML = "<span class=\"" + tone + "\">› " + String(text || "")
+            .replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</span>";
+    }
+    if (cls === "ok") {
+        const reactor = document.getElementById("reactor");
+        if (reactor && reactor.className.indexOf("online") < 0
+            && reactor.className.indexOf("inject") < 0) {
+            setReactorState("ok pulse");
+            setTimeout(function () {
+                const r = document.getElementById("reactor");
+                if (r && r.className.indexOf("pulse") >= 0)
+                    r.className = r.className.replace(/\bpulse\b/g, "").replace(/\s+/g, " ").trim();
+            }, 220);
+        }
+    } else if (cls === "bad") {
+        setReactorState("bad");
+    }
 }
 function danger(text) {
     if (elfldrSpawned) return;
@@ -722,16 +822,13 @@ function clearFailureBanners() {
 }
 
 function setCatResult(success) {
-    const cat = document.getElementById("cat");
     const failureMessage = document.getElementById("failureMessage");
     if (failureMessage) failureMessage.className = success ? "" : "on";
-    if (cat) {
-        cat.className = success ? "ok" : "bad";
-        if (success) {
-            const image = document.getElementById("catImage");
-            if (image) image.src = "cat.jpg";
-        }
-    }
+    if (!success) setReactorState("bad");
+    else if (document.getElementById("reactor")
+        && document.getElementById("reactor").className.indexOf("online") < 0
+        && document.getElementById("reactor").className.indexOf("inject") < 0)
+        setReactorState("ok");
 }
 
 function verdictBanner(kind, text) {
@@ -1453,7 +1550,7 @@ async function runLadder() {
     }));
 
     if (payloadSuccess)
-        stage("ELF LOADER READY -- opening payload menu", "ok");
+        stage("ELF LOADER READY -- auto-injecting Payload Manager", "ok");
     else if (fullSuccess)
         stage("SUCCESS -- " + passed + " PASS / 0 FAIL", "ok");
     else if (mustReboot)
@@ -1468,6 +1565,7 @@ async function runLadder() {
         flushMark("ELFLDR-MENU-INPAGE",
             "no-navigation-parked-racers-and-fds-remain-owned-port=9021");
         showPayloadMenu();
+        autoInjectevox();
     }
 }
 
@@ -1762,7 +1860,7 @@ function lastRunText() {
 
             link("?trigger=none", "no -- go back to the negative control",
                 "extra");
-            link("../index.html", "back to slopkit", "extra");
+            link("../index.html", "back to PS5-JB", "extra");
         }
         summaryEl.textContent = lastRunText()
             + "\n\nSAME-process re-arm checks, and their limit stated honestly: " + "this page records the first socket fd it is given and the " + "process's uid, and can therefore notice that THIS WebProcess has " + "already run";
