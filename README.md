@@ -3,7 +3,7 @@
 </p>
 <h1 align="center">PS5 webkit exploit evoX W2JB</h1>
 
-<p align="center">PS5 webkit exploit W2JB expérimental with evox pldmgr autoloader.</p>
+<p align="center">PS5 webkit exploit evoX W2JB expérimental with evox pldmgr fork autoloader.</p>
 
 edit your ps5 dns :
 
