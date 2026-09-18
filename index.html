@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>evoX PS5 Launcher &middot; Portail Multi-Modes</title>
+  <link rel="icon" type="image/png" href="evoX.W2JB.png">
+  <style>
+    :root {
+      --bg-main: #030712;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.4);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --primary-btn: #0284c7;
+      --primary-btn-hover: #0369a1;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(2, 132, 199, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 85% 90%, rgba(56, 189, 248, 0.06) 0%, transparent 40%);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 40px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    /* Top Bar Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-version {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 9999px;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Rescue / zFTPd Button in Top Bar */
+    .btn-rescue {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      background: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-rescue:hover {
+      background: rgba(245, 158, 11, 0.25);
+      border-color: #fbbf24;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .sys-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 9999px;
+    }
+
+    .sys-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    /* Auto-launch Banner */
+    .countdown-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: linear-gradient(90deg, rgba(2, 132, 199, 0.2) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 12px;
+      padding: 12px 18px;
+      margin-bottom: 24px;
+    }
+
+    .countdown-text {
+      font-size: 13px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .countdown-seconds {
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .countdown-cancel-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .countdown-cancel-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-card);
+    }
+
+    /* Modes Grid */
+    .modes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .mode-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .mode-card:hover, .mode-card:focus {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+      outline: none;
+    }
+
+    .mode-card.recommended {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: linear-gradient(180deg, rgba(14, 165, 233, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%);
+    }
+
+    .mode-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+
+    .mode-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-cyan {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-purple {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .badge-slate {
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .mode-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .mode-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      flex-grow: 1;
+    }
+
+    .mode-pipeline {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 14px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .mode-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 16px;
+      background: var(--primary-btn);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .mode-card:hover .mode-btn {
+      background: var(--primary-btn-hover);
+      box-shadow: 0 0 14px rgba(2, 132, 199, 0.5);
+    }
+
+    .mode-btn.outline {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+    }
+
+    .mode-card:hover .mode-btn.outline {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Port Map & Info Panel */
+    .info-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 24px;
+    }
+
+    .info-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 12px;
+    }
+
+    .ports-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .port-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .port-name {
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .port-num {
+      font-family: ui-monospace, monospace;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+      margin-top: auto;
+      padding-top: 16px;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand-wrap">
+      <img src="evoX.W2JB.png" alt="evoX logo" class="brand-logo" onerror="this.style.display='none'">
+      <div>
+        <div class="brand-title">
+          <span>PS5 W2JB Hub</span>
+          <span class="brand-version">vLite1</span>
+        </div>
+        <div class="brand-subtitle">Hôte d'exploitation WebKit &middot; Sélection du Mode de Lancement</div>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <!-- Bouton Rescue/zFTpd placé avant sys-badge -->
+      <a href="slopkit/zftpd.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1" class="btn-rescue">
+        🛠 Rescue / zFTPd
+      </a>
+      
+      <div class="sys-badge" id="envBadge">
+        <span class="sys-dot"></span>
+        <span id="envLabel">Détection de la console…</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auto-launch Countdown Bar (Auto Mode 1) -->
+  <div class="countdown-bar" id="countdownBar">
+    <div class="countdown-text">
+      <span>Démarrage automatique dans</span>
+      <span class="countdown-seconds" id="countdownSec">8s</span>
+      <span>vers le <strong>Mode Standard (evoX)</strong></span>
+    </div>
+    <button type="button" class="countdown-cancel-btn" id="btnCancelCountdown">Choisir manuellement</button>
+  </div>
+
+  <div class="section-title">Modes de Lancement Disponibles</div>
+
+  <!-- Launch Modes -->
+  <div class="modes-grid">
+
+    <!-- Mode 1: Standard Autoload -->
+    <a href="slopkit/poops.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1" class="mode-card recommended" id="cardAuto1">
+      <div class="mode-top">
+        <div class="mode-name">1. evoX Autoloader</div>
+        <span class="mode-badge badge-amber">Recommandé</span>
+      </div>
+      <div class="mode-desc">
+        La méthode classique et directe. Exécute l'exploit de bout en bout et injecte automatiquement le démon <strong>evoX.elf</strong> sur le port 8085 dès que elfldr est prêt.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; ROP &rarr; Kernel &rarr; elfldr &rarr; evox.elf</div>
+      <div class="mode-btn">Lancer en Mode evoX &rarr;</div>
+    </a>
+
+    <!-- Mode 2: Standard Autoload -->
+    <a href="slopkit/PS5_Unified_Autoloader.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1" class="mode-card recommended" id="cardAuto2">
+      <div class="mode-top">
+        <div class="mode-name">2. PS5_Autoloader</div>
+        <span class="mode-badge badge-purple">Personnalisé</span>
+      </div>
+      <div class="mode-desc">
+        La méthode classique et directe. Exécute l'exploit de bout en bout et injecte automatiquement le démon <strong>PS5_Unified_Autoloader.elf</strong> dès que elfldr est prêt et charge votre ps5_autoloader.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; ROP &rarr; Kernel &rarr; elfldr &rarr; PS5_Unified_Autoloader.elf</div>
+      <div class="mode-btn">Lancer en Mode PS5_Autoloader &rarr;</div>
+    </a>
+
+    <!-- Mode 3: Standard Autoload -->
+    <a href="slopkit/pldmgr.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1" class="mode-card recommended" id="cardAuto3">
+      <div class="mode-top">
+        <div class="mode-name">3. Payload Manager</div>
+        <span class="mode-badge badge-cyan">Personnalisé</span>
+      </div>
+      <div class="mode-desc">
+        La méthode classique et directe. Exécute l'exploit de bout en bout et injecte automatiquement le démon <strong>pldmgr.elf</strong> sur le port 8084 dès que elfldr est prêt.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; ROP &rarr; Kernel &rarr; elfldr &rarr; pldmgr.elf</div>
+      <div class="mode-btn">Lancer en Mode pldmgr &rarr;</div>
+    </a>
+
+  </div>
+
+  <!-- Port Mapping Info -->
+  <div class="info-box">
+    <div class="info-title">Ports Réseau PS5 après Armement de l'Exploit</div>
+    <div class="ports-list">
+      <div class="port-item">
+        <span class="port-name">elfldr standard</span>
+        <span class="port-num">:9021</span>
+      </div>
+      <div class="port-item">
+        <span class="port-name">pldmgr</span>
+        <span class="port-num">:8084</span>
+      </div>
+      <div class="port-item">
+        <span class="port-name">evoX</span>
+        <span class="port-num">:8085</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>PS5 WebKit W2JB &middot; Architecture Modulaire evoX &middot; Accès direct via Guide Utilisateur ou Navigateur</span>
+  </footer>
+
+</div>
+
+<script>
+  // Detect PS5 Environment
+  (function detectEnv() {
+    const ua = navigator.userAgent;
+    const envBadge = document.getElementById("envBadge");
+    const envLabel = document.getElementById("envLabel");
+    
+    if (/PlayStation 5/i.test(ua)) {
+      const match = ua.match(/PlayStation 5\/([0-9\.]+)/i);
+      const fw = match ? match[1] : "Compatible";
+      envLabel.textContent = "PlayStation 5 (FW " + fw + ")";
+    } else {
+      envLabel.textContent = "Mode Test / PC";
+    }
+  })();
+
+  // Countdown timer for automatic standard launch
+  (function initCountdown() {
+    let secondsLeft = 8;
+    const secEl = document.getElementById("countdownSec");
+    const barEl = document.getElementById("countdownBar");
+    const cancelBtn = document.getElementById("btnCancelCountdown");
+
+    // Check if user disabled auto-launch previously
+    if (sessionStorage.getItem("ps5_autolaunch_disabled") === "true") {
+      barEl.style.display = "none";
+      return;
+    }
+
+    const timer = setInterval(() => {
+      secondsLeft--;
+      if (secEl) secEl.textContent = secondsLeft + "s";
+      if (secondsLeft <= 0) {
+        clearInterval(timer);
+        window.location.href = "slopkit/poops.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1";
+      }
+    }, 1000);
+
+    cancelBtn.onclick = function() {
+      clearInterval(timer);
+      sessionStorage.setItem("ps5_autolaunch_disabled", "true");
+      barEl.style.display = "none";
+    };
+  })();
+</script>
+
+</body>
+</html>

