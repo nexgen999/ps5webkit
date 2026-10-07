@@ -446,7 +446,7 @@
       border: 1px solid var(--border-card);
       border-radius: 16px;
       backdrop-filter: blur(12px);
-      margin-bottom: 28px;
+      margin-bottom: 16px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
       transition: all 0.25s ease;
     }
@@ -455,6 +455,13 @@
       border-color: var(--accent);
       background: var(--bg-card-hover);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+    }
+
+    .installer-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .installer-btn {
@@ -472,9 +479,31 @@
       transition: all 0.2s;
     }
 
-    .installer-card:hover .installer-btn {
+    .installer-btn:hover {
       background: var(--primary-btn-hover);
       box-shadow: 0 0 14px rgba(2, 132, 199, 0.5);
+    }
+
+    .installer-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .installer-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     /* Port Map & Info Panel */
@@ -676,7 +705,7 @@
       <div>
         <div class="brand-title">
           <span>PS5 W2JB Hub</span>
-          <span class="brand-version">vLite1</span>
+          <span class="brand-version">v Lite 1.2</span>
         </div>
         <div class="brand-subtitle" id="hdrSubtitle">WebKit Exploit Host &middot; Launch Mode Selection</div>
       </div>
@@ -750,11 +779,12 @@
   </div>
 
   <!-- SECTION RELAPSE INSTALLER -->
-  <div id="relapseInstallerSection">
+  <div id="relapseInstallerSection" style="margin-bottom: 28px;">
     <div class="section-header-wrap">
       <div class="section-title">Relapse Installer</div>
     </div>
 
+    <!-- Carte 1: itsPLK Universal Installer -->
     <div class="installer-card">
       <div class="brand-wrap">
         <img src="Relapse-Installer/itsplk.jpg" alt="itsPLK logo" class="brand-logo" onerror="this.style.display='none'">
@@ -765,7 +795,26 @@
           <div class="brand-subtitle" id="installerSubtitle">Universal installer for Relapse</div>
         </div>
       </div>
-      <a href="Relapse-Installer/index.html" class="installer-btn" id="installerBtnText">Install &rarr;</a>
+      <div class="installer-actions">
+        <a href="Relapse-Installer/index.html" class="installer-btn" id="installerBtnText">Install &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Carte 2: PSMacedo -->
+    <div class="installer-card">
+      <div class="brand-wrap">
+        <img src="Relapse-PSMacedo/psmacedo.jpg" alt="PSMacedo logo" class="brand-logo" onerror="this.style.display='none'">
+        <div>
+          <div class="brand-title">
+            <span>PSMacedo</span>
+          </div>
+          <div class="brand-subtitle" id="psmacedoSubtitle">PSMacedo project for PS5</div>
+        </div>
+      </div>
+      <div class="installer-actions">
+        <a href="https://ps4macedo.github.io/ps51360/" target="_blank" rel="noopener noreferrer" class="installer-btn" id="btnLaunchHost">Lancer le host &rarr;</a>
+        <a href="Relapse-PSMacedo/Relapse-PSMacedo.html" class="installer-btn-secondary" id="btnPsmacedoInstall">Install</a>
+      </div>
     </div>
   </div>
 
@@ -879,14 +928,14 @@
     <!-- TILE 6 (FW 7x-13.60) : Relapse-Darkmor -->
     <a href="Relapse-Darkmor/Relapse-Darkmor.html" class="mode-card recommended fw-group-2">
       <div class="mode-top">
-        <div class="mode-name">6. Relapse-Darkmor</div>
+        <div class="mode-name">6. Relapse-Drakmor</div>
         <span class="mode-badge badge-amber" data-i18n="experimental">Experimental</span>
       </div>
       <div class="mode-desc" data-i18n="t2_6_desc">
-        Relapse Loader. Runs full exploit sequence and launches experimental <strong>Relapse-Darkmor</strong> release.
+        Relapse Loader. Runs full exploit sequence and launches experimental <strong>Relapse-Drakmor</strong> release.
       </div>
-      <div class="mode-pipeline">WebKit &rarr; 7.xx &rarr; 13.60 &rarr; darkmor</div>
-      <div class="mode-btn" data-i18n="t2_6_btn">Launch Relapse-Darkmor &rarr;</div>
+      <div class="mode-pipeline">WebKit &rarr; 7.xx &rarr; 13.60 &rarr; drakmor</div>
+      <div class="mode-btn" data-i18n="t2_6_btn">Launch Relapse-Drakmor &rarr;</div>
     </a>
 
   </div>
@@ -914,7 +963,7 @@
     </div>
   </div>
 
-  <!-- DNS Notice Box -->
+  <!-- Notice DNS Box -->
   <div class="dns-notice-box" id="dnsNoticeBox">
     <div class="dns-notice-header">
       <span class="dns-icon">⚠️</span>
@@ -989,6 +1038,9 @@
       fw2Btn: "Open menu \u2192",
       installerSubtitle: "Universal installer for Relapse",
       installerBtnText: "Install \u2192",
+      psmacedoSubtitle: "PSMacedo project for PS5",
+      btnLaunchHost: "Launch host \u2192",
+      btnPsmacedoInstall: "Install",
       infoTitle: "PS5 Network Ports Active After Exploit Payload Injection",
       port1Name: "standard elfldr",
       dnsTitle: "Network Configuration Required",
@@ -1043,6 +1095,9 @@
       fw2Btn: "Ouvrir le menu \u2192",
       installerSubtitle: "Programme d'installation universel pour Relapse",
       installerBtnText: "Installer \u2192",
+      psmacedoSubtitle: "Projet PSMacedo pour PS5",
+      btnLaunchHost: "Lancer le host \u2192",
+      btnPsmacedoInstall: "Install",
       infoTitle: "Ports R\u00E9seau PS5 apr\u00E8s Armement de l'Exploit",
       port1Name: "elfldr standard",
       dnsTitle: "Configuration R\u00E9seau Requise",
@@ -1075,8 +1130,8 @@
       t2_4_btn: "Lancer Relapse PS5 Autoloader \u2192",
       t2_5_desc: "Relapse Loader. Ex\u00E9cute l'exploit de bout en bout et injecte automatiquement le d\u00E9mon <strong>kstuff, shadowmountplus, etahen</strong>.",
       t2_5_btn: "Lancer Relapse PS5 Standard \u2192",
-      t2_6_desc: "Relapse Loader. Ex\u00E9cute l'exploit de bout en bout et lance la version exp\u00E9rimentale <strong>Relapse-Darkmor</strong>.",
-      t2_6_btn: "Lancer Relapse-Darkmor \u2192",
+      t2_6_desc: "Relapse Loader. Ex\u00E9cute l'exploit de bout en bout et lance la version exp\u00E9rimentale <strong>Relapse-Drakmor</strong>.",
+      t2_6_btn: "Lancer Relapse-Drakmor \u2192",
       credits1Title: "Cr\u00E9dits & Remerciements (Firmware 9.x - 12.x)",
       credits2Title: "Cr\u00E9dits & Remerciements (Firmware 7.x - 13.60)"
     }
@@ -1150,6 +1205,9 @@
     
     document.getElementById("installerSubtitle").textContent = t.installerSubtitle;
     document.getElementById("installerBtnText").innerHTML = t.installerBtnText;
+    document.getElementById("psmacedoSubtitle").textContent = t.psmacedoSubtitle;
+    document.getElementById("btnLaunchHost").innerHTML = t.btnLaunchHost;
+    document.getElementById("btnPsmacedoInstall").textContent = t.btnPsmacedoInstall;
     
     document.getElementById("infoTitle").textContent = t.infoTitle;
     document.getElementById("port1Name").textContent = t.port1Name;
