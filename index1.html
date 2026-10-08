@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>evoX PS5 Launcher &middot; Multi-Mode Portal</title>
+  <link rel="icon" type="image/png" href="evoX.W2JB.png">
+  <style>
+    :root {
+      --bg-main: #030712;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.4);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --primary-btn: #0284c7;
+      --primary-btn-hover: #0369a1;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(2, 132, 199, 0.15) 0%, transparent 60%),
+        radial-gradient(circle at 85% 90%, rgba(56, 189, 248, 0.06) 0%, transparent 40%);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 40px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    /* Top Bar Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-version {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 9999px;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Language Selector Switch */
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      padding: 2px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+    }
+
+    .btn-header-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-header-link:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+    }
+
+    .btn-rescue {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      background: rgba(245, 158, 11, 0.12);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-rescue:hover {
+      background: rgba(245, 158, 11, 0.25);
+      border-color: #fbbf24;
+      color: #fff;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .sys-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 9999px;
+    }
+
+    .sys-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    /* Auto-launch Banner */
+    .countdown-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: linear-gradient(90deg, rgba(2, 132, 199, 0.2) 0%, rgba(15, 23, 42, 0.6) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 12px;
+      padding: 12px 18px;
+      margin-bottom: 24px;
+    }
+
+    .countdown-text {
+      font-size: 13px;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .countdown-seconds {
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .countdown-cancel-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .countdown-cancel-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    /* Section Title & Subheaders */
+    .section-header-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .section-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-card);
+      margin-left: 8px;
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-left: 12px;
+    }
+
+    .btn-back:hover {
+      background: rgba(56, 189, 248, 0.2);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    /* Modes Grid */
+    .modes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .mode-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .mode-card:hover, .mode-card:focus {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+      outline: none;
+    }
+
+    .mode-card.recommended {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: linear-gradient(180deg, rgba(14, 165, 233, 0.1) 0%, rgba(15, 23, 42, 0.8) 100%);
+    }
+
+    .mode-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 8px;
+    }
+
+    .mode-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-cyan {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-purple {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-red {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .mode-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .mode-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      flex-grow: 1;
+    }
+
+    .mode-pipeline {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: #64748b;
+      margin-bottom: 14px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .mode-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 16px;
+      background: var(--primary-btn);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .mode-card:hover .mode-btn {
+      background: var(--primary-btn-hover);
+      box-shadow: 0 0 14px rgba(2, 132, 199, 0.5);
+    }
+
+    /* Banner Card for Installer */
+    .installer-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s ease;
+    }
+
+    .installer-card:hover {
+      border-color: var(--accent);
+      background: var(--bg-card-hover);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+    }
+
+    .installer-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .installer-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--primary-btn);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .installer-btn:hover {
+      background: var(--primary-btn-hover);
+      box-shadow: 0 0 14px rgba(2, 132, 199, 0.5);
+    }
+
+    .installer-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .installer-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Port Map & Info Panel */
+    .info-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 24px;
+    }
+
+    .info-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 12px;
+    }
+
+    .ports-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .port-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .port-name {
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .port-num {
+      font-family: ui-monospace, monospace;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Notice DNS Box */
+    .dns-notice-box {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .dns-notice-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .dns-icon {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .dns-notice-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fbbf24;
+    }
+
+    .dns-notice-text {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* DNS Table */
+    .dns-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .dns-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .dns-table th, .dns-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .dns-table th {
+      background: rgba(255, 255, 255, 0.05);
+      color: #f1f5f9;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .dns-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .dns-table td.dns-ip {
+      font-family: ui-monospace, monospace;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Credits Box */
+    .credits-box {
+      background: rgba(56, 189, 248, 0.05);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .credits-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .credits-icon {
+      font-size: 20px;
+    }
+
+    .credits-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .credits-text {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .credits-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .credit-item {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 12px;
+    }
+
+    .credit-author {
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .credit-work {
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+      margin-top: auto;
+      padding-top: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand-wrap">
+      <img src="evoX.W2JB.png" alt="evoX logo" class="brand-logo" onerror="this.style.display='none'">
+      <div>
+        <div class="brand-title">
+          <span>PS5 W2JB Hub</span>
+          <span class="brand-version">v Lite 1.2</span>
+        </div>
+        <div class="brand-subtitle" id="hdrSubtitle">WebKit Exploit Host &middot; Launch Mode Selection</div>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <!-- Language Switcher -->
+      <div class="lang-switch">
+        <button type="button" class="lang-btn active" id="langEN">EN</button>
+        <button type="button" class="lang-btn" id="langFR">FR</button>
+      </div>
+
+      <!-- Header External Links -->
+      <a href="https://nexgen999.github.io/evoX-CoreOS-WebUI/" target="_blank" id="btnWebUI" class="btn-header-link">
+        🌐 evoX-CoreOS WebUI
+      </a>
+      <a href="https://nexgen999.github.io/evoX-CoreOS-WebUI/pegasus-store_en.html" target="_blank" id="btnPegasus" class="btn-header-link">
+        🛒 evoX-CoreOS Pegasus Store
+      </a>
+
+      <!-- Rescue Button (hidden by default) -->
+      <a href="#" id="btnRescue" class="btn-rescue" style="display: none;">
+        🛠 Rescue / zFTPd
+      </a>
+      
+      <div class="sys-badge" id="envBadge">
+        <span class="sys-dot"></span>
+        <span id="envLabel">Detecting console...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Auto-launch Countdown Bar -->
+  <div class="countdown-bar" id="countdownBar" style="display: none;">
+    <div class="countdown-text">
+      <span id="txtAutoStart">Auto-starting in</span>
+      <span class="countdown-seconds" id="countdownSec">8s</span>
+      <span id="countdownTargetText">towards <strong>Standard Mode (evoX)</strong></span>
+    </div>
+    <button type="button" class="countdown-cancel-btn" id="btnCancelCountdown">Select manually</button>
+  </div>
+
+  <div class="section-header-wrap">
+    <div class="section-title" id="sectionTitle">Select your Firmware</div>
+    <button type="button" class="btn-back" id="btnBackMenu" style="display: none;">&larr; Change Firmware</button>
+  </div>
+
+  <!-- MENU LEVEL 1 : Firmware Choice -->
+  <div class="modes-grid" id="fwMenuGrid">
+    <div class="mode-card recommended" id="btnFwGroup1">
+      <div class="mode-top">
+        <div class="mode-name">Firmware 9.x - 12.x</div>
+        <span class="mode-badge badge-cyan">Slopkit</span>
+      </div>
+      <div class="mode-desc" id="fw1Desc">
+        Access compatible loaders for PlayStation 5 consoles running firmwares <strong>9.xx to 12.xx</strong> (evoX, PS5 Autoloader, Payload Manager).
+      </div>
+      <div class="mode-btn" id="fw1Btn">Open menu &rarr;</div>
+    </div>
+
+    <div class="mode-card recommended" id="btnFwGroup2">
+      <div class="mode-top">
+        <div class="mode-name">Firmware 7.x - 13.60</div>
+        <span class="mode-badge badge-purple">Relapse</span>
+      </div>
+      <div class="mode-desc" id="fw2Desc">
+        Access optimized Relapse loaders for consoles running firmwares <strong>7.xx to 13.60</strong> (evoX, Relapse PLDMGR, ProsperoMGR, Autoloader, Standard, Darkmor).
+      </div>
+      <div class="mode-btn" id="fw2Btn">Open menu &rarr;</div>
+    </div>
+  </div>
+
+  <!-- SECTION RELAPSE INSTALLER -->
+  <div id="relapseInstallerSection" style="margin-bottom: 28px;">
+    <div class="section-header-wrap">
+      <div class="section-title">Relapse Installer</div>
+    </div>
+
+    <!-- Carte 1: itsPLK Universal Installer -->
+    <div class="installer-card">
+      <div class="brand-wrap">
+        <img src="Relapse-Installer/itsplk.jpg" alt="itsPLK logo" class="brand-logo" onerror="this.style.display='none'">
+        <div>
+          <div class="brand-title">
+            <span>itsPLK universal installer</span>
+          </div>
+          <div class="brand-subtitle" id="installerSubtitle">Universal installer for Relapse</div>
+        </div>
+      </div>
+      <div class="installer-actions">
+        <a href="Relapse-Installer/index.html" class="installer-btn" id="installerBtnText">Install &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Carte 2: PSMacedo -->
+    <div class="installer-card">
+      <div class="brand-wrap">
+        <img src="Relapse-PSMacedo/psmacedo.jpg" alt="PSMacedo logo" class="brand-logo" onerror="this.style.display='none'">
+        <div>
+          <div class="brand-title">
+            <span>PSMacedo</span>
+          </div>
+          <div class="brand-subtitle" id="psmacedoSubtitle">PSMacedo project for PS5</div>
+        </div>
+      </div>
+      <div class="installer-actions">
+        <a href="https://ps4macedo.github.io/ps51360/" target="_blank" rel="noopener noreferrer" class="installer-btn" id="btnLaunchHost">Lancer le host &rarr;</a>
+        <a href="Relapse-PSMacedo/Relapse-PSMacedo.html" class="installer-btn-secondary" id="btnPsmacedoInstall">Install</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MENU LEVEL 2 : Launch Tiles (Groups 1 & 2) -->
+  <div class="modes-grid" id="launchModesGrid" style="display: none;">
+
+    <!-- TILE 1 (FW 9x-12x) -->
+    <a href="slopkit/poops.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1" class="mode-card recommended fw-group-1">
+      <div class="mode-top">
+        <div class="mode-name">1. evoX Autoloader</div>
+        <span class="mode-badge badge-amber" data-i18n="recommended">Recommended</span>
+      </div>
+      <div class="mode-desc" data-i18n="t1_1_desc">
+        Classic and direct method. Runs full exploit sequence and automatically injects <strong>evoX.elf</strong> daemon on port 8085 as soon as elfldr is ready.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; ROP &rarr; Kernel &rarr; elfldr &rarr; evox.elf</div>
+      <div class="mode-btn" data-i18n="t1_1_btn">Launch evoX Mode &rarr;</div>
+    </a>
+
+    <!-- TILE 2 (FW 9x-12x) -->
+    <a href="slopkit/PS5_Unified_Autoloader.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1" class="mode-card recommended fw-group-1">
+      <div class="mode-top">
+        <div class="mode-name">2. PS5_Autoloader</div>
+        <span class="mode-badge badge-purple" data-i18n="custom">Custom</span>
+      </div>
+      <div class="mode-desc" data-i18n="t1_2_desc">
+        Classic and direct method. Runs full exploit sequence and automatically injects <strong>PS5_Unified_Autoloader.elf</strong> as soon as elfldr is ready and loads your ps5_autoloader.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; ROP &rarr; Kernel &rarr; elfldr &rarr; PS5_Unified_Autoloader.elf</div>
+      <div class="mode-btn" data-i18n="t1_2_btn">Launch PS5_Autoloader Mode &rarr;</div>
+    </a>
+
+    <!-- TILE 3 (FW 9x-12x) -->
+    <a href="slopkit/pldmgr.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1" class="mode-card recommended fw-group-1">
+      <div class="mode-top">
+        <div class="mode-name">3. Payload Manager</div>
+        <span class="mode-badge badge-cyan" data-i18n="custom">Custom</span>
+      </div>
+      <div class="mode-desc" data-i18n="t1_3_desc">
+        Classic and direct method. Runs full exploit sequence and automatically injects <strong>pldmgr.elf</strong> daemon on port 8084 as soon as elfldr is ready.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; ROP &rarr; Kernel &rarr; elfldr &rarr; pldmgr.elf</div>
+      <div class="mode-btn" data-i18n="t1_3_btn">Launch pldmgr Mode &rarr;</div>
+    </a>
+
+    <!-- TILE 1 (FW 7x-13.60) -->
+    <a href="Relapse-evox/relapse-evox.html" class="mode-card recommended fw-group-2">
+      <div class="mode-top">
+        <div class="mode-name">1. evoX Autoloader</div>
+        <span class="mode-badge badge-amber" data-i18n="recommended">Recommended</span>
+      </div>
+      <div class="mode-desc" data-i18n="t2_1_desc">
+        Relapse Loader. Runs full exploit sequence and automatically injects <strong>evoX.elf</strong> daemon on port 8085 as soon as elfldr is ready.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; 7.xx &rarr; 13.60 &rarr; evox.elf</div>
+      <div class="mode-btn" data-i18n="t2_1_btn">Launch Relapse evoX &rarr;</div>
+    </a>
+
+    <!-- TILE 2 (FW 7x-13.60) -->
+    <a href="Relapse-pldmgr/relapse-pldmgr.html" class="mode-card recommended fw-group-2">
+      <div class="mode-top">
+        <div class="mode-name">2. Relapse PLDMGR</div>
+        <span class="mode-badge badge-cyan" data-i18n="custom">Custom</span>
+      </div>
+      <div class="mode-desc" data-i18n="t2_2_desc">
+        Relapse Loader. Runs full exploit sequence and automatically injects <strong>pldmgr.elf</strong> daemon on port 8084 as soon as elfldr is ready.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; 7.xx &rarr; 13.60 &rarr; pldmgr.elf</div>
+      <div class="mode-btn" data-i18n="t2_2_btn">Launch Relapse pldmgr &rarr;</div>
+    </a>
+
+    <!-- TILE 3 (FW 7x-13.60) -->
+    <a href="Relapse-ProsperoMGR/Relapse-ProsperoMGR.html" class="mode-card recommended fw-group-2">
+      <div class="mode-top">
+        <div class="mode-name">3. Relapse ProsperoMGR</div>
+        <span class="mode-badge badge-emerald" data-i18n="manager">Manager</span>
+      </div>
+      <div class="mode-desc" data-i18n="t2_3_desc">
+        Relapse Loader. Runs full exploit sequence and launches <strong>ProsperoMGR</strong> manager upon Kernel initialization.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; 7.xx &rarr; 13.60 &rarr; prosperomgr</div>
+      <div class="mode-btn" data-i18n="t2_3_btn">Launch Relapse ProsperoMGR &rarr;</div>
+    </a>
+
+    <!-- TILE 4 (FW 7x-13.60) -->
+    <a href="Relapse-autoloader/relapse-autoloader.html" class="mode-card recommended fw-group-2">
+      <div class="mode-top">
+        <div class="mode-name">4. Relapse PS5 Autoloader</div>
+        <span class="mode-badge badge-purple" data-i18n="custom">Custom</span>
+      </div>
+      <div class="mode-desc" data-i18n="t2_4_desc">
+        Relapse Loader. Runs full exploit sequence and automatically injects <strong>PS5_Unified_Autoloader.elf</strong> as soon as elfldr is ready and loads your ps5_autoloader.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; 7.xx &rarr; 13.60 &rarr; PS5_Unified_Autoloader.elf</div>
+      <div class="mode-btn" data-i18n="t2_4_btn">Launch Relapse PS5 Autoloader &rarr;</div>
+    </a>
+
+    <!-- TILE 5 (FW 7x-13.60) -->
+    <a href="Relapse-Standard/relapse.html" class="mode-card recommended fw-group-2">
+      <div class="mode-top">
+        <div class="mode-name">5. Relapse Standard</div>
+        <span class="mode-badge badge-red" data-i18n="custom">Custom</span>
+      </div>
+      <div class="mode-desc" data-i18n="t2_5_desc">
+        Relapse Loader. Runs full exploit sequence and automatically injects <strong>kstuff, shadowmountplus, etahen</strong> daemons.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; 7.xx &rarr; 13.60 &rarr; standard</div>
+      <div class="mode-btn" data-i18n="t2_5_btn">Launch Relapse PS5 Standard &rarr;</div>
+    </a>
+
+    <!-- TILE 6 (FW 7x-13.60) : Relapse-Darkmor -->
+    <a href="Relapse-Darkmor/Relapse-Darkmor.html" class="mode-card recommended fw-group-2">
+      <div class="mode-top">
+        <div class="mode-name">6. Relapse-Drakmor</div>
+        <span class="mode-badge badge-amber" data-i18n="experimental">Experimental</span>
+      </div>
+      <div class="mode-desc" data-i18n="t2_6_desc">
+        Relapse Loader. Runs full exploit sequence and launches experimental <strong>Relapse-Drakmor</strong> release.
+      </div>
+      <div class="mode-pipeline">WebKit &rarr; 7.xx &rarr; 13.60 &rarr; drakmor</div>
+      <div class="mode-btn" data-i18n="t2_6_btn">Launch Relapse-Drakmor &rarr;</div>
+    </a>
+
+  </div>
+
+  <!-- Port Mapping Info -->
+  <div class="info-box">
+    <div class="info-title" id="infoTitle">PS5 Network Ports Active After Exploit Payload Injection</div>
+    <div class="ports-list">
+      <div class="port-item">
+        <span class="port-name" id="port1Name">standard elfldr</span>
+        <span class="port-num">:9021</span>
+      </div>
+      <div class="port-item">
+        <span class="port-name">pldmgr</span>
+        <span class="port-num">:8084</span>
+      </div>
+      <div class="port-item">
+        <span class="port-name">evoX</span>
+        <span class="port-num">:8085</span>
+      </div>
+      <div class="port-item">
+        <span class="port-name">zftpd</span>
+        <span class="port-num">:2120</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notice DNS Box -->
+  <div class="dns-notice-box" id="dnsNoticeBox">
+    <div class="dns-notice-header">
+      <span class="dns-icon">⚠️</span>
+      <div class="dns-notice-title" id="dnsTitle">Network Configuration Required</div>
+    </div>
+    <div class="dns-notice-text" id="dnsText">
+      To prevent unintended system software updates and ensure proper WebKit redirections, please properly configure the <strong>Primary DNS</strong> in your PS5 network settings.
+    </div>
+    <div class="dns-table-wrapper">
+      <table class="dns-table">
+        <thead>
+          <tr>
+            <th id="thParam">Setting</th>
+            <th id="thIp">DNS IP Address</th>
+            <th id="thUsage">Usage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="tdDns1">Primary DNS (Option 1)</td>
+            <td class="dns-ip">62.210.38.117</td>
+            <td id="tdDns1Use">Block Updates &amp; User's Guide Redirection</td>
+          </tr>
+          <tr>
+            <td id="tdDns2">Primary DNS (Option 2)</td>
+            <td class="dns-ip">45.56.67.85</td>
+            <td id="tdDns2Use">Alternative DNS Server</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Credits Box -->
+  <div class="credits-box" id="creditsBox" style="display: none;">
+    <div class="credits-header">
+      <span class="credits-icon">👏</span>
+      <div class="credits-title" id="creditsTitle">Developer Credits &amp; Thanks</div>
+    </div>
+    <div class="credits-text" id="creditsText">
+      <!-- Text dynamically inserted via JS -->
+    </div>
+    <div class="credits-list" id="creditsList">
+      <!-- Tiles dynamically inserted via JS -->
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span id="footerText">PS5 WebKit W2JB &middot; evoX Modular Architecture &middot; Direct access via User's Guide or Browser</span>
+  </footer>
+
+</div>
+
+<script>
+  // Dictionary of translations
+  const translations = {
+    en: {
+      hdrSubtitle: "WebKit Exploit Host \u00B7 Launch Mode Selection",
+      envDetecting: "Detecting console...",
+      envTest: "Test Mode / PC",
+      txtAutoStart: "Auto-starting in",
+      txtAutoTarget: "towards <strong>Standard Mode (evoX)</strong>",
+      btnCancel: "Select manually",
+      secSelectFw: "Select your Firmware",
+      secLaunchFw1: "Launch Modes (Firmware 9.x - 12.x)",
+      secLaunchFw2: "Launch Modes (Firmware 7.x - 13.60)",
+      btnBack: "\u2190 Change Firmware",
+      fw1Desc: "Access compatible loaders for PlayStation 5 consoles running firmwares <strong>9.xx to 12.xx</strong> (evoX, PS5 Autoloader, Payload Manager).",
+      fw1Btn: "Open menu \u2192",
+      fw2Desc: "Access optimized Relapse loaders for consoles running firmwares <strong>7.xx to 13.60</strong> (evoX, Relapse PLDMGR, ProsperoMGR, Autoloader, Standard, Darkmor).",
+      fw2Btn: "Open menu \u2192",
+      installerSubtitle: "Universal installer for Relapse",
+      installerBtnText: "Install \u2192",
+      psmacedoSubtitle: "PSMacedo project for PS5",
+      btnLaunchHost: "Launch host \u2192",
+      btnPsmacedoInstall: "Install",
+      infoTitle: "PS5 Network Ports Active After Exploit Payload Injection",
+      port1Name: "standard elfldr",
+      dnsTitle: "Network Configuration Required",
+      dnsText: "To prevent unintended system software updates and ensure proper WebKit redirections, please properly configure the <strong>Primary DNS</strong> in your PS5 network settings.",
+      thParam: "Setting",
+      thIp: "DNS IP Address",
+      thUsage: "Usage",
+      tdDns1: "Primary DNS (Option 1)",
+      tdDns1Use: "Block Updates & User's Guide Redirection",
+      tdDns2: "Primary DNS (Option 2)",
+      tdDns2Use: "Alternative DNS Server",
+      footerText: "PS5 WebKit W2JB \u00B7 evoX Modular Architecture \u00B7 Direct access via User's Guide or Browser",
+      recommended: "Recommended",
+      custom: "Custom",
+      manager: "Manager",
+      experimental: "Experimental",
+      t1_1_desc: "Classic and direct method. Runs full exploit sequence and automatically injects <strong>evoX.elf</strong> daemon on port 8085 as soon as elfldr is ready.",
+      t1_1_btn: "Launch evoX Mode \u2192",
+      t1_2_desc: "Classic and direct method. Runs full exploit sequence and automatically injects <strong>PS5_Unified_Autoloader.elf</strong> as soon as elfldr is ready and loads your ps5_autoloader.",
+      t1_2_btn: "Launch PS5_Autoloader Mode \u2192",
+      t1_3_desc: "Classic and direct method. Runs full exploit sequence and automatically injects <strong>pldmgr.elf</strong> daemon on port 8084 as soon as elfldr is ready.",
+      t1_3_btn: "Launch pldmgr Mode \u2192",
+      t2_1_desc: "Relapse Loader. Runs full exploit sequence and automatically injects <strong>evoX.elf</strong> daemon on port 8085 as soon as elfldr is ready.",
+      t2_1_btn: "Launch Relapse evoX \u2192",
+      t2_2_desc: "Relapse Loader. Runs full exploit sequence and automatically injects <strong>pldmgr.elf</strong> daemon on port 8084 as soon as elfldr is ready.",
+      t2_2_btn: "Launch Relapse pldmgr \u2192",
+      t2_3_desc: "Relapse Loader. Runs full exploit sequence and launches <strong>ProsperoMGR</strong> manager upon Kernel initialization.",
+      t2_3_btn: "Launch Relapse ProsperoMGR \u2192",
+      t2_4_desc: "Relapse Loader. Runs full exploit sequence and automatically injects <strong>PS5_Unified_Autoloader.elf</strong> as soon as elfldr is ready and loads your ps5_autoloader.",
+      t2_4_btn: "Launch Relapse PS5 Autoloader \u2192",
+      t2_5_desc: "Relapse Loader. Runs full exploit sequence and automatically injects <strong>kstuff, shadowmountplus, etahen</strong> daemons.",
+      t2_5_btn: "Launch Relapse PS5 Standard \u2192",
+      t2_6_desc: "Relapse Loader. Runs full exploit sequence and launches experimental <strong>Relapse-Darkmor</strong> release.",
+      t2_6_btn: "Launch Relapse-Darkmor \u2192",
+      credits1Title: "Developer Credits & Thanks (Firmware 9.x - 12.x)",
+      credits2Title: "Developer Credits & Thanks (Firmware 7.x - 13.60)"
+    },
+    fr: {
+      hdrSubtitle: "H\u00F4te d'exploitation WebKit \u00B7 S\u00E9lection du Mode de Lancement",
+      envDetecting: "D\u00E9tection de la console...",
+      envTest: "Mode Test / PC",
+      txtAutoStart: "D\u00E9marrage automatique dans",
+      txtAutoTarget: "vers le <strong>Mode Standard (evoX)</strong>",
+      btnCancel: "Choisir manuellement",
+      secSelectFw: "S\u00E9lectionnez votre Firmware",
+      secLaunchFw1: "Modes de Lancement (Firmware 9.x - 12.x)",
+      secLaunchFw2: "Modes de Lancement (Firmware 7.x - 13.60)",
+      btnBack: "\u2190 Changer de Firmware",
+      fw1Desc: "Acc\u00E9der aux chargeurs compatibles pour les consoles PlayStation 5 sous firmwares <strong>9.xx \u00E0 12.xx</strong> (evoX, PS5 Autoloader, Payload Manager).",
+      fw1Btn: "Ouvrir le menu \u2192",
+      fw2Desc: "Acc\u00E9der aux chargeurs Relapse optimis\u00E9s pour les consoles sous firmwares <strong>7.xx \u00E0 13.60</strong> (evoX, Relapse PLDMGR, ProsperoMGR, Autoloader, Standard, Darkmor).",
+      fw2Btn: "Ouvrir le menu \u2192",
+      installerSubtitle: "Programme d'installation universel pour Relapse",
+      installerBtnText: "Installer \u2192",
+      psmacedoSubtitle: "Projet PSMacedo pour PS5",
+      btnLaunchHost: "Lancer le host \u2192",
+      btnPsmacedoInstall: "Install",
+      infoTitle: "Ports R\u00E9seau PS5 apr\u00E8s Armement de l'Exploit",
+      port1Name: "elfldr standard",
+      dnsTitle: "Configuration R\u00E9seau Requise",
+      dnsText: "Afin d'u00E9viter toute mise \u00E0 jour involontaire du syst\u00E8me et de garantir le bon fonctionnement des redirections WebKit, veuillez param\u00E9trer correctement le <strong>DNS Primaire</strong> dans les r\u00E9glages r\u00E9seau de votre PS5.",
+      thParam: "Param\u00E8tre",
+      thIp: "Adresse IP DNS",
+      thUsage: "Utilisation",
+      tdDns1: "DNS Primaire (Option 1)",
+      tdDns1Use: "Blocage MAJ & Redirection Guide Utilisateur",
+      tdDns2: "DNS Primaire (Option 2)",
+      tdDns2Use: "Serveur DNS Alternatif",
+      footerText: "PS5 WebKit W2JB \u00B7 Architecture Modulaire evoX \u00B7 Acc\u00E8s direct via Guide Utilisateur ou Navigateur",
+      recommended: "Recommand\u00E9",
+      custom: "Personnalis\u00E9",
+      manager: "Gestionnaire",
+      experimental: "Exp\u00E9rimental",
+      t1_1_desc: "La m\u00E9thode classique et directe. Ex\u00E9cute l'exploit de bout en bout et injecte automatiquement le d\u00E9mon <strong>evoX.elf</strong> sur le port 8085 d\u00E8s que elfldr est pr\u00EAt.",
+      t1_1_btn: "Lancer en Mode evoX \u2192",
+      t1_2_desc: "La m\u00E9thode classique et directe. Ex\u00E9cute l'exploit de bout en bout et injecte automatiquement le d\u00E9mon <strong>PS5_Unified_Autoloader.elf</strong> d\u00E8s que elfldr est pr\u00EAt et charge votre ps5_autoloader.",
+      t1_2_btn: "Lancer en Mode PS5_Autoloader \u2192",
+      t1_3_desc: "La m\u00E9thode classique et directe. Ex\u00E9cute l'exploit de bout en bout et injecte automatiquement le d\u00E9mon <strong>pldmgr.elf</strong> sur le port 8084 d\u00E8s que elfldr est pr\u00EAt.",
+      t1_3_btn: "Lancer en Mode pldmgr \u2192",
+      t2_1_desc: "Relapse Loader. Ex\u00E9cute l'exploit de bout en bout et injecte automatiquement le d\u00E9mon <strong>evoX.elf</strong> sur le port 8085 d\u00E8s que elfldr est pr\u00EAt.",
+      t2_1_btn: "Lancer Relapse evoX \u2192",
+      t2_2_desc: "Relapse Loader. Ex\u00E9cute l'exploit de bout en bout et injecte automatiquement le d\u00E9mon <strong>pldmgr.elf</strong> sur le port 8084 d\u00E8s que elfldr est pr\u00EAt.",
+      t2_2_btn: "Lancer Relapse pldmgr \u2192",
+      t2_3_desc: "Relapse Loader. Ex\u00E9cute l'exploit de bout en bout et lance le gestionnaire <strong>ProsperoMGR</strong> d\u00E8s l'initialisation du Kernel.",
+      t2_3_btn: "Lancer Relapse ProsperoMGR \u2192",
+      t2_4_desc: "Relapse Loader. Ex\u00E9cute l'exploit de bout en bout et injecte automatiquement le d\u00E9mon <strong>PS5_Unified_Autoloader.elf</strong> d\u00E8s que elfldr est pr\u00EAt et charge votre ps5_autoloader.",
+      t2_4_btn: "Lancer Relapse PS5 Autoloader \u2192",
+      t2_5_desc: "Relapse Loader. Ex\u00E9cute l'exploit de bout en bout et injecte automatiquement le d\u00E9mon <strong>kstuff, shadowmountplus, etahen</strong>.",
+      t2_5_btn: "Lancer Relapse PS5 Standard \u2192",
+      t2_6_desc: "Relapse Loader. Ex\u00E9cute l'exploit de bout en bout et lance la version exp\u00E9rimentale <strong>Relapse-Drakmor</strong>.",
+      t2_6_btn: "Lancer Relapse-Drakmor \u2192",
+      credits1Title: "Cr\u00E9dits & Remerciements (Firmware 9.x - 12.x)",
+      credits2Title: "Cr\u00E9dits & Remerciements (Firmware 7.x - 13.60)"
+    }
+  };
+
+  let currentLang = "en"; // Default Language: English
+  let currentGroup = 0;
+
+  // Global UI references
+  const fwMenuGrid = document.getElementById("fwMenuGrid");
+  const relapseInstallerSection = document.getElementById("relapseInstallerSection");
+  const launchModesGrid = document.getElementById("launchModesGrid");
+  const sectionTitle = document.getElementById("sectionTitle");
+  const btnBackMenu = document.getElementById("btnBackMenu");
+  const btnRescue = document.getElementById("btnRescue");
+  const btnWebUI = document.getElementById("btnWebUI");
+  const btnPegasus = document.getElementById("btnPegasus");
+  const countdownBar = document.getElementById("countdownBar");
+  const dnsNoticeBox = document.getElementById("dnsNoticeBox");
+  const creditsBox = document.getElementById("creditsBox");
+  const creditsTitle = document.getElementById("creditsTitle");
+  const creditsText = document.getElementById("creditsText");
+  const creditsList = document.getElementById("creditsList");
+  
+  let countdownTimer = null;
+
+  // Credits structure
+  const creditsData = {
+    1: {
+      fullText: "Egy, Sonic, Yenyen, Zeco, Gezine, Echostretch, Ufm42, TheFloW, John Tornblom, Flatz, Idlesauce and PS5 R&D Discord.",
+      tiles: [
+        { name: "itsPLK", work: "PLDMGR & PS5 Autoloader" },
+        { name: "nexgen999", work: "evoX" },
+        { name: "seregonwar", work: "zftpd" },
+        { name: "Community", work: "All Dev & You ❤️" }
+      ]
+    },
+    2: {
+      fullText: "ntfargo, ufm42, Sonic-Iso, Jordy, Dr. Yenyen, TheFlow, SlidyBat, Flatz, cow, nhk, bollarz, Sleirsgoevy, EchoStretch, EarthOnion.",
+      tiles: [
+        { name: "itsPLK", work: "PLDMGR & PS5 Autoloader" },
+        { name: "nexgen999", work: "evoX" },
+        { name: "seregonwar", work: "zftpd" },
+        { name: "Community", work: "All Dev & You ❤" }
+      ]
+    }
+  };
+
+  // Language switch implementation
+  function setLanguage(lang) {
+    currentLang = lang;
+    const t = translations[lang];
+
+    document.documentElement.lang = lang;
+
+    // Active button styling
+    document.getElementById("langEN").classList.toggle("active", lang === "en");
+    document.getElementById("langFR").classList.toggle("active", lang === "fr");
+
+    // Static text elements
+    document.getElementById("hdrSubtitle").innerHTML = t.hdrSubtitle;
+    document.getElementById("txtAutoStart").textContent = t.txtAutoStart;
+    document.getElementById("countdownTargetText").innerHTML = t.txtAutoTarget;
+    document.getElementById("btnCancelCountdown").textContent = t.btnCancel;
+    document.getElementById("btnBackMenu").innerHTML = t.btnBack;
+    
+    document.getElementById("fw1Desc").innerHTML = t.fw1Desc;
+    document.getElementById("fw1Btn").innerHTML = t.fw1Btn;
+    document.getElementById("fw2Desc").innerHTML = t.fw2Desc;
+    document.getElementById("fw2Btn").innerHTML = t.fw2Btn;
+    
+    document.getElementById("installerSubtitle").textContent = t.installerSubtitle;
+    document.getElementById("installerBtnText").innerHTML = t.installerBtnText;
+    document.getElementById("psmacedoSubtitle").textContent = t.psmacedoSubtitle;
+    document.getElementById("btnLaunchHost").innerHTML = t.btnLaunchHost;
+    document.getElementById("btnPsmacedoInstall").textContent = t.btnPsmacedoInstall;
+    
+    document.getElementById("infoTitle").textContent = t.infoTitle;
+    document.getElementById("port1Name").textContent = t.port1Name;
+    
+    document.getElementById("dnsTitle").textContent = t.dnsTitle;
+    document.getElementById("dnsText").innerHTML = t.dnsText;
+    document.getElementById("thParam").textContent = t.thParam;
+    document.getElementById("thIp").textContent = t.thIp;
+    document.getElementById("thUsage").textContent = t.thUsage;
+    document.getElementById("tdDns1").textContent = t.tdDns1;
+    document.getElementById("tdDns1Use").textContent = t.tdDns1Use;
+    document.getElementById("tdDns2").textContent = t.tdDns2;
+    document.getElementById("tdDns2Use").textContent = t.tdDns2Use;
+    
+    document.getElementById("footerText").innerHTML = t.footerText;
+
+    // Elements with data-i18n attributes
+    document.querySelectorAll("[data-i18n]").forEach(el => {
+      const key = el.getAttribute("data-i18n");
+      if (t[key]) el.innerHTML = t[key];
+    });
+
+    // Update section title based on current view
+    if (currentGroup === 0) {
+      sectionTitle.textContent = t.secSelectFw;
+    } else if (currentGroup === 1) {
+      sectionTitle.textContent = t.secLaunchFw1;
+    } else if (currentGroup === 2) {
+      sectionTitle.textContent = t.secLaunchFw2;
+    }
+
+    // Update credits if active
+    if (currentGroup > 0) {
+      updateCredits(currentGroup);
+    }
+
+    // Refresh detected environment string
+    detectEnv();
+  }
+
+  function updateCredits(group) {
+    const data = creditsData[group];
+    if (!data) return;
+
+    const t = translations[currentLang];
+    creditsTitle.textContent = (group === 1) ? t.credits1Title : t.credits2Title;
+    creditsText.textContent = data.fullText;
+    
+    creditsList.innerHTML = data.tiles.map(item => `
+      <div class="credit-item">
+        <div class="credit-author">${item.name}</div>
+        <div class="credit-work">${item.work}</div>
+      </div>
+    `).join('');
+  }
+
+  // Navigation Logic
+  function showFwGroup(group) {
+    currentGroup = group;
+    const t = translations[currentLang];
+
+    fwMenuGrid.style.display = "none";
+    relapseInstallerSection.style.display = "none";
+    launchModesGrid.style.display = "grid";
+    btnBackMenu.style.display = "inline-block";
+
+    dnsNoticeBox.style.display = "none";
+    btnWebUI.style.display = "none";
+    btnPegasus.style.display = "none";
+
+    creditsBox.style.display = "block";
+    updateCredits(group);
+
+    btnRescue.style.display = "inline-flex";
+
+    if (group === 1) {
+      btnRescue.href = "slopkit/zftpd.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1";
+      sectionTitle.textContent = t.secLaunchFw1;
+      startCountdown("slopkit/poops.html?go=1&auto=1&trigger=netcontrol&payload=1&v=lite1", t.txtAutoTarget);
+    } else {
+      btnRescue.href = "Relapse-zftpd/relapse-zftpd.html"; 
+      sectionTitle.textContent = t.secLaunchFw2;
+      stopCountdown();
+    }
+
+    document.querySelectorAll(".fw-group-1").forEach(el => {
+      el.style.display = (group === 1) ? "flex" : "none";
+    });
+    document.querySelectorAll(".fw-group-2").forEach(el => {
+      el.style.display = (group === 2) ? "flex" : "none";
+    });
+  }
+
+  function resetMenu() {
+    currentGroup = 0;
+    const t = translations[currentLang];
+
+    stopCountdown();
+    fwMenuGrid.style.display = "grid";
+    relapseInstallerSection.style.display = "block";
+    launchModesGrid.style.display = "none";
+    btnBackMenu.style.display = "none";
+    btnRescue.style.display = "none";
+    
+    dnsNoticeBox.style.display = "block";
+    btnWebUI.style.display = "inline-flex";
+    btnPegasus.style.display = "inline-flex";
+
+    creditsBox.style.display = "none";
+    sectionTitle.textContent = t.secSelectFw;
+  }
+
+  document.getElementById("btnFwGroup1").onclick = () => showFwGroup(1);
+  document.getElementById("btnFwGroup2").onclick = () => showFwGroup(2);
+  btnBackMenu.onclick = () => resetMenu();
+
+  document.getElementById("langEN").onclick = () => setLanguage("en");
+  document.getElementById("langFR").onclick = () => setLanguage("fr");
+
+  // Environment Detection
+  function detectEnv() {
+    const ua = navigator.userAgent;
+    const envLabel = document.getElementById("envLabel");
+    const t = translations[currentLang];
+    
+    if (/PlayStation 5/i.test(ua)) {
+      const match = ua.match(/PlayStation 5\/([0-9\.]+)/i);
+      const fw = match ? match[1] : "Compatible";
+      envLabel.textContent = "PlayStation 5 (FW " + fw + ")";
+    } else {
+      envLabel.textContent = t.envTest;
+    }
+  }
+
+  // Countdown Handler
+  function startCountdown(targetUrl, targetText) {
+    stopCountdown();
+    if (sessionStorage.getItem("ps5_autolaunch_disabled") === "true") return;
+
+    let secondsLeft = 8;
+    const secEl = document.getElementById("countdownSec");
+    const targetTextEl = document.getElementById("countdownTargetText");
+    
+    if (targetTextEl) targetTextEl.innerHTML = targetText;
+    if (secEl) secEl.textContent = secondsLeft + "s";
+    
+    countdownBar.style.display = "flex";
+
+    countdownTimer = setInterval(() => {
+      secondsLeft--;
+      if (secEl) secEl.textContent = secondsLeft + "s";
+      if (secondsLeft <= 0) {
+        clearInterval(countdownTimer);
+        window.location.href = targetUrl;
+      }
+    }, 1000);
+  }
+
+  function stopCountdown() {
+    if (countdownTimer) {
+      clearInterval(countdownTimer);
+      countdownTimer = null;
+    }
+    countdownBar.style.display = "none";
+  }
+
+  document.getElementById("btnCancelCountdown").onclick = function() {
+    sessionStorage.setItem("ps5_autolaunch_disabled", "true");
+    stopCountdown();
+  };
+
+  // Initialize page in English
+  setLanguage("en");
+</script>
+
+</body>
+</html>
