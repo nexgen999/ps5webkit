@@ -6,6 +6,7 @@ window.PAYLOAD_TILES = [
 	{"title": "ProsperoMgr", "name": "ProsperoMgr.elf", "key": "ProsperoMgr"},
 	{"title": "HyperHEN-v0.9.2", "name": "HyperHEN-v0.9.2.elf", "key": "HyperHEN-v0.9.2"},
 	{"title": "AniketosHEN", "name": "AniketosHEN.elf", "key": "AniketosHEN"},
+	{"title": "ps5-linux-loader-1160", "name": "ps5-linux-loader-1160.elf", "key": "ps5-linux-loader-1160"},
 	{"title": "byepervisor_reborn", "name": "byepervisor_reborn.elf", "key": "byepervisor_reborn"},
 	{"title": "byepervisor_reborn-fix", "name": "byepervisor_reborn-fix.elf", "key": "byepervisor_reborn-fix"},
 	{"title": "byepervisor_reborn_AUTO-9.40fat-slim-pro", "name": "byepervisor_reborn_AUTO-9.40fat-slim-pro.elf", "key": "byepervisor_reborn_AUTO-9.40fat-slim-pro"},
