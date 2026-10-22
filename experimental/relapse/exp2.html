@@ -131,7 +131,7 @@
     align-items: flex-start;
   }
 
-  /* --- CONSOLE PANEL (GAUCHE - PREND LA MOITIÉ) --- */
+  /* --- CONSOLE PANEL (GAUCHE - 50%) --- */
   .custom-console-card {
     flex: 1;
     background: var(--card-bg);
@@ -178,7 +178,7 @@
     white-space: pre-wrap;
   }
 
-  /* --- PAYLOADS PANEL (DROITE - PREND LA MOITIÉ) --- */
+  /* --- PAYLOADS PANEL (DROITE - 50%) --- */
   #payloads-view {
     flex: 1;
     display: flex !important;
@@ -215,39 +215,12 @@
     margin-left: 12px;
   }
 
-  /* Grille pour les payloads principaux (Gros boutons d'origine) */
-  .payloadGrid {
-    display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 10px;
-  }
-
-  /* Style des boutons principaux */
-  #payloads-view .payloadGrid .btn {
-    display: inline-block;
-    box-sizing: border-box;
-    width: 100%;
-    padding: 12px;
-    background: #06090e;
-    border: 1px solid var(--card-border);
-    border-radius: 0.8rem;
-    color: #fff;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.2s, border-color 0.2s;
-  }
-
-  #payloads-view .payloadGrid .btn:hover {
-    background: #182338;
-    border-color: #38bdf8;
-  }
-
-  /* --- SECONDE LISTE AU FORMAT LIGNE / LISTE PROPRE --- */
-  #payloadList2 {
+  /* --- FORMAT LISTE PROPRE POUR LES DEUX SECTIONS --- */
+  .payload-list-container {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    max-height: 300px;
+    max-height: 260px;
     overflow-y: auto;
     padding-right: 4px;
   }
@@ -363,7 +336,7 @@
 
   <!-- Main Content Layout (50% / 50%) -->
   <div id="main-content">
-    <!-- Console à Gauche (Prend 50%) -->
+    <!-- Console à Gauche (50%) -->
     <div class="custom-console-card">
       <div class="console-title">JOURNAL D'EXÉCUTION (CONSOLE)</div>
       
@@ -388,18 +361,18 @@
       </div>
     </div>
 
-    <!-- Payloads à Droite (Prend 50%) -->
+    <!-- Payloads à Droite (50%) -->
     <div id="payloads-view" class="app-view">
-      <!-- Section 1 : Payloads Principaux (Grille de boutons d'origine) -->
+      <!-- Section 1 : Payloads Principaux (Format Liste) -->
       <div class="payload-section">
         <div class="payload-section-title">PAYLOADS PRINCIPAUX</div>
-        <div class="payloadGrid"></div>
+        <div id="payloadList1" class="payload-list-container"></div>
       </div>
 
-      <!-- Section 2 : Payloads Secondaires (Format Liste propre) -->
+      <!-- Section 2 : Payloads Secondaires (Format Liste) -->
       <div class="payload-section">
         <div class="payload-section-title">PAYLOADS SECONDAIRES & UTILS</div>
-        <div id="payloadList2"></div>
+        <div id="payloadList2" class="payload-list-container"></div>
       </div>
     </div>
   </div>
@@ -411,6 +384,8 @@
 </div>
 
 <div id="payloadToastContainer"></div>
+<!-- Élément caché requis par site.js pour éviter les erreurs -->
+<div class="payloadGrid" style="display:none;"></div>
 <div id="console" hidden></div>
 
 <!-- Scripts de base -->
@@ -426,7 +401,6 @@
 <script src="../payloads2.js?v=1"></script>
 <script>
   window.PAYLOAD_TILES_2 = window.PAYLOAD_TILES;
-  window.PAYLOAD_TILES = window.PAYLOAD_TILES_1;
 </script>
 
 <script src="./src/main.js"></script>
@@ -434,14 +408,17 @@
 <script src="./src/utils/syscalls.js"></script>
 <script type="module" src="./src/site.js"></script>
 
-<!-- 3. Script d'injection pour la liste 2 avec liaison directe du clic fonctionnel -->
+<!-- 3. Script d'affichage propre en mode liste pour les deux sections et gestion du clic -->
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-    const listContainer2 = document.getElementById('payloadList2');
-    if (listContainer2 && window.PAYLOAD_TILES_2) {
-      listContainer2.innerHTML = '';
+    // Fonction pour peupler proprement une liste de payloads
+    function renderPayloadList(containerId, tilesArray) {
+      const container = document.getElementById(containerId);
+      if (!container || !tilesArray) return;
       
-      window.PAYLOAD_TILES_2.forEach(payload => {
+      container.innerHTML = '';
+      
+      tilesArray.forEach(payload => {
         const item = document.createElement('div');
         item.className = 'payload-list-item';
         
@@ -453,21 +430,26 @@
           <span class="payload-list-action">Lancer</span>
         `;
         
-        // CORRECTION DU CLIC : On simule ou déclenche l'action du premier bouton généré par le site
+        // Déclenchement de l'action de lancement gérée par le site
         item.addEventListener('click', () => {
-          const sampleBtn = document.querySelector('.payloadGrid .btn');
-          if (sampleBtn) {
-            // On modifie temporairement le nom du payload cible sur un vrai bouton et on simule le clic
-            sampleBtn.setAttribute('data-payload', payload.name);
-            sampleBtn.click();
-          } else {
-            console.log("Exécution payload secondaire :", payload.name);
+          // On cherche un bouton caché ou on simule l'action que site.js écoute
+          let sampleBtn = document.querySelector('.payloadGrid .btn');
+          if (!sampleBtn) {
+            sampleBtn = document.createElement('button');
+            sampleBtn.className = 'btn';
+            document.body.appendChild(sampleBtn);
           }
+          sampleBtn.setAttribute('data-payload', payload.name);
+          sampleBtn.click();
         });
 
-        listContainer2.appendChild(item);
+        container.appendChild(item);
       });
     }
+
+    // Injection des deux listes
+    renderPayloadList('payloadList1', window.PAYLOAD_TILES_1);
+    renderPayloadList('payloadList2', window.PAYLOAD_TILES_2);
   });
 </script>
 </body>
