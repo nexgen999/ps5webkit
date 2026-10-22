@@ -342,13 +342,13 @@
 
     <!-- Payloads à Droite en Deux Parties -->
     <div id="payloads-view" class="app-view">
-      <!-- Section 1 : Payloads Principaux (Géré par le script d'origine) -->
+      <!-- Section 1 : Payloads Principaux -->
       <div class="payload-section">
         <div class="payload-section-title">PAYLOADS PRINCIPAUX</div>
         <div class="payloadGrid"></div>
       </div>
 
-      <!-- Section 2 : Payloads Secondaires (payloads2.js) -->
+      <!-- Section 2 : Payloads Secondaires -->
       <div class="payload-section">
         <div class="payload-section-title">PAYLOADS SECONDAIRES & UTILS</div>
         <div class="payloadGrid" id="payloadGrid2"></div>
@@ -367,31 +367,59 @@
 
 <!-- Scripts de base -->
 <script src="./src/firmware.js"></script>
+
+<!-- 1. Chargement de payloads.js pour la première grille -->
 <script src="../payloads.js?v=1"></script>
+<script>
+  // On met de côté la première liste pour ne pas qu'elle soit écrasée par la suite
+  window.PAYLOAD_TILES_1 = window.PAYLOAD_TILES;
+</script>
+
+<!-- 2. Chargement de payloads2.js pour la deuxième grille -->
+<script src="../payloads2.js?v=1"></script>
+<script>
+  // On récupère la deuxième liste et on remet la première en variable globale principale pour site.js
+  window.PAYLOAD_TILES_2 = window.PAYLOAD_TILES;
+  window.PAYLOAD_TILES = window.PAYLOAD_TILES_1;
+</script>
+
 <script src="./src/main.js"></script>
 <script src="./src/rop.js"></script>
 <script src="./src/utils/syscalls.js"></script>
 <script type="module" src="./src/site.js"></script>
 
-<!-- Script optionnel pour charger payloads2.js dans la deuxième grille -->
+<!-- 3. Script d'injection automatique pour alimenter #payloadGrid2 avec payloads2.js -->
 <script>
-  // Si tu possèdes un fichier payloads2.js structuré de la même manière, tu peux le charger ici dynamiquement
-  fetch('../payloads2.js?v=1')
-    .then(response => {
-      if (!response.ok) throw new Error("Pas de payloads2.js");
-      return response.text();
-    })
-    .then(scriptText => {
-      // Si ton payloads2.js définit un tableau ou des éléments, tu peux adapter ici, 
-      // ou simplement laisser ce bloc gérer un fetch JSON / JS si besoin.
-    })
-    .catch(() => {
-      // Si payloads2.js n'existe pas encore, on duplique ou laisse vide proprement
-      const grid2 = document.getElementById('payloadGrid2');
-      if(grid2 && grid2.children.length === 0) {
-        grid2.innerHTML = '<div style="color: #7a8b9e; font-size: 0.85rem; padding: 10px;">Aucun payload secondaire chargé (Créez un fichier payloads2.js si besoin)</div>';
-      }
-    });
+  window.addEventListener('DOMContentLoaded', () => {
+    const grid2 = document.getElementById('payloadGrid2');
+    if (grid2 && window.PAYLOAD_TILES_2) {
+      grid2.innerHTML = '';
+      window.PAYLOAD_TILES_2.forEach(payload => {
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.setAttribute('data-payload', payload.name);
+        
+        let htmlContent = `<span class="payload-btn-title">${payload.title}</span>`;
+        if (payload.description) {
+          htmlContent += `<span class="payload-btn-description">${payload.description}</span>`;
+        }
+        htmlContent += `<span class="payload-btn-info">${payload.name}</span>`;
+        
+        btn.innerHTML = htmlContent;
+        
+        // Permet de déclencher le même comportement de clic que le script principal du site
+        btn.addEventListener('click', () => {
+          const sampleBtn = document.querySelector('.payloadGrid .btn');
+          if (sampleBtn) {
+            sampleBtn.setAttribute('data-payload', payload.name);
+            // Simule l'interaction utilisateur gérée par le site
+          }
+        });
+
+        grid2.appendChild(btn);
+      });
+    }
+  });
 </script>
 </body>
 </html>
