@@ -342,10 +342,10 @@
 
     <!-- Payloads à Droite en Deux Parties -->
     <div id="payloads-view" class="app-view">
-      <!-- Section 1 : Payloads Principaux (payloads.js) -->
+      <!-- Section 1 : Payloads Principaux (Géré par le script d'origine) -->
       <div class="payload-section">
         <div class="payload-section-title">PAYLOADS PRINCIPAUX</div>
-        <div class="payloadGrid" id="payloadGrid1"></div>
+        <div class="payloadGrid"></div>
       </div>
 
       <!-- Section 2 : Payloads Secondaires (payloads2.js) -->
@@ -367,20 +367,31 @@
 
 <!-- Scripts de base -->
 <script src="./src/firmware.js"></script>
+<script src="../payloads.js?v=1"></script>
 <script src="./src/main.js"></script>
 <script src="./src/rop.js"></script>
 <script src="./src/utils/syscalls.js"></script>
-
-<!-- Chargement séparé des deux fichiers de payloads -->
-<script>
-  // Variable globale ou tableau global que le site.js ou tes scripts attendent éventuellement
-  window.payloadsList1 = [];
-  window.payloadsList2 = [];
-</script>
-<script src="../payloads.js?v=1"></script>
-<!-- Crée un second fichier nommé payloads2.js dans le même dossier pour la deuxième partie -->
-<script src="../payloads2.js?v=1" onerror="console.log('payloads2.js optionnel non trouvé')"></script>
-
 <script type="module" src="./src/site.js"></script>
+
+<!-- Script optionnel pour charger payloads2.js dans la deuxième grille -->
+<script>
+  // Si tu possèdes un fichier payloads2.js structuré de la même manière, tu peux le charger ici dynamiquement
+  fetch('../payloads2.js?v=1')
+    .then(response => {
+      if (!response.ok) throw new Error("Pas de payloads2.js");
+      return response.text();
+    })
+    .then(scriptText => {
+      // Si ton payloads2.js définit un tableau ou des éléments, tu peux adapter ici, 
+      // ou simplement laisser ce bloc gérer un fetch JSON / JS si besoin.
+    })
+    .catch(() => {
+      // Si payloads2.js n'existe pas encore, on duplique ou laisse vide proprement
+      const grid2 = document.getElementById('payloadGrid2');
+      if(grid2 && grid2.children.length === 0) {
+        grid2.innerHTML = '<div style="color: #7a8b9e; font-size: 0.85rem; padding: 10px;">Aucun payload secondaire chargé (Créez un fichier payloads2.js si besoin)</div>';
+      }
+    });
+</script>
 </body>
 </html>
