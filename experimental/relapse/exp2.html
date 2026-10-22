@@ -123,7 +123,7 @@
     display: inline-block;
   }
 
-  /* --- DISPOSITION 2 COLONNES (50% / 50%) --- */
+  /* --- DISPOSITION 50% / 50% --- */
   #main-content {
     display: flex;
     gap: 20px;
@@ -215,48 +215,51 @@
     margin-left: 12px;
   }
 
-  /* --- FORMAT LISTE PROPRE POUR LES DEUX SECTIONS --- */
-  .payload-list-container {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 260px;
+  /* --- STYLES CSS POUR TRANSFORMER LES BOUTONS ORIGINAUX EN LISTE PROPRE --- */
+  .payloadGrid, .payload-list-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    max-height: 280px;
     overflow-y: auto;
     padding-right: 4px;
   }
 
+  /* Style ligne/liste appliqué aux boutons natifs générés par site.js */
+  #payloads-view .payloadGrid .btn,
   .payload-list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #06090e;
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    background: #06090e !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    transition: background 0.2s, border-color 0.2s !important;
   }
 
+  #payloads-view .payloadGrid .btn:hover,
   .payload-list-item:hover {
-    background: #182338;
-    border-color: #38bdf8;
+    background: #182338 !important;
+    border-color: #38bdf8 !important;
   }
 
-  .payload-list-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  .payload-btn-title, .payload-list-title {
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    color: #fff !important;
+    display: block !important;
   }
 
-  .payload-list-title {
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #fff;
-  }
-
-  .payload-list-file {
-    font-size: 0.75rem;
-    color: #64748b;
+  .payload-btn-info, .payload-list-file {
+    font-size: 0.75rem !important;
+    color: #64748b !important;
+    display: block !important;
   }
 
   .payload-list-action {
@@ -291,7 +294,6 @@
 
   #cfg { font-size: 12px; color: #94a3b8; background: #080d16; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; white-space: pre-wrap; }
 
-  /* --- FOOTER --- */
   .custom-footer {
     text-align: center;
     font-size: 13px;
@@ -363,13 +365,13 @@
 
     <!-- Payloads à Droite (50%) -->
     <div id="payloads-view" class="app-view">
-      <!-- Section 1 : Payloads Principaux (Format Liste) -->
+      <!-- Section 1 : Payloads Principaux (Rempli naturellement par site.js) -->
       <div class="payload-section">
         <div class="payload-section-title">PAYLOADS PRINCIPAUX</div>
-        <div id="payloadList1" class="payload-list-container"></div>
+        <div class="payloadGrid"></div>
       </div>
 
-      <!-- Section 2 : Payloads Secondaires (Format Liste) -->
+      <!-- Section 2 : Payloads Secondaires (Listé & connecté à l'exécution) -->
       <div class="payload-section">
         <div class="payload-section-title">PAYLOADS SECONDAIRES & UTILS</div>
         <div id="payloadList2" class="payload-list-container"></div>
@@ -384,8 +386,6 @@
 </div>
 
 <div id="payloadToastContainer"></div>
-<!-- Élément caché requis par site.js pour éviter les erreurs -->
-<div class="payloadGrid" style="display:none;"></div>
 <div id="console" hidden></div>
 
 <!-- Scripts de base -->
@@ -401,6 +401,8 @@
 <script src="../payloads2.js?v=1"></script>
 <script>
   window.PAYLOAD_TILES_2 = window.PAYLOAD_TILES;
+  // On restitue la première liste pour que site.js puisse générer la grille principale
+  window.PAYLOAD_TILES = window.PAYLOAD_TILES_1;
 </script>
 
 <script src="./src/main.js"></script>
@@ -408,48 +410,40 @@
 <script src="./src/utils/syscalls.js"></script>
 <script type="module" src="./src/site.js"></script>
 
-<!-- 3. Script d'affichage propre en mode liste pour les deux sections et gestion du clic -->
+<!-- 3. Rendu de la 2ème liste et délégation des événements de clic vers l'hôte -->
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-    // Fonction pour peupler proprement une liste de payloads
-    function renderPayloadList(containerId, tilesArray) {
-      const container = document.getElementById(containerId);
-      if (!container || !tilesArray) return;
+    const listContainer2 = document.getElementById('payloadList2');
+    
+    if (listContainer2 && window.PAYLOAD_TILES_2) {
+      listContainer2.innerHTML = '';
       
-      container.innerHTML = '';
-      
-      tilesArray.forEach(payload => {
+      window.PAYLOAD_TILES_2.forEach(payload => {
         const item = document.createElement('div');
         item.className = 'payload-list-item';
         
         item.innerHTML = `
-          <div class="payload-list-info">
+          <div>
             <span class="payload-list-title">${payload.title}</span>
             <span class="payload-list-file">${payload.name}</span>
           </div>
           <span class="payload-list-action">Lancer</span>
         `;
         
-        // Déclenchement de l'action de lancement gérée par le site
-        item.addEventListener('click', () => {
-          // On cherche un bouton caché ou on simule l'action que site.js écoute
-          let sampleBtn = document.querySelector('.payloadGrid .btn');
-          if (!sampleBtn) {
-            sampleBtn = document.createElement('button');
-            sampleBtn.className = 'btn';
-            document.body.appendChild(sampleBtn);
+        // Exécution fonctionnelle : On relaie le clic vers la première vraie carte générée par site.js
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetBtn = document.querySelector('.payloadGrid .btn');
+          if (targetBtn) {
+            targetBtn.setAttribute('data-payload', payload.name);
+            // On déclenche l'événement click réel pour le framework d'origine
+            targetBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
           }
-          sampleBtn.setAttribute('data-payload', payload.name);
-          sampleBtn.click();
         });
 
-        container.appendChild(item);
+        listContainer2.appendChild(item);
       });
     }
-
-    // Injection des deux listes
-    renderPayloadList('payloadList1', window.PAYLOAD_TILES_1);
-    renderPayloadList('payloadList2', window.PAYLOAD_TILES_2);
   });
 </script>
 </body>
