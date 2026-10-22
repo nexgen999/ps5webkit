@@ -18,6 +18,7 @@
     --btn-mode-bg: #064e3b;
     --btn-mode-border: #10b981;
     --btn-mode-text: #34d399;
+    --accent: #38bdf8;
   }
 
   html, body {
@@ -123,25 +124,26 @@
     display: inline-block;
   }
 
-  /* --- DISPOSITION 50% / 50% --- */
+  /* --- DISPOSITION 50% / 50% PARFAITEMENT ÉGALES --- */
   #main-content {
     display: flex;
     gap: 20px;
     width: 100%;
-    align-items: flex-start;
+    align-items: stretch;
   }
 
-  /* --- CONSOLE PANEL (GAUCHE - 50%) --- */
-  .custom-console-card {
+  .custom-console-card, .categories-container {
     flex: 1;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 14px;
     padding: 20px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
   }
 
-  .console-title {
+  .panel-title {
     font-size: 13px;
     font-weight: 700;
     color: var(--text-sub);
@@ -151,7 +153,7 @@
     align-items: center;
   }
 
-  .console-title::after {
+  .panel-title::after {
     content: "";
     flex: 1;
     height: 1px;
@@ -159,12 +161,14 @@
     margin-left: 12px;
   }
 
+  /* Console */
   #early { display: none !important; }
 
   #scr {
     box-sizing: border-box;
     width: 100%;
-    min-height: 550px;
+    flex: 1;
+    min-height: 480px;
     background: #04070c;
     border: 1px solid #10192a;
     border-radius: 10px;
@@ -178,101 +182,175 @@
     white-space: pre-wrap;
   }
 
-  /* --- PAYLOADS PANEL (DROITE - 50%) --- */
-  #payloads-view {
-    flex: 1;
-    display: flex !important;
-    flex-direction: column;
-    gap: 20px;
-    background: var(--card-bg);
+  /* --- 3 ENCADRÉS DE CATÉGORIES (ACCUEIL DROITE) --- */
+  .categories-container {
+    gap: 15px;
+    justify-content: center;
+  }
+
+  .category-card {
+    background: #06090e;
     border: 1px solid var(--card-border);
-    border-radius: 14px;
+    border-radius: 12px;
     padding: 20px;
-    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
 
-  .payload-section {
+  .category-card:hover {
+    background: #182338;
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .category-icon {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #0b111e;
+    padding: 6px;
+    border: 1px solid var(--card-border);
+  }
+
+  .category-info h3 {
+    margin: 0 0 4px 0;
+    font-size: 1.1rem;
+    color: #fff;
+  }
+
+  .category-info p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-sub);
+  }
+
+  /* --- BARRE LATÉRALE (SIDEBAR COULISSANTE) --- */
+  #sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  #sidebar-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 420px;
+    height: 100vh;
+    background: var(--card-bg);
+    border-left: 1px solid var(--card-border);
+    z-index: 9999;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .payload-section-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-sub);
-    letter-spacing: 0.05em;
-    margin: 0;
+  .sidebar.open {
+    right: 0;
+  }
+
+  .sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--card-border);
     display: flex;
+    justify-content: space-between;
     align-items: center;
   }
 
-  .payload-section-title::after {
-    content: "";
+  .sidebar-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #fff;
+  }
+
+  .sidebar-close {
+    background: none;
+    border: none;
+    color: var(--text-sub);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+
+  .sidebar-close:hover {
+    background: #182338;
+    color: #fff;
+  }
+
+  .sidebar-content {
     flex: 1;
-    height: 1px;
-    background: var(--card-border);
-    margin-left: 12px;
-  }
-
-  /* --- STYLES CSS POUR TRANSFORMER LES BOUTONS ORIGINAUX EN LISTE PROPRE --- */
-  .payloadGrid, .payload-list-container {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
-    max-height: 280px;
     overflow-y: auto;
-    padding-right: 4px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
-  /* Style ligne/liste appliqué aux boutons natifs générés par site.js */
-  #payloads-view .payloadGrid .btn,
+  /* Style des éléments de liste dans la sidebar */
   .payload-list-item {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    background: #06090e !important;
-    border: 1px solid var(--card-border) !important;
-    border-radius: 8px !important;
-    padding: 10px 14px !important;
-    margin: 0 !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    text-align: left !important;
-    cursor: pointer !important;
-    transition: background 0.2s, border-color 0.2s !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #06090e;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
   }
 
-  #payloads-view .payloadGrid .btn:hover,
   .payload-list-item:hover {
-    background: #182338 !important;
-    border-color: #38bdf8 !important;
+    background: #182338;
+    border-color: var(--accent);
   }
 
-  .payload-btn-title, .payload-list-title {
-    font-weight: 600 !important;
-    font-size: 0.95rem !important;
-    color: #fff !important;
-    display: block !important;
+  .payload-list-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
   }
 
-  .payload-btn-info, .payload-list-file {
-    font-size: 0.75rem !important;
-    color: #64748b !important;
-    display: block !important;
+  .payload-list-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #fff;
+  }
+
+  .payload-list-file {
+    font-size: 0.75rem;
+    color: var(--text-sub);
   }
 
   .payload-list-action {
     font-size: 0.8rem;
     font-weight: 600;
-    color: #38bdf8;
+    color: var(--accent);
     background: rgba(56, 189, 248, 0.1);
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: 6px;
   }
 
-  /* Masquage des éléments inutiles */
-  #danger, #reboot, #verdict, #wrap, #console, #cat, #nav, #slopkitHeader, #slopkitFooter, .homeLink { display: none !important; }
+  /* Masquage des éléments techniques inutiles */
+  #danger, #reboot, #verdict, #wrap, #console, #cat, #nav, #slopkitHeader, #slopkitFooter, .homeLink, .payloadGrid { display: none !important; }
 
   #stage {
     font-size: 14px;
@@ -280,7 +358,7 @@
     border-radius: 6px;
     margin-bottom: 12px;
     background: #10192a;
-    border-left: 4px solid #38bdf8;
+    border-left: 4px solid var(--accent);
   }
   #stage.ok  { background: #064e3b; border-left-color: #10b981; color: #a7f3d0; }
   #stage.bad { background: #450a0a; border-left-color: #ef4444; color: #fecaca; }
@@ -292,7 +370,7 @@
   }
   #vitals.on { display: block; }
 
-  #cfg { font-size: 12px; color: #94a3b8; background: #080d16; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; white-space: pre-wrap; }
+  #cfg { font-size: 12px; color: var(--text-sub); background: #080d16; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; white-space: pre-wrap; }
 
   .custom-footer {
     text-align: center;
@@ -301,7 +379,7 @@
     margin-top: 10px;
   }
 
-  #payloadToastContainer { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+  #payloadToastContainer { position: fixed; top: 20px; right: 20px; z-index: 10000; }
   .payloadToast {
     width: 300px; margin-top: 10px; padding: 15px 20px; border-radius: 10px;
     background: #15161a; color: #fff; box-shadow: 0 0 10px rgba(0,0,0,.5);
@@ -311,10 +389,7 @@
     #main-content {
       flex-direction: column;
     }
-    .custom-console-card, #payloads-view {
-      max-width: 100%;
-      width: 100%;
-    }
+    .sidebar { width: 100%; right: -100%; }
   }
 </style>
 </head>
@@ -336,13 +411,13 @@
     </div>
   </div>
 
-  <!-- Main Content Layout (50% / 50%) -->
+  <!-- Main Content Layout (50% / 50% Parfait) -->
   <div id="main-content">
-    <!-- Console à Gauche (50%) -->
+    <!-- Console à Gauche -->
     <div class="custom-console-card">
-      <div class="console-title">JOURNAL D'EXÉCUTION (CONSOLE)</div>
+      <div class="panel-title">JOURNAL D'EXÉCUTION (CONSOLE)</div>
       
-      <div id="console-view" class="app-view selected">
+      <div id="console-view" class="app-view selected" style="display:flex; flex-direction:column; flex:1;">
         <div id="failureMessage" style="display:none;">UNLUCKY &mdash; YOU NEED TO REBOOT</div>
         <div id="cat"><img id="catImage" src="mmhmm-cats-ps5.gif" alt=""></div>
         <div id="reboot"></div>
@@ -363,18 +438,35 @@
       </div>
     </div>
 
-    <!-- Payloads à Droite (50%) -->
-    <div id="payloads-view" class="app-view">
-      <!-- Section 1 : Payloads Principaux (Rempli naturellement par site.js) -->
-      <div class="payload-section">
-        <div class="payload-section-title">PAYLOADS PRINCIPAUX</div>
-        <div class="payloadGrid"></div>
+    <!-- 3 Encadrés de Catégories à Droite -->
+    <div class="categories-container">
+      <div class="panel-title">CATÉGORIES DE PAYLOADS</div>
+      
+      <!-- Catégorie 1 : Linux Loader -->
+      <div class="category-card" onclick="openSidebar('linux')">
+        <img src="icon1.png" alt="Linux Loader" class="category-icon" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2338bdf8\' stroke-width=\'2\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\'/><line x1=\'8\' y1=\'21\' x2=\'16\' y2=\'21\'/><line x1=\'12\' y1=\'17\' x2=\'12\' y2=\'21\'/></svg>'">
+        <div class="category-info">
+          <h3>Linux Loader</h3>
+          <p>Chargeurs et noyaux Linux pour PS5</p>
+        </div>
       </div>
 
-      <!-- Section 2 : Payloads Secondaires (Listé & connecté à l'exécution) -->
-      <div class="payload-section">
-        <div class="payload-section-title">PAYLOADS SECONDAIRES & UTILS</div>
-        <div id="payloadList2" class="payload-list-container"></div>
+      <!-- Catégorie 2 : HEN -->
+      <div class="category-card" onclick="openSidebar('hen')">
+        <img src="icon2.png" alt="HEN" class="category-icon" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2338bdf8\' stroke-width=\'2\'><path d=\'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6\'/></svg>'">
+        <div class="category-info">
+          <h3>HEN & Exploits</h3>
+          <p>Homebrew Enablers et patches système</p>
+        </div>
+      </div>
+
+      <!-- Catégorie 3 : Tools -->
+      <div class="category-card" onclick="openSidebar('tools')">
+        <img src="icon3.png" alt="Tools" class="category-icon" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2338bdf8\' stroke-width=\'2\'><path d=\'M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z\'/></svg>'">
+        <div class="category-info">
+          <h3>Tools & Utilitaires</h3>
+          <p>Gestionnaires, FTP et outils de maintenance</p>
+        </div>
       </div>
     </div>
   </div>
@@ -385,66 +477,102 @@
   </div>
 </div>
 
+<!-- SIDEBAR COULISSANTE POUR LES PAYLOADS -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+<div id="payloadSidebar" class="sidebar">
+  <div class="sidebar-header">
+    <h2 id="sidebarTitle">Payloads</h2>
+    <button class="sidebar-close" onclick="closeSidebar()">&times;</button>
+  </div>
+  <div class="sidebar-content" id="sidebarContentList">
+    <!-- Rempli dynamiquement -->
+  </div>
+</div>
+
 <div id="payloadToastContainer"></div>
 <div id="console" hidden></div>
+<div class="payloadGrid" style="display:none;"><button class="btn"></button></div>
 
-<!-- Scripts de base -->
+<!-- Scripts de base de l'hôte PS5 -->
 <script src="./src/firmware.js"></script>
 
-<!-- 1. Chargement de payloads.js -->
+<!-- Chargement des 3 listes de payloads -->
 <script src="../payloads.js?v=1"></script>
-<script>
-  window.PAYLOAD_TILES_1 = window.PAYLOAD_TILES;
-</script>
+<script> window.PAYLOADS_1 = window.PAYLOAD_TILES || []; </script>
 
-<!-- 2. Chargement de payloads2.js -->
-<script src="../payloads2.js?v=1"></script>
-<script>
-  window.PAYLOAD_TILES_2 = window.PAYLOAD_TILES;
-  // On restitue la première liste pour que site.js puisse générer la grille principale
-  window.PAYLOAD_TILES = window.PAYLOAD_TILES_1;
-</script>
+<script src="../payloads2.js?v=1" onerror="window.PAYLOADS_2=[]"></script>
+<script> window.PAYLOADS_2 = window.PAYLOAD_TILES || []; </script>
+
+<script src="../payloads3.js?v=1" onerror="window.PAYLOADS_3=[]"></script>
+<script> window.PAYLOADS_3 = window.PAYLOAD_TILES || []; </script>
 
 <script src="./src/main.js"></script>
 <script src="./src/rop.js"></script>
 <script src="./src/utils/syscalls.js"></script>
 <script type="module" src="./src/site.js"></script>
 
-<!-- 3. Rendu de la 2ème liste et délégation des événements de clic vers l'hôte -->
+<!-- Script de gestion de la Sidebar et des clics fonctionnels -->
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const listContainer2 = document.getElementById('payloadList2');
+  function openSidebar(category) {
+    const sidebar = document.getElementById('payloadSidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const titleEl = document.getElementById('sidebarTitle');
+    const contentList = document.getElementById('sidebarContentList');
     
-    if (listContainer2 && window.PAYLOAD_TILES_2) {
-      listContainer2.innerHTML = '';
-      
-      window.PAYLOAD_TILES_2.forEach(payload => {
+    contentList.innerHTML = '';
+    
+    let data = [];
+    let title = '';
+    
+    if (category === 'linux') {
+      title = 'Linux Loader Payloads';
+      data = window.PAYLOADS_1;
+    } else if (category === 'hen') {
+      title = 'HEN & Exploits Payloads';
+      data = window.PAYLOADS_2;
+    } else if (category === 'tools') {
+      title = 'Tools & Utilitaires Payloads';
+      data = window.PAYLOADS_3;
+    }
+    
+    titleEl.textContent = title;
+    
+    if (!data || data.length === 0) {
+      contentList.innerHTML = '<div style="color:var(--text-sub); text-align:center; padding:20px;">Aucun payload trouvé dans ce fichier.</div>';
+    } else {
+      data.forEach(payload => {
         const item = document.createElement('div');
         item.className = 'payload-list-item';
         
         item.innerHTML = `
-          <div>
+          <div class="payload-list-info">
             <span class="payload-list-title">${payload.title}</span>
             <span class="payload-list-file">${payload.name}</span>
           </div>
           <span class="payload-list-action">Lancer</span>
         `;
         
-        // Exécution fonctionnelle : On relaie le clic vers la première vraie carte générée par site.js
-        item.addEventListener('click', (e) => {
-          e.preventDefault();
-          const targetBtn = document.querySelector('.payloadGrid .btn');
-          if (targetBtn) {
-            targetBtn.setAttribute('data-payload', payload.name);
-            // On déclenche l'événement click réel pour le framework d'origine
-            targetBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+        // Exécution fonctionnelle reliée au script d'origine
+        item.addEventListener('click', () => {
+          let sampleBtn = document.querySelector('.payloadGrid .btn');
+          if (sampleBtn) {
+            sampleBtn.setAttribute('data-payload', payload.name);
+            sampleBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
           }
         });
 
-        listContainer2.appendChild(item);
+        contentList.appendChild(item);
       });
     }
-  });
+    
+    overlay.classList.add('open');
+    sidebar.classList.add('open');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sidebar-overlay').classList.remove('open');
+    document.getElementById('payloadSidebar').classList.remove('open');
+  }
 </script>
 </body>
 </html>
