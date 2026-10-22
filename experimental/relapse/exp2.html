@@ -123,7 +123,7 @@
     display: inline-block;
   }
 
-  /* --- DISPOSITION 2 COLONNES --- */
+  /* --- DISPOSITION 2 COLONNES (50% / 50%) --- */
   #main-content {
     display: flex;
     gap: 20px;
@@ -131,11 +131,9 @@
     align-items: flex-start;
   }
 
-  /* --- CONSOLE PANEL (GAUCHE) --- */
+  /* --- CONSOLE PANEL (GAUCHE - PREND LA MOITIÉ) --- */
   .custom-console-card {
     flex: 1;
-    min-width: 320px;
-    max-width: 420px;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 14px;
@@ -166,7 +164,7 @@
   #scr {
     box-sizing: border-box;
     width: 100%;
-    min-height: 500px;
+    min-height: 550px;
     background: #04070c;
     border: 1px solid #10192a;
     border-radius: 10px;
@@ -180,9 +178,9 @@
     white-space: pre-wrap;
   }
 
-  /* --- PAYLOADS PANEL (DROITE EN DEUX PARTIES) --- */
+  /* --- PAYLOADS PANEL (DROITE - PREND LA MOITIÉ) --- */
   #payloads-view {
-    flex: 2;
+    flex: 1;
     display: flex !important;
     flex-direction: column;
     gap: 20px;
@@ -217,18 +215,19 @@
     margin-left: 12px;
   }
 
+  /* Grille pour les payloads principaux (Gros boutons d'origine) */
   .payloadGrid {
     display: grid !important;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
   }
 
-  /* Style des boutons de payload */
-  #payloads-view .btn {
+  /* Style des boutons principaux */
+  #payloads-view .payloadGrid .btn {
     display: inline-block;
     box-sizing: border-box;
     width: 100%;
-    padding: 1rem;
+    padding: 12px;
     background: #06090e;
     border: 1px solid var(--card-border);
     border-radius: 0.8rem;
@@ -238,14 +237,63 @@
     transition: background 0.2s, border-color 0.2s;
   }
 
-  #payloads-view .btn:hover {
+  #payloads-view .payloadGrid .btn:hover {
     background: #182338;
     border-color: #38bdf8;
   }
 
-  .payload-btn-title { display: block; font-weight: bold; font-size: 1rem; color: #fff; word-break: break-word; }
-  .payload-btn-description { display: block; color: #94a3b8; font-size: .85rem; margin-top: 4px; word-break: break-word; }
-  .payload-btn-info { display: block; color: #64748b; font-size: .75rem; margin-top: 4px; }
+  /* --- SECONDE LISTE AU FORMAT LIGNE / LISTE PROPRE --- */
+  #payloadList2 {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .payload-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #06090e;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .payload-list-item:hover {
+    background: #182338;
+    border-color: #38bdf8;
+  }
+
+  .payload-list-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .payload-list-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #fff;
+  }
+
+  .payload-list-file {
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+
+  .payload-list-action {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
 
   /* Masquage des éléments inutiles */
   #danger, #reboot, #verdict, #wrap, #console, #cat, #nav, #slopkitHeader, #slopkitFooter, .homeLink { display: none !important; }
@@ -313,9 +361,9 @@
     </div>
   </div>
 
-  <!-- Main Content Layout (2 Colonnes) -->
+  <!-- Main Content Layout (50% / 50%) -->
   <div id="main-content">
-    <!-- Console à Gauche -->
+    <!-- Console à Gauche (Prend 50%) -->
     <div class="custom-console-card">
       <div class="console-title">JOURNAL D'EXÉCUTION (CONSOLE)</div>
       
@@ -340,18 +388,18 @@
       </div>
     </div>
 
-    <!-- Payloads à Droite en Deux Parties -->
+    <!-- Payloads à Droite (Prend 50%) -->
     <div id="payloads-view" class="app-view">
-      <!-- Section 1 : Payloads Principaux -->
+      <!-- Section 1 : Payloads Principaux (Grille de boutons d'origine) -->
       <div class="payload-section">
         <div class="payload-section-title">PAYLOADS PRINCIPAUX</div>
         <div class="payloadGrid"></div>
       </div>
 
-      <!-- Section 2 : Payloads Secondaires -->
+      <!-- Section 2 : Payloads Secondaires (Format Liste propre) -->
       <div class="payload-section">
         <div class="payload-section-title">PAYLOADS SECONDAIRES & UTILS</div>
-        <div class="payloadGrid" id="payloadGrid2"></div>
+        <div id="payloadList2"></div>
       </div>
     </div>
   </div>
@@ -368,17 +416,15 @@
 <!-- Scripts de base -->
 <script src="./src/firmware.js"></script>
 
-<!-- 1. Chargement de payloads.js pour la première grille -->
+<!-- 1. Chargement de payloads.js -->
 <script src="../payloads.js?v=1"></script>
 <script>
-  // On met de côté la première liste pour ne pas qu'elle soit écrasée par la suite
   window.PAYLOAD_TILES_1 = window.PAYLOAD_TILES;
 </script>
 
-<!-- 2. Chargement de payloads2.js pour la deuxième grille -->
+<!-- 2. Chargement de payloads2.js -->
 <script src="../payloads2.js?v=1"></script>
 <script>
-  // On récupère la deuxième liste et on remet la première en variable globale principale pour site.js
   window.PAYLOAD_TILES_2 = window.PAYLOAD_TILES;
   window.PAYLOAD_TILES = window.PAYLOAD_TILES_1;
 </script>
@@ -388,35 +434,38 @@
 <script src="./src/utils/syscalls.js"></script>
 <script type="module" src="./src/site.js"></script>
 
-<!-- 3. Script d'injection automatique pour alimenter #payloadGrid2 avec payloads2.js -->
+<!-- 3. Script d'injection pour la liste 2 avec liaison directe du clic fonctionnel -->
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-    const grid2 = document.getElementById('payloadGrid2');
-    if (grid2 && window.PAYLOAD_TILES_2) {
-      grid2.innerHTML = '';
+    const listContainer2 = document.getElementById('payloadList2');
+    if (listContainer2 && window.PAYLOAD_TILES_2) {
+      listContainer2.innerHTML = '';
+      
       window.PAYLOAD_TILES_2.forEach(payload => {
-        const btn = document.createElement('button');
-        btn.className = 'btn';
-        btn.setAttribute('data-payload', payload.name);
+        const item = document.createElement('div');
+        item.className = 'payload-list-item';
         
-        let htmlContent = `<span class="payload-btn-title">${payload.title}</span>`;
-        if (payload.description) {
-          htmlContent += `<span class="payload-btn-description">${payload.description}</span>`;
-        }
-        htmlContent += `<span class="payload-btn-info">${payload.name}</span>`;
+        item.innerHTML = `
+          <div class="payload-list-info">
+            <span class="payload-list-title">${payload.title}</span>
+            <span class="payload-list-file">${payload.name}</span>
+          </div>
+          <span class="payload-list-action">Lancer</span>
+        `;
         
-        btn.innerHTML = htmlContent;
-        
-        // Permet de déclencher le même comportement de clic que le script principal du site
-        btn.addEventListener('click', () => {
+        // CORRECTION DU CLIC : On simule ou déclenche l'action du premier bouton généré par le site
+        item.addEventListener('click', () => {
           const sampleBtn = document.querySelector('.payloadGrid .btn');
           if (sampleBtn) {
+            // On modifie temporairement le nom du payload cible sur un vrai bouton et on simule le clic
             sampleBtn.setAttribute('data-payload', payload.name);
-            // Simule l'interaction utilisateur gérée par le site
+            sampleBtn.click();
+          } else {
+            console.log("Exécution payload secondaire :", payload.name);
           }
         });
 
-        grid2.appendChild(btn);
+        listContainer2.appendChild(item);
       });
     }
   });
