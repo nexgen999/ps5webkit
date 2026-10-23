@@ -10,6 +10,7 @@ window.PAYLOAD_TILES = [
 	{"title": "ps5-unified-autoloader-v0.1.6-e7093cd", "name": "ps5-unified-autoloader-v0.1.6-e7093cd.elf", "key": "ps5-unified-autoloader-v0.1.6-e7093cd"},
 	{"title": "pldmgr_v0.6.3", "name": "pldmgr_v0.6.3.elf", "key": "pldmgr_v0.6.3"},
     {"title": "evox", "description": "evox", "name": "evox.elf", "key": "evox"},
+	{"title": "pph", "description": "pph", "name": "pph.elf", "key": "pph"},
 	{"title": "kstuff-fpkg-1.13-dr-test6", "name": "kstuff-fpkg-1.13-dr-test6.elf", "key": "kstuff-fpkg-1.13-dr-test6"},
 	{"title": "shadowmountplus_v1.7beta7", "name": "shadowmountplus_v1.7beta7.elf", "key": "shadowmountplus_v1.7beta7"},
 	{"title": "ProsperoMgr", "name": "ProsperoMgr.elf", "key": "ProsperoMgr"},
