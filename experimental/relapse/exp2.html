@@ -74,6 +74,7 @@
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
   }
 
   .header-title-container {
@@ -82,7 +83,6 @@
     gap: 12px;
   }
 
-  /* GitHub profile bubble */
   .github-profile-bubble {
     position: relative;
     width: 38px;
@@ -149,7 +149,6 @@
     gap: 10px;
   }
 
-  /* evoX button with custom icon from Icons8 / GitHub / URL */
   .btn-evox {
     background: var(--btn-evox-bg);
     border: 1px solid var(--btn-evox-border);
@@ -195,35 +194,7 @@
     box-shadow: 0 0 8px #10b981;
   }
 
-  /* --- BANNER & NOTICE --- */
-  .custom-banner-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 14px;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .custom-banner-img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    display: block;
-  }
-
-  .custom-notice-card {
-    background: rgba(2, 132, 199, 0.12);
-    border: 1px solid rgba(56, 189, 248, 0.3);
-    border-radius: 12px;
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 12px;
-    color: #bae6fd;
-  }
-
-  /* --- SPLIT LAYOUT (CÔTE À CÔTE PLEINE PAGE) --- */
+  /* --- SPLIT LAYOUT --- */
   .ps5-split-container {
     display: flex;
     flex-direction: row;
@@ -255,38 +226,6 @@
     overflow: hidden;
   }
 
-  .ps5-split-resizer {
-    width: 8px;
-    margin: 0 -4px;
-    cursor: col-resize;
-    position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: background 0.2s ease;
-  }
-
-  .ps5-split-resizer::after {
-    content: "";
-    width: 3px;
-    height: 36px;
-    background: #334155;
-    border-radius: 2px;
-  }
-
-  .ps5-split-resizer:hover,
-  .ps5-split-resizer.is-dragging {
-    background: rgba(56, 189, 248, 0.25);
-  }
-
-  .ps5-split-resizer:hover::after,
-  .ps5-split-resizer.is-dragging::after {
-    background: #38bdf8;
-    height: 50px;
-  }
-
   @media (max-width: 880px) {
     html, body {
       height: auto !important;
@@ -313,15 +252,12 @@
       max-height: none !important;
       overflow: visible !important;
     }
-    .ps5-split-resizer {
-      display: none !important;
-    }
-    #payloads-view .payloadGrid {
-      max-height: 500px !important;
+    #scr {
+      min-height: 350px !important;
     }
   }
 
-  /* --- CONSOLE PANEL ADAPTÉE À LA HAUTEUR --- */
+  /* --- CONSOLE PANEL (CORRIGÉ POUR LA HAUTEUR) --- */
   .custom-console-card {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -362,9 +298,9 @@
     margin-left: 10px;
   }
 
-  /* Unification de la console d'affichage unique */
   #early { display: none !important; }
 
+  /* FIX PRINCIPAL ICI */
   #main-content {
     position: relative;
     width: 100%;
@@ -399,7 +335,7 @@
     width: 100%;
     flex: 1;
     min-height: 0;
-    height: 100% !important;
+    height: 100%;
     background: #04070c;
     border: 1px solid #10192a;
     border-radius: 10px;
@@ -426,8 +362,6 @@
     flex-shrink: 0;
   }
 
-  
-
   #stage {
     flex-shrink: 0;
     font-size: 14px;
@@ -451,10 +385,7 @@
 
   #cfg { font-size: 12px; color: #94a3b8; background: #080d16; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; white-space: pre-wrap; }
 
-  #main-content { position: relative; width: 100%; flex: 1; }
-  #main-content > .app-view { display: block; }
-
-  /* --- PAYLOADS VIEW (LISTE DÉROULANTE INTERNE PLEINE PAGE) --- */
+  /* --- PAYLOADS VIEW --- */
   #payloads-view {
     display: flex !important;
     flex-direction: column !important;
@@ -478,7 +409,6 @@
     font-size: 0.85rem;
   }
 
-  /* Grille / Liste scrollable avec ascenseur discret */
   #payloads-view .payloadGrid {
     flex: 1;
     min-height: 0;
@@ -491,7 +421,6 @@
     padding-bottom: 8px;
   }
 
-  /* Scrollbars personnalisées nettes */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -508,7 +437,6 @@
     background: #38bdf8;
   }
 
-  /* Style des boutons Payloads (Style Photo : Titre seul + Badge + Flèche Téléchargement) */
   #payloads-view .btn,
   #payloads-view.mode-list .btn {
     display: flex !important;
@@ -590,88 +518,23 @@
     box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
   }
 
-  /* SUPPRESSION COMPLÈTE DE LA DESCRIPTION SUR LES PAYLOADS */
   #payloads-view .payload-btn-description {
     display: none !important;
   }
 
-  /* Mode Tableau optionnel */
-  #payloads-view.mode-table-clean .payloadTableCard {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    width: 100%;
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  #payloads-view.mode-table-clean .tableHeaderRow {
-    display: grid;
-    grid-template-columns: minmax(200px, 2.5fr) 100px 130px 45px;
-    padding: 12px 18px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-sub);
-    border-bottom: 1px solid var(--card-border);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: rgba(255, 255, 255, 0.015);
-    flex-shrink: 0;
-  }
-
-  /* General button icon hiding - USER EXPLICITLY REQUESTED NO ICONS ON PAYLOADS */
   .payload-btn-icon-wrapper {
     display: none !important;
   }
 
-  /* --- QUICK ACTIONS BAR --- */
-  .custom-quick-actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 10px 16px;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-  }
-
-  .btn-quick {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-sub);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 6px 14px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-
-  .btn-quick:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.08);
-    border-color: #38bdf8;
-  }
-
-  /* --- FOOTER --- */
   .custom-footer {
     text-align: center;
     font-size: 12px;
     color: #475569;
     margin-top: 6px;
     line-height: 1.5;
+    flex-shrink: 0;
   }
 
-  /* Elements requis par les scripts existants mais masques visuellement */
   #danger, #reboot, #verdict, #wrap, #console, #cat, #nav, #slopkitHeader, #slopkitFooter, .homeLink { display: none !important; }
 
   #payloadToastContainer {
@@ -706,25 +569,21 @@
 
 <div id="main-wrapper">
 
-
   <!-- Top Panel Header -->
   <div class="custom-header">
     <div>
       <div class="header-title-container">
-        
           <div class="github-profile-bubble" title="Profil GitHub: nexgen999">
             <img src="https://github.com/nexgen999.png" alt="GitHub Avatar" class="github-avatar-img" onerror="this.src='https://github.com/identicons/nexgen999.png'" />
             <span class="github-online-dot"></span>
           </div>
         
-        
         <h1>PS5 Relapse</h1>
         <span class="badge-version">Lite Version 1.03</span>
       </div>
-      <div class="header-sub">Hôte d&#039;exploit WebKit · Exécution des scripts</div>
+      <div class="header-sub">Hôte d'exploit WebKit · Exécution des scripts</div>
     </div>
     <div class="header-buttons">
-      
         <div class="btn-evox">
           <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/linux.png" alt="evoX" class="evox-icon-img" />
           <span>Linux Loader</span>
@@ -733,60 +592,53 @@
     </div>
   </div>
 
-
-
-<div id="ps5-split-wrapper" class="ps5-split-container">
-  <div id="ps5-split-left" class="ps5-split-left">
-    
-  <!-- Main Console Box -->
-  <div class="custom-console-card">
-    <div class="console-title">
-      <div class="console-title-text">JOURNAL D&#039;EXÉCUTION (CONSOLE)</div>
-      <div style="font-size:10px; color:#475569; font-mono">JS EXEC TERMINAL</div>
-    </div>
-    
-    <div id="main-content">
-      <div id="console-view" class="app-view selected">
-        <div id="failureMessage" style="display:none;">UNLUCKY &mdash; YOU NEED TO REBOOT</div>
-        <div id="cat" style="display:none;"><img id="catImage" src="mmhmm-cats-ps5.gif" alt=""></div>
-        <div id="reboot"></div>
-        <div id="verdict"></div>
-        <div id="danger"></div>
-        <div id="stage" >idle</div>
-        <div id="vitals"></div>
-        <div id="cfg" hidden></div>
-        <pre id="early"></pre>
-        <div class="scr-wrapper">
-          <pre id="scr">[-] PlayStation 5 Required
+  <div id="ps5-split-wrapper" class="ps5-split-container">
+    <div id="ps5-split-left" class="ps5-split-left">
+      <!-- Main Console Box -->
+      <div class="custom-console-card">
+        <div class="console-title">
+          <div class="console-title-text">JOURNAL D'EXÉCUTION (CONSOLE)</div>
+          <div style="font-size:10px; color:#475569; font-family: monospace;">JS EXEC TERMINAL</div>
+        </div>
+        
+        <div id="main-content">
+          <div id="console-view" class="app-view selected">
+            <div id="failureMessage" style="display:none;">UNLUCKY &mdash; YOU NEED TO REBOOT</div>
+            <div id="cat" style="display:none;"><img id="catImage" src="mmhmm-cats-ps5.gif" alt=""></div>
+            <div id="reboot"></div>
+            <div id="verdict"></div>
+            <div id="danger"></div>
+            <div id="stage">idle</div>
+            <div id="vitals"></div>
+            <div id="cfg" hidden></div>
+            <pre id="early"></pre>
+            <div class="scr-wrapper">
+              <pre id="scr">[-] PlayStation 5 Required
 [*] En attente de commande WebKit...</pre>
-          
+            </div>
+            <div id="nav"></div>
+            <div hidden id="arm">Open this page with <b>?go=1</b> to arm it. Nothing runs otherwise.</div>
+            <div id="wrap">
+              <table><thead><tr><th>#</th><th>test</th><th>st</th><th>result</th></tr></thead><tbody id="rows"></tbody></table>
+            </div>
+            <div id="tally"></div>
+            <div id="summary"></div>
+          </div>
         </div>
-        <div id="nav"></div>
-        <div hidden id="arm">Open this page with <b>?go=1</b> to arm it. Nothing runs otherwise.</div>
-        <div id="wrap">
-          <table><thead><tr><th>#</th><th>test</th><th>st</th><th>result</th></tr></thead><tbody id="rows"></tbody></table>
-        </div>
-        <div id="tally"></div>
-        <div id="summary"></div>
+        <div class="console-bottom-pill"></div>
       </div>
     </div>
-    <div class="console-bottom-pill"></div>
-  </div>
-  </div>
-  
-  <div id="ps5-split-right" class="ps5-split-right">
     
-  <!-- Payloads View & Scrollable List -->
-  <div id="payloads-view" class="app-view mode-cards">
-    <div class="payloadHeader">
-      <p id="payloadProgress">Sélectionnez un payload pour l'envoyer au chargeur ELF.</p>
+    <div id="ps5-split-right" class="ps5-split-right">
+      <!-- Payloads View -->
+      <div id="payloads-view" class="app-view mode-compact">
+        <div class="payloadHeader">
+          <p id="payloadProgress">Sélectionnez un payload pour l'envoyer au chargeur ELF.</p>
+        </div>
+        <div class="payloadGrid"></div>
+      </div>
     </div>
-    <div class="payloadGrid"></div>
   </div>
-  </div>
-</div>
-
-
 
   <!-- Footer -->
   <div class="custom-footer">
