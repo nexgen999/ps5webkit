@@ -362,7 +362,6 @@
     flex-shrink: 0;
   }
 
-  /* Masquage de la barre d'état/stage inutilisée */
   #stage { display: none !important; }
 
   #vitals {
@@ -464,47 +463,9 @@
     font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
   }
 
+  /* Masque complètement l'affichage des noms de fichiers ELF à droite sur les boutons */
   #payloads-view .payload-right-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-    margin-left: 14px;
-  }
-
-  #payloads-view .payload-tag,
-  #payloads-view .payload-btn-info {
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 6px;
-    background: rgba(56, 189, 248, 0.12);
-    border: 1px solid rgba(56, 189, 248, 0.25);
-    color: #38bdf8;
-    font-weight: 600;
-    white-space: nowrap;
-    display: inline-block;
-    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
-  }
-
-  #payloads-view .tableActionBtn {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    background: #141f33;
-    border: 1px solid #233350;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #94a3b8;
-    transition: all 0.15s ease;
-    flex-shrink: 0;
-  }
-
-  #payloads-view .btn:hover .tableActionBtn {
-    background: #1d2d48;
-    border-color: #38bdf8;
-    color: #38bdf8;
-    box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+    display: none !important;
   }
 
   #payloads-view .payload-btn-description {
@@ -562,8 +523,9 @@
   <div class="custom-header">
     <div>
       <div class="header-title-container">
-          <div class="github-profile-bubble" title="Profil GitHub: nexgen999">
-            <img src="https://github.com/nexgen999.png" alt="GitHub Avatar" class="github-avatar-img" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://avatars.githubusercontent.com/u/0?v=4';" />
+          <!-- Utilisation directe de votre icône rick.jpg depuis votre dépôt GitHub -->
+          <div class="github-profile-bubble" title="Profil: nexgen999">
+            <img src="https://raw.githubusercontent.com/nexgen999/ps5webkit/main/experimental/rick.jpg" alt="Avatar" class="github-avatar-img" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://github.com/nexgen999.png';" />
             <span class="github-online-dot"></span>
           </div>
         
@@ -646,7 +608,7 @@
 <script src="./src/utils/syscalls.js"></script>
 <script type="module" src="./src/site.js"></script>
 
-<!-- Script additionnel pour forcer l'attribut title sur les boutons générés dynamiquement -->
+<!-- Script additionnel pour ajouter le title au survol des boutons de payload -->
 <script>
   window.addEventListener('DOMContentLoaded', () => {
     const observer = new MutationObserver(() => {
