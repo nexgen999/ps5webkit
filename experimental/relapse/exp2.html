@@ -90,12 +90,12 @@
     border-radius: 50%;
     border: 2px solid #233350;
     background: #090e17;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
     flex-shrink: 0;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .github-avatar-img {
@@ -115,6 +115,7 @@
     background: #10b981;
     border: 2px solid var(--card-bg);
     border-radius: 50%;
+    z-index: 2;
   }
 
   .header-title-container h1 {
@@ -257,7 +258,7 @@
     }
   }
 
-  /* --- CONSOLE PANEL (CORRIGÉ POUR LA HAUTEUR) --- */
+  /* --- CONSOLE PANEL --- */
   .custom-console-card {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -300,7 +301,6 @@
 
   #early { display: none !important; }
 
-  /* FIX PRINCIPAL ICI */
   #main-content {
     position: relative;
     width: 100%;
@@ -362,19 +362,8 @@
     flex-shrink: 0;
   }
 
-  #stage {
-    flex-shrink: 0;
-    font-size: 14px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    background: #10192a;
-    border-left: 4px solid #38bdf8;
-    color: #e2e8f0;
-    display: block;
-  }
-  #stage.ok  { background: #064e3b; border-left-color: #10b981; color: #a7f3d0; }
-  #stage.bad { background: #450a0a; border-left-color: #ef4444; color: #fecaca; }
+  /* Masquage de la barre d'état/stage inutilisée */
+  #stage { display: none !important; }
 
   #vitals {
     display: none; font-size: 13px; padding: 8px 12px; margin-bottom: 10px;
@@ -574,7 +563,7 @@
     <div>
       <div class="header-title-container">
           <div class="github-profile-bubble" title="Profil GitHub: nexgen999">
-            <img src="https://github.com/nexgen999.png" alt="GitHub Avatar" class="github-avatar-img" onerror="this.src='https://github.com/identicons/nexgen999.png'" />
+            <img src="https://github.com/nexgen999.png" alt="GitHub Avatar" class="github-avatar-img" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://avatars.githubusercontent.com/u/0?v=4';" />
             <span class="github-online-dot"></span>
           </div>
         
@@ -608,7 +597,6 @@
             <div id="reboot"></div>
             <div id="verdict"></div>
             <div id="danger"></div>
-            <div id="stage">idle</div>
             <div id="vitals"></div>
             <div id="cfg" hidden></div>
             <pre id="early"></pre>
@@ -657,6 +645,26 @@
 <script src="./src/rop.js"></script>
 <script src="./src/utils/syscalls.js"></script>
 <script type="module" src="./src/site.js"></script>
+
+<!-- Script additionnel pour forcer l'attribut title sur les boutons générés dynamiquement -->
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const observer = new MutationObserver(() => {
+      const payloadButtons = document.querySelectorAll('#payloads-view .btn');
+      payloadButtons.forEach(btn => {
+        const titleSpan = btn.querySelector('.payload-btn-title');
+        if (titleSpan && !btn.hasAttribute('title')) {
+          btn.setAttribute('title', titleSpan.textContent.trim());
+        }
+      });
+    });
+    
+    const target = document.querySelector('.payloadGrid');
+    if (target) {
+      observer.observe(target, { childList: true, subtree: true });
+    }
+  });
+</script>
 
 </body>
 </html>
