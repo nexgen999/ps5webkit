@@ -425,12 +425,20 @@
     background: #38bdf8;
   }
 
+  /* SUPPRESSION DES SOULIGNEMENTS ET DÉCORATIONS DU TEXTE SUR LES BOUTONS */
+  #payloads-view *, 
+  #payloads-view .btn,
+  #payloads-view .payload-btn-title,
+  #payloads-view a {
+    text-decoration: none !important;
+  }
+
   #payloads-view .btn,
   #payloads-view.mode-list .btn {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
     padding: 14px 18px !important;
     border: 1px solid var(--card-border) !important;
     border-radius: 12px !important;
@@ -456,22 +464,21 @@
 
   #payloads-view .payload-btn-title {
     font-weight: 700 !important;
-    font-size: 15px !important;
+    font-size: 14px !important;
     color: #f8fafc !important;
     letter-spacing: -0.01em;
-    word-break: break-all;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
     font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+    text-decoration: none !important;
   }
 
-  /* Masque complètement l'affichage des noms de fichiers ELF à droite sur les boutons */
-  #payloads-view .payload-right-actions {
-    display: none !important;
-  }
-
-  #payloads-view .payload-btn-description {
-    display: none !important;
-  }
-
+  /* Masquer tout ce qui est secondaire à droite des boutons */
+  #payloads-view .payload-right-actions,
+  #payloads-view .payload-btn-description,
+  #payloads-view .payload-tag,
+  #payloads-view .payload-btn-info,
   .payload-btn-icon-wrapper {
     display: none !important;
   }
@@ -523,7 +530,6 @@
   <div class="custom-header">
     <div>
       <div class="header-title-container">
-          <!-- Utilisation directe de votre icône rick.jpg depuis votre dépôt GitHub -->
           <div class="github-profile-bubble" title="Profil: nexgen999">
             <img src="https://raw.githubusercontent.com/nexgen999/ps5webkit/main/experimental/rick.jpg" alt="Avatar" class="github-avatar-img" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://github.com/nexgen999.png';" />
             <span class="github-online-dot"></span>
@@ -608,23 +614,36 @@
 <script src="./src/utils/syscalls.js"></script>
 <script type="module" src="./src/site.js"></script>
 
-<!-- Script additionnel pour ajouter le title au survol des boutons de payload -->
+<!-- Nettoyage dynamique des boutons générés par payloads.js -->
 <script>
   window.addEventListener('DOMContentLoaded', () => {
-    const observer = new MutationObserver(() => {
+    const cleanButtons = () => {
       const payloadButtons = document.querySelectorAll('#payloads-view .btn');
       payloadButtons.forEach(btn => {
+        // Enlever les conteneurs indésirables à droite s'ils existent
+        const rightActions = btn.querySelector('.payload-right-actions');
+        if (rightActions) rightActions.remove();
+
         const titleSpan = btn.querySelector('.payload-btn-title');
-        if (titleSpan && !btn.hasAttribute('title')) {
-          btn.setAttribute('title', titleSpan.textContent.trim());
+        if (titleSpan) {
+          const cleanText = titleSpan.textContent.trim();
+          // Définir l'attribut title pour l'infobulle native
+          btn.setAttribute('title', cleanText);
         }
       });
+    };
+
+    // Observer la génération dynamique des éléments par payloads.js
+    const observer = new MutationObserver(() => {
+      cleanButtons();
     });
     
     const target = document.querySelector('.payloadGrid');
     if (target) {
       observer.observe(target, { childList: true, subtree: true });
     }
+
+    cleanButtons();
   });
 </script>
 
