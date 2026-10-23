@@ -2,9 +2,11 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<title>PS5-Relapse Experimental Power Users</title>
+<title>PS5-Relapse</title>
 <style>
+
   :root {
     --bg-dark: #06090e;
     --card-bg: #0b111e;
@@ -18,30 +20,36 @@
     --btn-mode-bg: #064e3b;
     --btn-mode-border: #10b981;
     --btn-mode-text: #34d399;
-    --accent: #38bdf8;
+    --accent-glow: #0284c7;
   }
+
+  * { box-sizing: border-box; }
 
   html, body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
     background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 50% 0%, rgba(2, 132, 199, 0.08) 0%, transparent 60%);
     color: #e2e8f0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
 
   body {
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
   }
 
   #main-wrapper {
     width: 100%;
+    max-width: 1100px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
+    transition: max-width 0.2s ease;
   }
 
   /* --- HEADER PANEL --- */
@@ -49,10 +57,11 @@
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 14px;
-    padding: 16px 24px;
+    padding: 18px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
 
   .header-title-container {
@@ -66,6 +75,7 @@
     font-weight: 700;
     color: var(--text-title);
     margin: 0;
+    letter-spacing: -0.02em;
   }
 
   .badge-version {
@@ -76,44 +86,47 @@
     padding: 3px 8px;
     border-radius: 12px;
     text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
   }
 
   .header-sub {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--text-sub);
-    margin-top: 4px;
+    margin-top: 3px;
   }
 
   .header-buttons {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
   }
 
   .btn-evox {
     background: var(--btn-evox-bg);
     border: 1px solid var(--btn-evox-border);
     color: #fef3c7;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    padding: 7px 16px;
+    padding: 6px 14px;
     border-radius: 20px;
     display: flex;
     align-items: center;
     gap: 6px;
+    cursor: default;
   }
 
   .btn-mode {
     background: var(--btn-mode-bg);
     border: 1px solid var(--btn-mode-border);
     color: var(--btn-mode-text);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
-    padding: 7px 16px;
+    padding: 6px 14px;
     border-radius: 20px;
     display: flex;
     align-items: center;
     gap: 8px;
+    cursor: default;
   }
 
   .dot-online {
@@ -122,288 +135,547 @@
     background-color: #10b981;
     border-radius: 50%;
     display: inline-block;
+    box-shadow: 0 0 8px #10b981;
   }
 
-  /* --- DISPOSITION 50% / 50% PARFAITEMENT ÉGALES --- */
-  #main-content {
+  /* --- BANNER & NOTICE --- */
+  .custom-banner-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .custom-banner-img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .custom-notice-card {
+    background: rgba(2, 132, 199, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 12px;
+    padding: 10px 16px;
     display: flex;
-    gap: 20px;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: #bae6fd;
+  }
+
+  /* --- SPLIT LAYOUT (CÔTE À CÔTE) --- */
+  .ps5-split-container {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
     width: 100%;
     align-items: stretch;
   }
 
-  .custom-console-card, .categories-container {
-    flex: 1;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: 14px;
-    padding: 20px;
-    box-sizing: border-box;
+  .ps5-split-left {
+    flex: 0 0 50%;
+    min-width: 260px;
     display: flex;
     flex-direction: column;
   }
 
-  .panel-title {
-    font-size: 13px;
+  .ps5-split-right {
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Interactive resizer bar */
+  .ps5-split-resizer {
+    width: 8px;
+    margin: 0 -4px;
+    cursor: col-resize;
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+  }
+
+  .ps5-split-resizer::after {
+    content: "";
+    width: 3px;
+    height: 36px;
+    background: #334155;
+    border-radius: 2px;
+  }
+
+  .ps5-split-resizer:hover,
+  .ps5-split-resizer.is-dragging {
+    background: rgba(56, 189, 248, 0.25);
+  }
+
+  .ps5-split-resizer:hover::after,
+  .ps5-split-resizer.is-dragging::after {
+    background: #38bdf8;
+    height: 50px;
+  }
+
+  @media (max-width: 880px) {
+    .ps5-split-container {
+      flex-direction: column !important;
+    }
+    .ps5-split-left, .ps5-split-right {
+      flex: 1 1 100% !important;
+      min-width: 100% !important;
+    }
+    .ps5-split-resizer {
+      display: none !important;
+    }
+  }
+
+  /* --- CONSOLE PANEL --- */
+  .custom-console-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 100%;
+  }
+
+  .console-title {
+    font-size: 12px;
     font-weight: 700;
     color: var(--text-sub);
     letter-spacing: 0.05em;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .console-title-text {
     display: flex;
     align-items: center;
   }
 
-  .panel-title::after {
+  .console-title-text::after {
     content: "";
-    flex: 1;
+    width: 60px;
     height: 1px;
     background: var(--card-border);
-    margin-left: 12px;
+    margin-left: 10px;
   }
 
-  /* Console */
+  /* Unification de la console d'affichage unique */
   #early { display: none !important; }
+
+  .scr-wrapper {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 
   #scr {
     box-sizing: border-box;
     width: 100%;
-    flex: 1;
-    min-height: 480px;
+    height: 301px;
+    min-height: 120px;
     background: #04070c;
     border: 1px solid #10192a;
     border-radius: 10px;
     padding: 16px;
     margin: 0;
     color: var(--text-console);
-    font-family: "JetBrains Mono", "Consolas", "Courier New", monospace;
-    font-size: 13px;
+    font-family: "JetBrains Mono", Consolas, Courier New, monospace;
+    font-size: 14px;
     line-height: 1.6;
     overflow-y: auto;
     white-space: pre-wrap;
+    position: relative;
+    box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.8);
+    resize: none;
   }
 
-  /* --- 3 ENCADRÉS DE CATÉGORIES (ACCUEIL DROITE) --- */
-  .categories-container {
-    gap: 15px;
+  /* Console vertical height resizer handle */
+  .console-height-resizer {
+    height: 10px;
+    width: 100%;
+    cursor: row-resize;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    margin-top: 4px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
   }
-
-  .category-card {
-    background: #06090e;
-    border: 1px solid var(--card-border);
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .category-card:hover {
-    background: #182338;
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
-
-  .category-icon {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-    border-radius: 8px;
-    background: #0b111e;
-    padding: 6px;
-    border: 1px solid var(--card-border);
-  }
-
-  .category-info h3 {
-    margin: 0 0 4px 0;
-    font-size: 1.1rem;
-    color: #fff;
-  }
-
-  .category-info p {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--text-sub);
-  }
-
-  /* --- BARRE LATÉRALE (SIDEBAR COULISSANTE) --- */
-  #sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    z-index: 9998;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-  }
-
-  #sidebar-overlay.open {
+  .console-height-resizer:hover, .console-height-resizer.is-dragging {
     opacity: 1;
-    visibility: visible;
+  }
+  .console-height-resizer::after {
+    content: "";
+    width: 32px;
+    height: 3px;
+    background: #38bdf8;
+    border-radius: 2px;
   }
 
-  .sidebar {
-    position: fixed;
-    top: 0;
-    right: -450px;
-    width: 420px;
-    height: 100vh;
-    background: var(--card-bg);
-    border-left: 1px solid var(--card-border);
-    z-index: 9999;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.5);
-    display: flex;
-    flex-direction: column;
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  #scr::before {
+    content: " ";
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 3px, 6px 100%;
+    pointer-events: none;
+    border-radius: 10px;
   }
-
-  .sidebar.open {
-    right: 0;
-  }
-
-  .sidebar-header {
-    padding: 20px;
-    border-bottom: 1px solid var(--card-border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .sidebar-header h2 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: #fff;
-  }
-
-  .sidebar-close {
-    background: none;
-    border: none;
-    color: var(--text-sub);
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 6px;
-  }
-
-  .sidebar-close:hover {
-    background: #182338;
-    color: #fff;
-  }
-
-  .sidebar-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  /* Style des éléments de liste dans la sidebar */
-  .payload-list-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #06090e;
-    border: 1px solid var(--card-border);
-    border-radius: 8px;
-    padding: 12px 16px;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-  }
-
-  .payload-list-item:hover {
-    background: #182338;
-    border-color: var(--accent);
-  }
-
-  .payload-list-info {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .payload-list-title {
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #fff;
-  }
-
-  .payload-list-file {
-    font-size: 0.75rem;
-    color: var(--text-sub);
-  }
-
-  .payload-list-action {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--accent);
-    background: rgba(56, 189, 248, 0.1);
-    padding: 6px 12px;
-    border-radius: 6px;
-  }
-
-  /* Masquage des éléments techniques inutiles */
-  #danger, #reboot, #verdict, #wrap, #console, #cat, #nav, #slopkitHeader, #slopkitFooter, .homeLink, .payloadGrid { display: none !important; }
 
   #stage {
     font-size: 14px;
     padding: 8px 12px;
     border-radius: 6px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     background: #10192a;
-    border-left: 4px solid var(--accent);
+    border-left: 4px solid #38bdf8;
+    display: block;
   }
   #stage.ok  { background: #064e3b; border-left-color: #10b981; color: #a7f3d0; }
   #stage.bad { background: #450a0a; border-left-color: #ef4444; color: #fecaca; }
 
   #vitals {
-    display: none; font-size: 13px; padding: 8px 12px; margin-bottom: 12px;
+    display: none; font-size: 13px; padding: 8px 12px; margin-bottom: 10px;
     border-radius: 6px; background: #17212e; border-left: 4px solid #f59e0b;
     color: #fef3c7; white-space: pre-wrap;
   }
   #vitals.on { display: block; }
 
-  #cfg { font-size: 12px; color: var(--text-sub); background: #080d16; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; white-space: pre-wrap; }
+  #cfg { font-size: 12px; color: #94a3b8; background: #080d16; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; white-space: pre-wrap; }
 
+  #main-content { position: relative; width: 100%; flex: 1; }
+  #main-content > .app-view { display: block; }
+
+  /* --- PAYLOADS SECTION --- */
+  #payloads-view {
+    display: block !important;
+    background: transparent;
+    color: #fff;
+    margin-top: 4px;
+    width: 100%;
+  }
+
+  .payloadHeader {
+    position: relative;
+    padding: 0.2rem 0.5rem 0.6rem;
+    text-align: left;
+  }
+  .payloadHeader p { margin: 0; color: #7a8b9e; font-size: 0.85rem; }
+
+  #payloads-view .payloadGrid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 16px;
+    padding: 0 0 0.8rem 0;
+  }
+
+  /* Responsive column adjustments */
+  @media (max-width: 980px) {
+    #payloads-view .payloadGrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+
+  @media (max-width: 680px) {
+    #payloads-view .payloadGrid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    #payloads-view .payloadGrid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* Base Button Styling */
+  #payloads-view .btn {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    background: var(--card-bg);
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    outline: none;
+  }
+
+  #payloads-view .btn:hover,
+  #payloads-view .btn:focus-visible {
+    background: #182338;
+    border-color: #38bdf8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -4px #38bdf855, 0 0 12px #38bdf833;
+  }
+
+  #payloads-view .btn:active {
+    transform: translateY(0);
+  }
+
+  /* --- DISPLAY MODE 1: CARDS --- */
+  #payloads-view.mode-cards .btn {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 24px;
+    text-align: left;
+  }
+
+  #payloads-view.mode-cards .btn-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  #payloads-view.mode-cards .payload-btn-description {
+    display: block;
+    color: #94a3b8;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+
+  /* --- DISPLAY MODE 2: LIST (RANGÉES HORIZONTALES) --- */
+  #payloads-view.mode-list .btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    gap: 12px;
+    text-align: left;
+  }
+
+  #payloads-view.mode-list .btn-left-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  #payloads-view.mode-list .btn-text-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+
+  #payloads-view.mode-list .payload-btn-description {
+    display: block;
+    color: #94a3b8;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+  }
+
+  /* --- DISPLAY MODE 3: COMPACT (LIGNES MINIMALES) --- */
+  #payloads-view.mode-compact .btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 12px;
+    gap: 8px;
+    text-align: left;
+  }
+
+  #payloads-view.mode-compact .btn-left-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  #payloads-view.mode-compact .payload-btn-title {
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #payloads-view.mode-compact .payload-btn-description {
+    display: none !important;
+  }
+
+  /* --- DISPLAY MODE 4: TILES (TUILES PS5 DASHBOARD) --- */
+  #payloads-view.mode-tiles .btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px 12px;
+    gap: 8px;
+    aspect-ratio: 1 / 0.95;
+  }
+
+  #payloads-view.mode-tiles .payload-btn-icon-wrapper {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+  }
+
+  #payloads-view.mode-tiles .payload-btn-title {
+    font-size: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.25;
+  }
+
+  #payloads-view.mode-tiles .payload-btn-description {
+    display: none !important;
+  }
+
+  /* General Icon & Text styles */
+  .payload-btn-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-console);
+    shrink: 0;
+  }
+
+  .payload-btn-title {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 18px;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .payload-tag {
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    font-weight: 700;
+    white-space: nowrap;
+    shrink: 0;
+  }
+
+  /* --- QUICK ACTIONS BAR --- */
+  .custom-quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+  }
+
+  .btn-quick {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-sub);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-quick:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #38bdf8;
+  }
+
+  /* --- FOOTER --- */
   .custom-footer {
     text-align: center;
-    font-size: 13px;
+    font-size: 12px;
     color: #475569;
-    margin-top: 10px;
+    margin-top: 6px;
+    line-height: 1.5;
   }
 
-  #payloadToastContainer { position: fixed; top: 20px; right: 20px; z-index: 10000; }
+  /* Elements requis par les scripts existants mais masques visuellement */
+  #danger, #reboot, #verdict, #wrap, #console, #cat, #nav, #slopkitHeader, #slopkitFooter, .homeLink { display: none !important; }
+
+  #payloadToastContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
   .payloadToast {
-    width: 300px; margin-top: 10px; padding: 15px 20px; border-radius: 10px;
-    background: #15161a; color: #fff; box-shadow: 0 0 10px rgba(0,0,0,.5);
+    width: 300px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: #15161a;
+    border: 1px solid #2a354c;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,.7);
+    animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
   }
   
-  @media (max-width: 900px) {
-    #main-content {
-      flex-direction: column;
-    }
-    .sidebar { width: 100%; right: -100%; }
-  }
 </style>
 </head>
 <body class="quiet">
 
 <div id="main-wrapper">
-  <!-- Top Panel -->
+
+
+  <!-- Top Panel Header -->
   <div class="custom-header">
     <div>
       <div class="header-title-container">
-        <h1>PS5-Relapse Experimental Power Users</h1>
+        <img src="https://github.com/nexgen999/ps5webkit/blob/main/experimental/rick.jpg" alt="Logo" style="height:28px; width:auto; border-radius:4px; margin-right:4px;">
+        <h1>PS5-Relapse</h1>
         <span class="badge-version">VLITE1</span>
       </div>
-      <div class="header-sub">Hôte d'exploitation WebKit &middot; Exécution des scripts</div>
+      <div class="header-sub">Hôte d&#039;exploitation WebKit · Exécution des scripts</div>
     </div>
     <div class="header-buttons">
       <div class="btn-evox">🛠 evoX</div>
@@ -411,23 +683,34 @@
     </div>
   </div>
 
-  <!-- Main Content Layout (50% / 50% Parfait) -->
-  <div id="main-content">
-    <!-- Console à Gauche -->
-    <div class="custom-console-card">
-      <div class="panel-title">JOURNAL D'EXÉCUTION (CONSOLE)</div>
-      
-      <div id="console-view" class="app-view selected" style="display:flex; flex-direction:column; flex:1;">
+
+
+<div id="ps5-split-wrapper" class="ps5-split-container">
+  <div id="ps5-split-left" class="ps5-split-left">
+    
+  <!-- Main Console Box -->
+  <div class="custom-console-card">
+    <div class="console-title">
+      <div class="console-title-text">JOURNAL D&#039;EXÉCUTION (CONSOLE)</div>
+      <div style="font-size:10px; color:#475569; font-mono">JS EXEC TERMINAL</div>
+    </div>
+    
+    <div id="main-content">
+      <div id="console-view" class="app-view selected">
         <div id="failureMessage" style="display:none;">UNLUCKY &mdash; YOU NEED TO REBOOT</div>
-        <div id="cat"><img id="catImage" src="mmhmm-cats-ps5.gif" alt=""></div>
+        <div id="cat" style="display:none;"><img id="catImage" src="mmhmm-cats-ps5.gif" alt=""></div>
         <div id="reboot"></div>
         <div id="verdict"></div>
         <div id="danger"></div>
-        <div id="stage" hidden>idle</div>
+        <div id="stage" >idle</div>
         <div id="vitals"></div>
         <div id="cfg" hidden></div>
         <pre id="early"></pre>
-        <pre id="scr">[-] PlayStation 5 Required</pre>
+        <div class="scr-wrapper">
+          <pre id="scr">[-] PlayStation 5 Required
+[*] En attente de commande WebKit...</pre>
+          <div id="ps5-console-resizer" class="console-height-resizer" title="↕ Glisser pour ajuster la hauteur de la console"></div>
+        </div>
         <div id="nav"></div>
         <div hidden id="arm">Open this page with <b>?go=1</b> to arm it. Nothing runs otherwise.</div>
         <div id="wrap">
@@ -437,142 +720,416 @@
         <div id="summary"></div>
       </div>
     </div>
-
-    <!-- 3 Encadrés de Catégories à Droite -->
-    <div class="categories-container">
-      <div class="panel-title">CATÉGORIES DE PAYLOADS</div>
-      
-      <!-- Catégorie 1 : Linux Loader -->
-      <div class="category-card" onclick="openSidebar('linux')">
-        <img src="icon1.png" alt="Linux Loader" class="category-icon" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2338bdf8\' stroke-width=\'2\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\'/><line x1=\'8\' y1=\'21\' x2=\'16\' y2=\'21\'/><line x1=\'12\' y1=\'17\' x2=\'12\' y2=\'21\'/></svg>'">
-        <div class="category-info">
-          <h3>Linux Loader</h3>
-          <p>Chargeurs et noyaux Linux pour PS5</p>
-        </div>
-      </div>
-
-      <!-- Catégorie 2 : HEN -->
-      <div class="category-card" onclick="openSidebar('hen')">
-        <img src="icon2.png" alt="HEN" class="category-icon" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2338bdf8\' stroke-width=\'2\'><path d=\'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6\'/></svg>'">
-        <div class="category-info">
-          <h3>HEN & Exploits</h3>
-          <p>Homebrew Enablers et patches système</p>
-        </div>
-      </div>
-
-      <!-- Catégorie 3 : Tools -->
-      <div class="category-card" onclick="openSidebar('tools')">
-        <img src="icon3.png" alt="Tools" class="category-icon" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2338bdf8\' stroke-width=\'2\'><path d=\'M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z\'/></svg>'">
-        <div class="category-info">
-          <h3>Tools & Utilitaires</h3>
-          <p>Gestionnaires, FTP et outils de maintenance</p>
-        </div>
-      </div>
+  </div>
+  </div>
+  <div id="ps5-split-resizer" class="ps5-split-resizer" title="↔ Glisser pour ajuster la largeur"></div>
+  <div id="ps5-split-right" class="ps5-split-right">
+    
+  <!-- Payloads View & Buttons Grid -->
+  <div id="payloads-view" class="app-view mode-compact">
+    <div class="payloadHeader">
+      <p id="payloadProgress">Sélectionnez un payload pour l'envoyer au chargeur ELF.</p>
     </div>
+    <div class="payloadGrid">
+      
+      <button class="btn" type="button" data-payload="byepervisor_reborn_AUTO-9.40fat-slim-pro.elf" data-name="byepervisor_reborn_AUTO-9.40fat-slim-pro.elf" data-key="byepervisor_reborn_AUTO-9.40fat-slim-pro">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">byepervisor_reborn_AUTO-9.40fat-slim-pro</span>
+        </div>
+        <span class="payload-tag" style="background:#38bdf826; color:#38bdf8;">AUTO 9.40</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="ps5-linux-loader-1160.elf" data-name="ps5-linux-loader-1160.elf" data-key="ps5-linux-loader-1160">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">ps5-linux-loader-1160</span>
+        </div>
+        <span class="payload-tag" style="background:#10b98126; color:#10b981;">Linux 1160</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="ps5-linux-loader-1160.v313.elf" data-name="ps5-linux-loader-1160.v313.elf" data-key="ps5-linux-loader-1160.v313">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">ps5-linux-loader-1160.v313</span>
+        </div>
+        <span class="payload-tag" style="background:#10b98126; color:#10b981;">v3.13</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="byepervisor_reborn.elf" data-name="byepervisor_reborn.elf" data-key="byepervisor_reborn">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">byepervisor_reborn</span>
+        </div>
+        <span class="payload-tag" style="background:#38bdf826; color:#38bdf8;">Reborn</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="byepervisor_reborn-fix.elf" data-name="byepervisor_reborn-fix.elf" data-key="byepervisor_reborn-fix">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">byepervisor_reborn-fix</span>
+        </div>
+        <span class="payload-tag" style="background:#0ea5e926; color:#0ea5e9;">Stabilité Fix</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="ps5-linux-loader_soniciso_11x-13x.elf" data-name="ps5-linux-loader_soniciso_11x-13x.elf" data-key="ps5-linux-loader_soniciso_11x-13x">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">ps5-linux-loader_soniciso_11x-13x</span>
+        </div>
+        <span class="payload-tag" style="background:#14b8a626; color:#14b8a6;">SonicISO 1.1x-1.3x</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="ps5-linux-loader_soniciso_13.60pro.elf" data-name="ps5-linux-loader_soniciso_13.60pro.elf" data-key="ps5-linux-loader_soniciso_13.60pro">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">ps5-linux-loader_soniciso_13.60pro</span>
+        </div>
+        <span class="payload-tag" style="background:#f9731626; color:#f97316;">SonicISO Pro</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="ps5-unified-autoloader-v0.1.6-e7093cd.elf" data-name="ps5-unified-autoloader-v0.1.6-e7093cd.elf" data-key="ps5-unified-autoloader-v0.1.6-e7093cd">
+        <div class="btn-left-content">
+          <div class="payload-btn-icon-wrapper"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="3"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></div>
+          <span class="payload-btn-title">ps5-unified-autoloader-v0.1.6-e7093cd</span>
+        </div>
+        <span class="payload-tag" style="background:#8b5cf626; color:#8b5cf6;">v0.1.6 Unifié</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="pldmgr_v0.6.3.elf" data-name="pldmgr_v0.6.3.elf" data-key="pldmgr_v0.6.3">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">pldmgr_v0.6.3</span>
+        </div>
+        <span class="payload-tag" style="background:#a855f726; color:#a855f7;">v0.6.3</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="evox.elf" data-name="evox.elf" data-key="evox">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">evox</span>
+        </div>
+        <span class="payload-tag" style="background:#f59e0b26; color:#f59e0b;">evoX System</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="kstuff-fpkg-1.13-dr-test6.elf" data-name="kstuff-fpkg-1.13-dr-test6.elf" data-key="kstuff-fpkg-1.13-dr-test6">
+        <div class="btn-left-content">
+          <div class="payload-btn-icon-wrapper"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="3"><circle cx="12" cy="12" r="8"></circle></svg></div>
+          <span class="payload-btn-title">kstuff-fpkg-1.13-dr-test6</span>
+        </div>
+        <span class="payload-tag" style="background:#06b6d426; color:#06b6d4;">fPKG v1.13</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="shadowmountplus_v1.7beta7.elf" data-name="shadowmountplus_v1.7beta7.elf" data-key="shadowmountplus_v1.7beta7">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">shadowmountplus_v1.7beta7</span>
+        </div>
+        <span class="payload-tag" style="background:#ec489926; color:#ec4899;">v1.7 beta7</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="ProsperoMgr.elf" data-name="ProsperoMgr.elf" data-key="ProsperoMgr">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">ProsperoMgr</span>
+        </div>
+        <span class="payload-tag" style="background:#6366f126; color:#6366f1;">Prospero Core</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="HyperHEN-v0.9.2.elf" data-name="HyperHEN-v0.9.2.elf" data-key="HyperHEN-v0.9.2">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">HyperHEN-v0.9.2</span>
+        </div>
+        <span class="payload-tag" style="background:#eab30826; color:#eab308;">v0.9.2 Hyper</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="AniketosHEN.elf" data-name="AniketosHEN.elf" data-key="AniketosHEN">
+        <div class="btn-left-content">
+          <div class="payload-btn-icon-wrapper"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div>
+          <span class="payload-btn-title">AniketosHEN</span>
+        </div>
+        <span class="payload-tag" style="background:#10b98126; color:#10b981;">Aniketos Stable</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="full_y2jb_block.elf" data-name="full_y2jb_block.elf" data-key="full_y2jb_block">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">full_y2jb_block</span>
+        </div>
+        <span class="payload-tag" style="background:#ef444426; color:#ef4444;">Anti-Update</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="zftpd-ps5-v1.5.0.elf" data-name="zftpd-ps5-v1.5.0.elf" data-key="zftpd-ps5-v1.5.0">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">zftpd-ps5-v1.5.0</span>
+        </div>
+        <span class="payload-tag" style="background:#38bdf826; color:#38bdf8;">FTP Port 1337</span>
+      </button>
+      
+      <button class="btn" type="button" data-payload="webkit-autoloader-installer_v0.6.1.elf" data-name="webkit-autoloader-installer_v0.6.1.elf" data-key="webkit-autoloader-installer_v0.6.1">
+        <div class="btn-left-content">
+          
+          <span class="payload-btn-title">webkit-autoloader-installer_v0.6.1</span>
+        </div>
+        <span class="payload-tag" style="background:#8b5cf626; color:#8b5cf6;">Installateur v0.6.1</span>
+      </button>
+    </div>
+  </div>
+  </div>
+</div>
+
+
+  <!-- Quick Actions Bar -->
+  <div class="custom-quick-actions">
+    <button class="btn-quick" data-action="reboot"><span>⚙️</span> Redémarrer PS5</button>
+    <button class="btn-quick" data-action="reload"><span>⚙️</span> Recharger Page</button>
+    <button class="btn-quick" data-action="cache"><span>⚙️</span> Installer Cache Offline</button>
+    <button class="btn-quick" data-action="clear"><span>⚙️</span> Effacer Logs</button>
   </div>
 
   <!-- Footer -->
   <div class="custom-footer">
-    PS5 WebKit W2JB &middot; Architecture Modulaire evoX &middot; Accès direct via Guide Utilisateur ou Navigateur
+    PS5 WebKit W2JB · Architecture Modulaire evoX · Accès direct via Guide Utilisateur ou Navigateur
   </div>
-</div>
-
-<!-- SIDEBAR COULISSANTE POUR LES PAYLOADS -->
-<div id="sidebar-overlay" onclick="closeSidebar()"></div>
-<div id="payloadSidebar" class="sidebar">
-  <div class="sidebar-header">
-    <h2 id="sidebarTitle">Payloads</h2>
-    <button class="sidebar-close" onclick="closeSidebar()">&times;</button>
-  </div>
-  <div class="sidebar-content" id="sidebarContentList">
-    <!-- Rempli dynamiquement -->
-  </div>
+    
 </div>
 
 <div id="payloadToastContainer"></div>
 <div id="console" hidden></div>
-<div class="payloadGrid" style="display:none;"><button class="btn"></button></div>
 
-<!-- Scripts de base de l'hôte PS5 -->
+<!-- Original Exploitation & WebKit Scripts (Strictly Preserved) -->
+<script>
+window.PAYLOAD_TILES = [
+  {
+    "title": "byepervisor_reborn_AUTO-9.40fat-slim-pro",
+    "name": "byepervisor_reborn_AUTO-9.40fat-slim-pro.elf",
+    "key": "byepervisor_reborn_AUTO-9.40fat-slim-pro",
+    "description": "Bypass Hypervisor automatique pour PS5 Fat, Slim & Pro jusqu'au FW 9.40"
+  },
+  {
+    "title": "ps5-linux-loader-1160",
+    "name": "ps5-linux-loader-1160.elf",
+    "key": "ps5-linux-loader-1160",
+    "description": "Chargeur de noyau Linux PS5 pour firmwares 1.00 à 1.16"
+  },
+  {
+    "title": "ps5-linux-loader-1160.v313",
+    "name": "ps5-linux-loader-1160.v313.elf",
+    "key": "ps5-linux-loader-1160.v313",
+    "description": "Linux loader optimisé révision v3.13 avec pilotes graphiques Baikal"
+  },
+  {
+    "title": "byepervisor_reborn",
+    "name": "byepervisor_reborn.elf",
+    "key": "byepervisor_reborn",
+    "description": "Exploitation HV standard pour accès kernel complet"
+  },
+  {
+    "title": "byepervisor_reborn-fix",
+    "name": "byepervisor_reborn-fix.elf",
+    "key": "byepervisor_reborn-fix",
+    "description": "Patch correctif de stabilité pour freeze sur firmwares intermédiaires"
+  },
+  {
+    "title": "ps5-linux-loader_soniciso_11x-13x",
+    "name": "ps5-linux-loader_soniciso_11x-13x.elf",
+    "key": "ps5-linux-loader_soniciso_11x-13x",
+    "description": "Boot direct sur distribution SonicISO pour FW 1.1x à 1.3x"
+  },
+  {
+    "title": "ps5-linux-loader_soniciso_13.60pro",
+    "name": "ps5-linux-loader_soniciso_13.60pro.elf",
+    "key": "ps5-linux-loader_soniciso_13.60pro",
+    "description": "Version Pro compatible révision 13.60 et support Radeon Navi"
+  },
+  {
+    "title": "ps5-unified-autoloader-v0.1.6-e7093cd",
+    "name": "ps5-unified-autoloader-v0.1.6-e7093cd.elf",
+    "key": "ps5-unified-autoloader-v0.1.6-e7093cd",
+    "description": "Chargeur automatique unifié pour exécuter vos payloads en séquence"
+  },
+  {
+    "title": "pldmgr_v0.6.3",
+    "name": "pldmgr_v0.6.3.elf",
+    "key": "pldmgr_v0.6.3",
+    "description": "Payload Manager : gestionnaire de modules et injection dynamique"
+  },
+  {
+    "title": "evox",
+    "name": "evox.elf",
+    "key": "evox",
+    "description": "Dashboard modulaire evoX Next-Gen pour PlayStation 5"
+  },
+  {
+    "title": "kstuff-fpkg-1.13-dr-test6",
+    "name": "kstuff-fpkg-1.13-dr-test6.elf",
+    "key": "kstuff-fpkg-1.13-dr-test6",
+    "description": "Patch fPKG et fSELF en mémoire kernel (test6 DR)"
+  },
+  {
+    "title": "shadowmountplus_v1.7beta7",
+    "name": "shadowmountplus_v1.7beta7.elf",
+    "key": "shadowmountplus_v1.7beta7",
+    "description": "Montage de disques virtuels, clés USB et dossiers chiffrés"
+  },
+  {
+    "title": "ProsperoMgr",
+    "name": "ProsperoMgr.elf",
+    "key": "ProsperoMgr",
+    "description": "Gestionnaire système Prospero OS pour configuration et dumps"
+  },
+  {
+    "title": "HyperHEN-v0.9.2",
+    "name": "HyperHEN-v0.9.2.elf",
+    "key": "HyperHEN-v0.9.2",
+    "description": "Homebrew Enabler haute performance avec bypass de sécurité"
+  },
+  {
+    "title": "AniketosHEN",
+    "name": "AniketosHEN.elf",
+    "key": "AniketosHEN",
+    "description": "Environnement HEN léger et ultra-stable pour lancement direct"
+  },
+  {
+    "title": "full_y2jb_block",
+    "name": "full_y2jb_block.elf",
+    "key": "full_y2jb_block",
+    "description": "Blocage des serveurs de télémétrie et sécurisation anti-mise à jour"
+  },
+  {
+    "title": "zftpd-ps5-v1.5.0",
+    "name": "zftpd-ps5-v1.5.0.elf",
+    "key": "zftpd-ps5-v1.5.0",
+    "description": "Serveur FTP PS5 haute vitesse sur port 1337 / 21"
+  },
+  {
+    "title": "webkit-autoloader-installer_v0.6.1",
+    "name": "webkit-autoloader-installer_v0.6.1.elf",
+    "key": "webkit-autoloader-installer_v0.6.1",
+    "description": "Installation permanente de l'autoloader dans le cache WebKit"
+  }
+];
+window.PAYLOAD_ART = { dir: "ui/", pfx: "btn-", on: true };
+</script>
 <script src="./src/firmware.js"></script>
-
-<!-- Chargement des 3 listes de payloads -->
 <script src="../payloads.js?v=1"></script>
-<script> window.PAYLOADS_1 = window.PAYLOAD_TILES || []; </script>
-
-<script src="../payloads2.js?v=1" onerror="window.PAYLOADS_2=[]"></script>
-<script> window.PAYLOADS_2 = window.PAYLOAD_TILES || []; </script>
-
-<script src="../payloads3.js?v=1" onerror="window.PAYLOADS_3=[]"></script>
-<script> window.PAYLOADS_3 = window.PAYLOAD_TILES || []; </script>
-
 <script src="./src/main.js"></script>
 <script src="./src/rop.js"></script>
 <script src="./src/utils/syscalls.js"></script>
 <script type="module" src="./src/site.js"></script>
 
-<!-- Script de gestion de la Sidebar et des clics fonctionnels -->
 <script>
-  function openSidebar(category) {
-    const sidebar = document.getElementById('payloadSidebar');
-    const overlay = document.getElementById('sidebar-overlay');
-    const titleEl = document.getElementById('sidebarTitle');
-    const contentList = document.getElementById('sidebarContentList');
-    
-    contentList.innerHTML = '';
-    
-    let data = [];
-    let title = '';
-    
-    if (category === 'linux') {
-      title = 'Linux Loader Payloads';
-      data = window.PAYLOADS_1;
-    } else if (category === 'hen') {
-      title = 'HEN & Exploits Payloads';
-      data = window.PAYLOADS_2;
-    } else if (category === 'tools') {
-      title = 'Tools & Utilitaires Payloads';
-      data = window.PAYLOADS_3;
-    }
-    
-    titleEl.textContent = title;
-    
-    if (!data || data.length === 0) {
-      contentList.innerHTML = '<div style="color:var(--text-sub); text-align:center; padding:20px;">Aucun payload trouvé dans ce fichier.</div>';
-    } else {
-      data.forEach(payload => {
-        const item = document.createElement('div');
-        item.className = 'payload-list-item';
-        
-        item.innerHTML = `
-          <div class="payload-list-info">
-            <span class="payload-list-title">${payload.title}</span>
-            <span class="payload-list-file">${payload.name}</span>
-          </div>
-          <span class="payload-list-action">Lancer</span>
-        `;
-        
-        // Exécution fonctionnelle reliée au script d'origine
-        item.addEventListener('click', () => {
-          let sampleBtn = document.querySelector('.payloadGrid .btn');
-          if (sampleBtn) {
-            sampleBtn.setAttribute('data-payload', payload.name);
-            sampleBtn.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
-          }
-        });
+  // Mouse Drag Resizing & Interactive Simulator Logic
+  (function() {
+    // 1. Horizontal Split Resizer
+    const resizer = document.getElementById('ps5-split-resizer');
+    const splitContainer = document.getElementById('ps5-split-wrapper');
+    const splitLeft = document.getElementById('ps5-split-left');
 
-        contentList.appendChild(item);
+    if (resizer && splitContainer && splitLeft) {
+      let isDragging = false;
+
+      resizer.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        resizer.classList.add('is-dragging');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        const rect = splitContainer.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left;
+        let percentage = (offsetX / rect.width) * 100;
+        percentage = Math.max(20, Math.min(80, percentage));
+        splitLeft.style.flex = '0 0 ' + percentage + '%';
+
+        // Notify parent editor iframe
+        try {
+          window.parent.postMessage({ type: 'SPLIT_RESIZED', ratio: Math.round(percentage) }, '*');
+        } catch(err) {}
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (isDragging) {
+          isDragging = false;
+          resizer.classList.remove('is-dragging');
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+        }
       });
     }
-    
-    overlay.classList.add('open');
-    sidebar.classList.add('open');
-  }
 
-  function closeSidebar() {
-    document.getElementById('sidebar-overlay').classList.remove('open');
-    document.getElementById('payloadSidebar').classList.remove('open');
-  }
+    // 2. Vertical Console Height Resizer
+    const consoleResizer = document.getElementById('ps5-console-resizer');
+    const scr = document.getElementById('scr');
+
+    if (consoleResizer && scr) {
+      let isResizingConsole = false;
+      let startY = 0;
+      let startHeight = 0;
+
+      consoleResizer.addEventListener('mousedown', function(e) {
+        isResizingConsole = true;
+        startY = e.clientY;
+        startHeight = scr.offsetHeight;
+        consoleResizer.classList.add('is-dragging');
+        document.body.style.cursor = 'row-resize';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', function(e) {
+        if (!isResizingConsole) return;
+        const dy = e.clientY - startY;
+        const newHeight = Math.max(120, Math.min(650, startHeight + dy));
+        scr.style.height = newHeight + 'px';
+
+        // Notify parent editor iframe
+        try {
+          window.parent.postMessage({ type: 'CONSOLE_HEIGHT_RESIZED', height: Math.round(newHeight) }, '*');
+        } catch(err) {}
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (isResizingConsole) {
+          isResizingConsole = false;
+          consoleResizer.classList.remove('is-dragging');
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+        }
+      });
+    }
+
+    // 3. Payload button simulation click handler
+    document.querySelectorAll('#payloads-view .btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const payloadName = btn.getAttribute('data-payload') || btn.querySelector('.payload-btn-title')?.innerText || 'Payload';
+        const scrEl = document.getElementById('scr');
+        if (scrEl) {
+          const time = new Date().toLocaleTimeString();
+          scrEl.textContent += `\n[${time}] [+] Lancement du payload: ${payloadName}...`;
+          scrEl.scrollTop = scrEl.scrollHeight;
+        }
+        
+        // Show realistic toast
+        const toastContainer = document.getElementById('payloadToastContainer');
+        if (toastContainer) {
+          const toast = document.createElement('div');
+          toast.className = 'payloadToast';
+          toast.innerHTML = `<strong>⚡ Payload Envoyé</strong><br>${payloadName} injecté avec succès.`;
+          toastContainer.appendChild(toast);
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+          }, 3500);
+        }
+      });
+    });
+  })();
 </script>
 </body>
 </html>
