@@ -6,6 +6,7 @@ window.PAYLOAD_TILES = [
 	{"title": "ps5-linux-loader-aio_wigglez-sudo_11x-13x", "name": "ps5-linux-loader-aio_wigglez-sudo.elf", "key": "ps5-linux-loader-aio_wigglez-sudo"},
 	{"title": "byepervisor_reborn", "name": "byepervisor_reborn.elf", "key": "byepervisor_reborn"},
 	{"title": "byepervisor_reborn-fix", "name": "byepervisor_reborn-fix.elf", "key": "byepervisor_reborn-fix"},
+	{"title": "ps5-linux-loader_soniciso_10x", "name": "ps5-linux-loader-10xx_soniciso.elf", "key": "ps5-linux-loader-10xx_soniciso"},
 	{"title": "ps5-linux-loader_soniciso_11x-13x", "name": "ps5-linux-loader_soniciso_11x-13x.elf", "key": "ps5-linux-loader_soniciso_11x-13x"},
 	{"title": "ps5-linux-loader_soniciso_13.60pro", "name": "ps5-linux-loader_soniciso_13.60pro.elf", "key": "ps5-linux-loader_soniciso_13.60pro"},
 ];
