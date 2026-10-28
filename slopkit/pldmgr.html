@@ -1689,10 +1689,19 @@ async function preflight() {
             + Object.keys(wk_gadgetmap || {}).length + " gadgets, "
             + Object.keys(syscall_map || {}).length + " syscalls.");
 
+    const ROP_SLAVE_SHA256 = "a0bd7b7433762b7ce56a62c7109fa3bbb9077e2b90954f9ab25d9bf04b5dbc47";
     let verdict = "ok";
+    let workerUrl = null;
     try {
         const r = await fetch("rop_slave.js", { cache: "no-store" });
         if (!r.ok) verdict = "http-" + r.status;
+        else {
+            const buf = await r.arrayBuffer();
+            const digest = await crypto.subtle.digest("SHA-256", buf);
+            const hex = Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, "0")).join("");
+            if (hex !== ROP_SLAVE_SHA256) verdict = "integrity-mismatch";
+            else workerUrl = URL.createObjectURL(new Blob([buf], { type: "text/javascript" }));
+        }
     } catch (err) { verdict = "fetch-threw"; }
     if (verdict === "ok") {
         let w = null;
@@ -1706,12 +1715,13 @@ async function preflight() {
             };
             const t = setTimeout(() => finish("timeout"), 4000);
             try {
-                w = new Worker("rop_slave.js");
+                w = new Worker(workerUrl);
                 w.onmessage = () => { clearTimeout(t); finish("ok"); };
                 w.onerror = () => { clearTimeout(t); finish("worker-error"); };
                 w.postMessage(0);
             } catch (err) { clearTimeout(t); finish("worker-threw"); }
         });
+        URL.revokeObjectURL(workerUrl);
     }
     flushMark("WORKER-PROBE", verdict);
     if (verdict !== "ok")
