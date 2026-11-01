@@ -3,6 +3,7 @@ window.PAYLOAD_TILES = [
 	{"title": "byepervisor reborn AUTO-9.40 fat-slim-pro", "name": "byepervisor_reborn_AUTO-9.40fat-slim-pro.elf", "key": "byepervisor_reborn_AUTO-9.40fat-slim-pro"},
 	{"title": "ps5-linux-loader-11.60", "name": "ps5-linux-loader-1160.v313.elf", "key": "ps5-linux-loader-1160.v313"},
 	{"title": "ps5-linux-loader-12xx-aio", "name": "ps5-linux-loader-12xx-aio.elf", "key": "ps5-linux-loader-12xx-aio"},
+	{"title": "PS5-linux-loader-aio-3xx-13xx-Wigglez-sudo", "name": "PS5-linux-loader-aio-3xx-13xx-Wigglez-sudo", "key": "PS5-linux-loader-aio-3xx-13xx-Wigglez-sudo"},
 	{"title": "ps5-linux-loader-aio_wigglez-sudo_11x-13x", "name": "ps5-linux-loader-aio_wigglez-sudo.elf", "key": "ps5-linux-loader-aio_wigglez-sudo"},
 	{"title": "ps5-linux-loader-1200-pro_Wigglez-sudo", "name": "ps5-linux-loader-1200-pro_Wigglez-sudo.elf", "key": "ps5-linux-loader-1200-pro_Wigglez-sudo"},
 	{"title": "ps5-linux-loader-1240-pro_Wigglez-sudo", "name": "ps5-linux-loader-1240-pro_Wigglez-sudo.elf", "key": "ps5-linux-loader-1240-pro_Wigglez-sudo"},
