@@ -14,5 +14,7 @@ window.PAYLOAD_TILES = [
 	{"title": "ps5-linux-loader_soniciso_10x", "name": "ps5-linux-loader-10xx_soniciso.elf", "key": "ps5-linux-loader-10xx_soniciso"},
 	{"title": "ps5-linux-loader_soniciso_11x-13x", "name": "ps5-linux-loader_soniciso_11x-13x.elf", "key": "ps5-linux-loader_soniciso_11x-13x"},
 	{"title": "ps5-linux-loader_soniciso_13.60pro", "name": "ps5-linux-loader_soniciso_13.60pro.elf", "key": "ps5-linux-loader_soniciso_13.60pro"},
+	{"title": "ps5-linux-loader-all10-13-20261102", "name": "ps5-linux-loader-all10-13-20261102.elf", "key": "ps5-linux-loader-all10-13-20261102"},
+	{"title": "ps5-linux-loader-all10-13-20261103-pro", "name": "ps5-linux-loader-all10-13-20261103-pro.elf", "key": "ps5-linux-loader-all10-13-20261103-pro"},
 ];
 window.PAYLOAD_ART = { dir: "ui/", pfx: "btn-", on: true };
