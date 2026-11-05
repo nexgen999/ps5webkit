@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>PS5-Relapse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Fira+Code:wght@500;700&family=Inter:wght@500;700&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@500;700&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+
+  :root {
+    --bg-dark: #06090e;
+    --card-bg: #0b111e;
+    --card-border: #182338;
+    --text-title: #ffffff;
+    --text-sub: #7a8b9e;
+    --text-console: #38bdf8;
+    --badge-bg: #0284c7;
+    --btn-evox-bg: #b45309;
+    --btn-evox-border: #f59e0b;
+    --btn-mode-bg: #064e3b;
+    --btn-mode-border: #10b981;
+    --btn-mode-text: #34d399;
+    --accent-glow: #0284c7;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 50% 0%, rgba(2, 132, 199, 0.08) 0%, transparent 60%);
+    color: #e2e8f0;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    box-sizing: border-box;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 22px;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  #main-wrapper {
+    width: 100%;
+    max-width: 1400px;
+    height: 100%;
+    max-height: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  /* --- HEADER PANEL --- */
+  .custom-header {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 16px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+  }
+
+  .header-title-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .github-profile-bubble {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid #233350;
+    background: #090e17;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .github-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .github-online-dot {
+    position: absolute;
+    bottom: -1px;
+    right: -1px;
+    width: 10px;
+    height: 10px;
+    background: #10b981;
+    border: 2px solid var(--card-bg);
+    border-radius: 50%;
+    z-index: 2;
+  }
+
+  .header-title-container h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-title);
+    margin: 0;
+    letter-spacing: -0.02em;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  }
+
+  .badge-version {
+    background: var(--badge-bg);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
+  }
+
+  .header-sub {
+    font-size: 12px;
+    color: var(--text-sub);
+    margin-top: 3px;
+  }
+
+  .header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-evox {
+    background: var(--btn-evox-bg);
+    border: 1px solid var(--btn-evox-border);
+    color: #fef3c7;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: default;
+    box-shadow: 0 2px 10px rgba(245, 158, 11, 0.2);
+  }
+
+  .evox-icon-img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    display: inline-block;
+  }
+
+  .btn-mode {
+    background: var(--btn-mode-bg);
+    border: 1px solid var(--btn-mode-border);
+    color: var(--btn-mode-text);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: default;
+  }
+
+  .dot-online {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px #10b981;
+  }
+
+  /* --- SPLIT LAYOUT --- */
+  .ps5-split-container {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    align-items: stretch;
+  }
+
+  .ps5-split-left {
+    flex: 0 0 47%;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .ps5-split-right {
+    flex: 1;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  @media (max-width: 880px) {
+    html, body {
+      height: auto !important;
+      max-height: none !important;
+      overflow-y: auto !important;
+    }
+    body {
+      padding: 12px !important;
+    }
+    #main-wrapper {
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+    .ps5-split-container {
+      flex-direction: column !important;
+      height: auto !important;
+      overflow: visible !important;
+    }
+    .ps5-split-left, .ps5-split-right {
+      flex: 1 1 100% !important;
+      min-width: 100% !important;
+      height: auto !important;
+      max-height: none !important;
+      overflow: visible !important;
+    }
+    #scr {
+      min-height: 350px !important;
+    }
+  }
+
+  /* --- CONSOLE PANEL --- */
+  .custom-console-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .console-title {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-sub);
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .console-title-text {
+    display: flex;
+    align-items: center;
+  }
+
+  .console-title-text::after {
+    content: "";
+    width: 60px;
+    height: 1px;
+    background: var(--card-border);
+    margin-left: 10px;
+  }
+
+  #early { display: none !important; }
+
+  #main-content {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #console-view {
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .scr-wrapper {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #scr {
+    box-sizing: border-box;
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    background: #04070c;
+    border: 1px solid #10192a;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 0;
+    color: var(--text-console);
+    font-family: "JetBrains Mono", Consolas, Courier New, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    position: relative;
+    box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.8);
+    resize: none;
+  }
+
+  .console-bottom-pill {
+    width: 36px;
+    height: 4px;
+    background: #38bdf8;
+    border-radius: 2px;
+    margin: 10px auto 0 auto;
+    opacity: 0.8;
+    flex-shrink: 0;
+  }
+
+  #stage { display: none !important; }
+
+  #vitals {
+    display: none; font-size: 13px; padding: 8px 12px; margin-bottom: 10px;
+    border-radius: 6px; background: #17212e; border-left: 4px solid #f59e0b;
+    color: #fef3c7; white-space: pre-wrap;
+  }
+  #vitals.on { display: block; }
+
+  #cfg { font-size: 12px; color: #94a3b8; background: #080d16; padding: 8px 12px; border-radius: 6px; margin-bottom: 10px; white-space: pre-wrap; }
+
+  /* --- PAYLOADS VIEW --- */
+  #payloads-view {
+    display: flex !important;
+    flex-direction: column !important;
+    background: transparent;
+    color: #fff;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .payloadHeader {
+    flex-shrink: 0;
+    position: relative;
+    padding: 0 0 10px 0;
+    text-align: left;
+  }
+  .payloadHeader p {
+    margin: 0;
+    color: #7a8b9e;
+    font-size: 0.85rem;
+  }
+
+  #payloads-view .payloadGrid {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 6px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding-bottom: 8px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 15, 26, 0.4);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #38bdf8;
+  }
+
+  /* SUPPRESSION DES SOULIGNEMENTS ET DÉCORATIONS DU TEXTE SUR LES BOUTONS */
+  #payloads-view *, 
+  #payloads-view .btn,
+  #payloads-view .payload-btn-title,
+  #payloads-view a {
+    text-decoration: none !important;
+  }
+
+  #payloads-view .btn,
+  #payloads-view.mode-list .btn {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 14px 18px !important;
+    border: 1px solid var(--card-border) !important;
+    border-radius: 12px !important;
+    background: var(--card-bg) !important;
+    color: #fff !important;
+    cursor: pointer;
+    text-align: left !important;
+    transition: all 0.2s ease;
+    width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+    flex-shrink: 0;
+  }
+
+  #payloads-view .btn:hover,
+  #payloads-view.mode-list .btn:hover {
+    background: #141f33 !important;
+    border-color: #38bdf8 !important;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.25) !important;
+  }
+
+  #payloads-view .payload-btn-title {
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    color: #f8fafc !important;
+    letter-spacing: -0.01em;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+    text-decoration: none !important;
+  }
+
+  /* Masquer tout ce qui est secondaire à droite des boutons */
+  #payloads-view .payload-right-actions,
+  #payloads-view .payload-btn-description,
+  #payloads-view .payload-tag,
+  #payloads-view .payload-btn-info,
+  .payload-btn-icon-wrapper {
+    display: none !important;
+  }
+
+  .custom-footer {
+    text-align: center;
+    font-size: 12px;
+    color: #475569;
+    margin-top: 6px;
+    line-height: 1.5;
+    flex-shrink: 0;
+  }
+
+  #danger, #reboot, #verdict, #wrap, #console, #cat, #nav, #slopkitHeader, #slopkitFooter, .homeLink { display: none !important; }
+
+  #payloadToastContainer {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .payloadToast {
+    width: 300px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: #15161a;
+    border: 1px solid #2a354c;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,.7);
+    animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(-10px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  
+  /* --- MENU PAYLOADS : LISTES + CARTES --- */
+  .payloadHeader-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .payloadHeader-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #cbd5e1;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  }
+
+  .payload-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: #7dd3fc;
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 999px;
+    padding: 1px 9px;
+    font-family: "JetBrains Mono", Consolas, monospace;
+  }
+
+  .payloadToolbar {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 10px;
+  }
+
+  .payload-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .payload-tab {
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: #93a5b8;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .payload-tab:hover:enabled {
+    color: #e2e8f0;
+    border-color: #2b3d59;
+  }
+
+  .payload-tab.active {
+    color: #e0f2fe;
+    background: rgba(2, 132, 199, 0.18);
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+  }
+
+  .payload-tab:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  #payloads-view .payload-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  #payloads-view .payload-group-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 3px 2px 7px 2px;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid #16223a;
+    color: #8fa2b7;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  #payloads-view .payload-group-head:hover { color: #cbd5e1; }
+
+  #payloads-view .payload-group-caret {
+    width: 0;
+    height: 0;
+    border-left: 5px solid #38bdf8;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transform: rotate(90deg);
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  #payloads-view .payload-group.collapsed .payload-group-caret { transform: rotate(0deg); }
+
+  #payloads-view .payload-group-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  #payloads-view .payload-group-count {
+    flex-shrink: 0;
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    background: #0a1220;
+    border: 1px solid #16223a;
+    border-radius: 999px;
+    padding: 1px 7px;
+    letter-spacing: 0;
+  }
+
+  #payloads-view .payload-group-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #payloads-view .payload-group.collapsed .payload-group-body { display: none; }
+
+  #payloads-view .payloadTile {
+    gap: 12px !important;
+  }
+
+  #payloads-view .payload-tile-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  #payloads-view .payload-file {
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 10.5px;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.01em;
+  }
+
+  #payloads-view .payload-state {
+    flex: 0 0 auto;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #64748b;
+    border: 1px solid #233350;
+    border-radius: 999px;
+    padding: 3px 9px;
+    white-space: nowrap;
+  }
+
+  #payloads-view .payloadTile:hover .payload-state {
+    color: #7dd3fc;
+    border-color: #38bdf8;
+  }
+
+  #payloads-view .payloadTile.busy {
+    border-color: #f59e0b !important;
+    background: rgba(245, 158, 11, 0.07) !important;
+    box-shadow: 0 0 14px rgba(245, 158, 11, 0.2) !important;
+  }
+  #payloads-view .payloadTile.busy .payload-state { color: #fbbf24; border-color: #f59e0b; }
+
+  #payloads-view .payloadTile.sent {
+    border-color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.08) !important;
+    box-shadow: 0 0 14px rgba(16, 185, 129, 0.18) !important;
+  }
+  #payloads-view .payloadTile.sent .payload-btn-title { color: #d1fae5 !important; }
+  #payloads-view .payloadTile.sent .payload-state { color: #34d399; border-color: #10b981; }
+
+  #payloads-view .payloadTile.failed {
+    border-color: #f43f5e !important;
+    background: rgba(244, 63, 94, 0.08) !important;
+  }
+  #payloads-view .payloadTile.failed .payload-state { color: #fb7185; border-color: #f43f5e; }
+
+  #payloads-view .payload-empty {
+    padding: 28px 14px;
+    border: 1px dashed #182338;
+    border-radius: 12px;
+    color: #52627a;
+    font-size: 12.5px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+</style>
+</head>
+<body class="quiet">
+
+<div id="main-wrapper">
+
+  <!-- Top Panel Header -->
+  <div class="custom-header">
+    <div>
+      <div class="header-title-container">
+          <div class="github-profile-bubble" title="Profil: nexgen999">
+            <img src="https://raw.githubusercontent.com/nexgen999/ps5webkit/main/experimental/rick.jpg" alt="Avatar" class="github-avatar-img" crossorigin="anonymous" onerror="this.onerror=null; this.src='https://github.com/nexgen999.png';" />
+            <span class="github-online-dot"></span>
+          </div>
+        
+        <h1>PS5 Relapse</h1>
+        <span class="badge-version">Lite Version 1.04</span>
+      </div>
+      <div class="header-sub">Hôte d'exploit WebKit · Exécution des scripts</div>
+    </div>
+    <div class="header-buttons">
+        <div class="btn-evox">
+          <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/playstation.png" alt="evoX" class="evox-icon-img" />
+          <span>Universal evoX-CoreOS Loader</span>
+        </div>
+      <div class="btn-mode"><span class="dot-online"></span> Mode Test / PC</div>
+    </div>
+  </div>
+
+  <div id="ps5-split-wrapper" class="ps5-split-container">
+    <div id="ps5-split-left" class="ps5-split-left">
+      <!-- Main Console Box -->
+      <div class="custom-console-card">
+        <div class="console-title">
+          <div class="console-title-text">JOURNAL D'EXÉCUTION (CONSOLE)</div>
+          <div style="font-size:10px; color:#475569; font-family: monospace;">JS EXEC TERMINAL</div>
+        </div>
+        
+        <div id="main-content">
+          <div id="console-view" class="app-view selected">
+            <div id="failureMessage" style="display:none;">UNLUCKY &mdash; YOU NEED TO REBOOT</div>
+            <div id="cat" style="display:none;"><img id="catImage" src="mmhmm-cats-ps5.gif" alt=""></div>
+            <div id="reboot"></div>
+            <div id="verdict"></div>
+            <div id="danger"></div>
+            <div id="vitals"></div>
+            <div id="cfg" hidden></div>
+            <pre id="early"></pre>
+            <div class="scr-wrapper">
+              <pre id="scr">[-] PlayStation 5 Required
+[*] En attente de commande WebKit...</pre>
+            </div>
+            <div id="nav"></div>
+            <div hidden id="arm">Open this page with <b>?go=1</b> to arm it. Nothing runs otherwise.</div>
+            <div id="wrap">
+              <table><thead><tr><th>#</th><th>test</th><th>st</th><th>result</th></tr></thead><tbody id="rows"></tbody></table>
+            </div>
+            <div id="tally"></div>
+            <div id="summary"></div>
+          </div>
+        </div>
+        <div class="console-bottom-pill"></div>
+      </div>
+    </div>
+    
+    <div id="ps5-split-right" class="ps5-split-right">
+      <!-- Payloads View -->
+      <div id="payloads-view" class="app-view mode-compact">
+        <div class="payloadHeader">
+          <div class="payloadHeader-top">
+            <span class="payloadHeader-title">PAYLOADS DISPONIBLES</span>
+            <span id="payloadCount" class="payload-count">0</span>
+          </div>
+          <p id="payloadProgress">Sélectionnez un payload pour l'envoyer au chargeur ELF.</p>
+        </div>
+        <div class="payloadToolbar">
+          <div id="payloadTabs" class="payload-tabs" role="tablist" aria-label="Listes de payloads"></div>
+        </div>
+        <div class="payloadGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="custom-footer">
+    PS5 WebKit W2JB · Architecture Modulaire evoX · Accès direct via Guide Utilisateur ou Navigateur
+  </div>
+    
+</div>
+
+<div id="payloadToastContainer"></div>
+<div id="console" hidden></div>
+
+<!-- Original Scripts -->
+<script src="./src/firmware.js"></script>
+<script src="../payloads.js?v=1"></script>
+<script src="./src/main.js"></script>
+<script src="./src/rop.js"></script>
+<script src="./src/utils/syscalls.js"></script>
+<script type="module" src="./src/site.js"></script>
+
+<!-- Menu payloads : listes principales + sous-listes classées -->
+<script>
+(function () {
+  "use strict";
+
+  /* Listes principales par défaut. payloads_editor.py peut les remplacer
+     entièrement via window.applyPayloadModel() (payloads-data.js). */
+  var CATEGORIES = [
+    { id: "hen", label: "HEN Loader" },
+    { id: "linux", label: "Linux Loader" },
+    { id: "utility", label: "Utility" }
+  ];
+
+  /* Fichiers de payloads.
+     - payloads-data.js est généré par payloads_editor.py : il fournit les
+       listes principales et les sous-listes, et remplace les fichiers codés
+       en dur ci-dessous.
+     - payloads1.js / payloads2.js restent lus si payloads-data.js est absent.
+     - Un fichier au format historique (window.PAYLOAD_TILES = [...]) reste
+       accepté : ses payloads deviennent une sous-liste de sa catégorie. */
+  var SOURCES = [
+    { id: "model", label: "Listes éditées", category: "linux", file: "../payloads-data.js", bust: true },
+    { id: "base", label: "Linux Loader", category: "linux", file: "../payloads.js?v=1", preloaded: true },
+    { id: "linux", label: "Linux Loader", category: "linux", file: "../payloads1.js?v=1" },
+    { id: "extra", label: "HEN / Utility", category: "utility", file: "../payloads2.js?v=1" }
+  ];
+
+  var CATEGORY_KEY = "relapse.payloadCategory";
+  var state = { groups: [], active: null, collapsed: {}, loaded: {}, pending: 0, modelApplied: false };
+
+  function byId(id) { return document.getElementById(id); }
+
+  function setProgress(text) {
+    var el = byId("payloadProgress");
+    if (el) el.textContent = text;
+  }
+
+  function logLine(text, type) {
+    if (typeof window.writeLog === "function") {
+      try { window.writeLog(text, type || "info"); } catch (e) {}
+    }
+  }
+
+  function readStored() {
+    try { return window.localStorage.getItem(CATEGORY_KEY); } catch (e) { return null; }
+  }
+
+  function writeStored(value) {
+    try { window.localStorage.setItem(CATEGORY_KEY, value); } catch (e) {}
+  }
+
+  /* Normalise les tiles vers { title, name, desc, key }. */
+  function normalizeTiles(tiles) {
+    var out = [];
+    if (!tiles || !tiles.length) return out;
+    for (var i = 0; i < tiles.length; i++) {
+      var tile = tiles[i] || {};
+      var name = tile.name || tile.file || tile.title;
+      if (!name) continue;
+      out.push({
+        title: tile.title || String(name).replace(/\.elf$/i, ""),
+        name: name,
+        desc: tile.desc || tile.description || "",
+        key: tile.key || name
+      });
+    }
+    return out;
+  }
+
+  function categoryById(id) {
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      if (CATEGORIES[i].id === id) return CATEGORIES[i];
+    }
+    return null;
+  }
+
+  function groupsFor(categoryId) {
+    var out = [];
+    for (var i = 0; i < state.groups.length; i++) {
+      if (state.groups[i].category === categoryId) out.push(state.groups[i]);
+    }
+    return out;
+  }
+
+  function countTiles(groups) {
+    var total = 0;
+    for (var i = 0; i < groups.length; i++) total += groups[i].tiles.length;
+    return total;
+  }
+
+  /* API utilisée par payloads1.js, payloads2.js, ... */
+  window.registerPayloadGroup = function (group) {
+    if (!group) return;
+    var tiles = normalizeTiles(group.tiles);
+    if (!tiles.length) return;
+
+    var category = categoryById(group.category) ? group.category : "linux";
+    var id = category + ":" + String(group.id || group.label || ("group-" + (state.groups.length + 1)));
+
+    for (var i = 0; i < state.groups.length; i++) {
+      if (state.groups[i].id === id) {
+        state.groups[i].label = group.label || state.groups[i].label;
+        state.groups[i].tiles = tiles;
+        return;
+      }
+    }
+    state.groups.push({ id: id, category: category, label: group.label || id, tiles: tiles });
+  };
+
+  /* Déclare une liste principale supplémentaire (sans données éditées). */
+  window.registerPayloadCategory = function (category) {
+    if (!category || !category.id) return;
+    var existing = categoryById(category.id);
+    if (existing) {
+      existing.label = category.label || existing.label;
+      return;
+    }
+    CATEGORIES.push({ id: category.id, label: category.label || category.id });
+  };
+
+  /* Modèle complet fourni par payloads-data.js (éditeur Python) : il remplace
+     les listes principales et toutes les sous-listes. */
+  window.applyPayloadModel = function (model) {
+    if (!model || !model.categories || !model.categories.length) return;
+
+    CATEGORIES.length = 0;
+    state.groups.length = 0;
+
+    for (var i = 0; i < model.categories.length; i++) {
+      var source = model.categories[i] || {};
+      var categoryId = String(source.id || source.label || ("cat-" + (i + 1)));
+      CATEGORIES.push({ id: categoryId, label: source.label || categoryId });
+
+      var groups = source.groups || [];
+      for (var j = 0; j < groups.length; j++) {
+        var group = groups[j] || {};
+        var tiles = normalizeTiles(group.tiles);
+        if (!tiles.length) continue;
+        state.groups.push({
+          id: categoryId + ":" + String(group.id || group.label || ("group-" + (j + 1))),
+          category: categoryId,
+          label: group.label || "Payloads",
+          tiles: tiles
+        });
+      }
+    }
+
+    state.modelApplied = true;
+    if (!categoryById(state.active)) state.active = CATEGORIES[0].id;
+    syncLegacyTiles();
+    renderTabs();
+    renderGrid();
+  };
+
+  /* Garde window.PAYLOAD_TILES aligné sur la liste affichée (compat main.js). */
+  function syncLegacyTiles() {
+    var tiles = [];
+    var groups = groupsFor(state.active);
+    for (var i = 0; i < groups.length; i++) tiles = tiles.concat(groups[i].tiles);
+    window.PAYLOAD_TILES = tiles;
+  }
+
+  function updateCount(total) {
+    var el = byId("payloadCount");
+    if (el) el.textContent = String(total);
+  }
+
+  function renderTabs() {
+    var wrap = byId("payloadTabs");
+    if (!wrap) return;
+    wrap.innerHTML = "";
+
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      var category = CATEGORIES[i];
+      var total = countTiles(groupsFor(category.id));
+      var tab = document.createElement("button");
+      tab.type = "button";
+      tab.className = "payload-tab" + (category.id === state.active ? " active" : "");
+      tab.textContent = category.label;
+      tab.title = total + " payload(s)";
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-selected", category.id === state.active ? "true" : "false");
+      tab.addEventListener("click", (function (id) {
+        return function () { selectCategory(id); };
+      })(category.id));
+      wrap.appendChild(tab);
+    }
+  }
+
+  function buildTile(tile) {
+    var link = document.createElement("a");
+    link.href = "#";
+    link.className = "btn payloadTile";
+    link.tabIndex = 0;
+    link.setAttribute("title", tile.title + "\n" + tile.name);
+
+    var text = document.createElement("span");
+    text.className = "payload-tile-text";
+
+    var name = document.createElement("span");
+    name.className = "payload-btn-title";
+    name.textContent = tile.title;
+    text.appendChild(name);
+
+    var file = document.createElement("span");
+    file.className = "payload-file";
+    file.textContent = tile.desc ? tile.desc + " · " + tile.name : tile.name;
+    text.appendChild(file);
+
+    var status = document.createElement("span");
+    status.className = "payload-state";
+    status.textContent = "Envoyer";
+
+    link.appendChild(text);
+    link.appendChild(status);
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      sendPayload(tile, link, status);
+    });
+    return link;
+  }
+
+  function buildGroup(group) {
+    var wrap = document.createElement("div");
+    wrap.className = "payload-group" + (state.collapsed[group.id] ? " collapsed" : "");
+
+    var head = document.createElement("button");
+    head.type = "button";
+    head.className = "payload-group-head";
+    head.setAttribute("aria-expanded", state.collapsed[group.id] ? "false" : "true");
+
+    var caret = document.createElement("span");
+    caret.className = "payload-group-caret";
+
+    var label = document.createElement("span");
+    label.className = "payload-group-label";
+    label.textContent = group.label;
+
+    var count = document.createElement("span");
+    count.className = "payload-group-count";
+    count.textContent = group.tiles.length;
+
+    head.appendChild(caret);
+    head.appendChild(label);
+    head.appendChild(count);
+    head.addEventListener("click", function () {
+      var collapsed = !state.collapsed[group.id];
+      state.collapsed[group.id] = collapsed;
+      if (collapsed) wrap.classList.add("collapsed");
+      else wrap.classList.remove("collapsed");
+      head.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    });
+
+    var body = document.createElement("div");
+    body.className = "payload-group-body";
+    for (var i = 0; i < group.tiles.length; i++) body.appendChild(buildTile(group.tiles[i]));
+
+    wrap.appendChild(head);
+    wrap.appendChild(body);
+    return wrap;
+  }
+
+  function sendPayload(tile, link, status) {
+    if (link.classList.contains("busy")) return;
+
+    /* window.sendElf n'existe qu'une fois le kernel exploit terminé. */
+    if (typeof window.sendElf !== "function") {
+      link.classList.remove("sent", "busy");
+      link.classList.add("failed");
+      status.textContent = "Indisponible";
+      setProgress("Exploit inactif : lancez le kernel exploit avant d'envoyer un payload.");
+      logLine(tile.title + " : chargeur ELF non disponible (exploit pas encore lancé)", "error");
+      return;
+    }
+
+    link.classList.remove("sent", "failed");
+    link.classList.add("busy");
+    status.textContent = "Envoi…";
+    setProgress("Envoi de " + tile.title + " vers le chargeur ELF…");
+    logLine(tile.title + " : envoi en cours…", "info");
+
+    window.sendElf(tile.name).then(function (bytes) {
+      link.classList.remove("busy", "failed");
+      link.classList.add("sent");
+      status.textContent = "Envoyé";
+      setProgress("« " + tile.title + " » envoyé sur 127.0.0.1:9021.");
+      logLine(tile.title + " : " + bytes + " octets envoyés sur 127.0.0.1:9021", "success");
+    }, function (error) {
+      link.classList.remove("busy", "sent");
+      link.classList.add("failed");
+      status.textContent = "Échec";
+      setProgress("Échec de l'envoi de " + tile.title + ".");
+      logLine(tile.title + " : " + ((error && error.message) || error), "error");
+    });
+  }
+
+  function renderGrid() {
+    var grid = document.querySelector("#payloads-view .payloadGrid");
+    if (!grid) return;
+
+    var groups = groupsFor(state.active);
+    grid.innerHTML = "";
+
+    if (!groups.length) {
+      var empty = document.createElement("div");
+      empty.className = "payload-empty";
+      empty.textContent = state.pending > 0
+        ? "Chargement des listes de payloads…"
+        : "Aucun payload dans cette liste.";
+      grid.appendChild(empty);
+      updateCount(0);
+      return;
+    }
+
+    for (var i = 0; i < groups.length; i++) grid.appendChild(buildGroup(groups[i]));
+    updateCount(countTiles(groups));
+  }
+
+  function selectCategory(id) {
+    var category = categoryById(id);
+    if (!category) return;
+    state.active = id;
+    writeStored(id);
+    syncLegacyTiles();
+    renderTabs();
+    renderGrid();
+    setProgress(category.label + " : " + countTiles(groupsFor(id)) + " payload(s). Choisissez celui à envoyer.");
+  }
+
+  /* Charge un fichier de payloads sans bloquer l'affichage.
+     Un fichier au format historique remplace window.PAYLOAD_TILES : on le
+     détecte en neutralisant ce global juste avant l'injection. */
+  function loadSource(source) {
+    return new Promise(function (resolve) {
+      var groupsBefore = state.groups.length;
+      var previous = window.PAYLOAD_TILES;
+      window.PAYLOAD_TILES = null;
+
+      var script = document.createElement("script");
+      script.src = source.bust ? source.file + "?v=" + Date.now() : source.file;
+      script.async = false;
+      script.onload = function () {
+        if (state.groups.length === groupsBefore) {
+          var tiles = normalizeTiles(window.PAYLOAD_TILES);
+          if (tiles.length) {
+            window.registerPayloadGroup({
+              category: source.category,
+              id: source.id,
+              label: source.label,
+              tiles: tiles
+            });
+            state.loaded[source.id] = "ok";
+          } else {
+            state.loaded[source.id] = "error";
+          }
+        } else {
+          state.loaded[source.id] = "ok";
+        }
+
+        window.PAYLOAD_TILES = previous;
+        syncLegacyTiles();
+        resolve(true);
+      };
+      script.onerror = function () {
+        state.loaded[source.id] = "error";
+        window.PAYLOAD_TILES = previous;
+        syncLegacyTiles();
+        resolve(false);
+      };
+      document.head.appendChild(script);
+    });
+  }
+
+  function loadSources(legacyTiles) {
+    var chain = Promise.resolve();
+    for (var i = 0; i < SOURCES.length; i++) {
+      (function (source) {
+        if (source.preloaded) return;
+        chain = chain.then(function () {
+          /* Un modèle édité remplace les listes codées en dur. */
+          if (state.modelApplied) {
+            state.pending--;
+            renderTabs();
+            renderGrid();
+            return null;
+          }
+          return loadSource(source).then(function () {
+            state.pending--;
+            renderTabs();
+            renderGrid();
+          });
+        });
+      })(SOURCES[i]);
+    }
+
+    return chain.then(function () {
+      /* Repli : sans fichier de sous-listes, l'ancienne liste plate de
+         payloads.js alimente "Linux Loader". */
+      var missing = [];
+      for (var i = 0; i < SOURCES.length; i++) {
+        if (state.loaded[SOURCES[i].id] === "error") missing.push(SOURCES[i]);
+      }
+      if (legacyTiles.length && !state.modelApplied && !groupsFor("linux").length) {
+        window.registerPayloadGroup({
+          category: "linux",
+          id: "base",
+          label: "Linux Loaders",
+          tiles: legacyTiles
+        });
+      }
+      syncLegacyTiles();
+      renderTabs();
+      renderGrid();
+      return missing;
+    });
+  }
+
+  function init() {
+    var stored = readStored();
+    state.active = categoryById(stored) ? stored : CATEGORIES[0].id;
+
+    /* main.js a déjà consommé payloads.js : sa liste plate sert de repli. */
+    var legacyTiles = normalizeTiles(window.PAYLOAD_TILES);
+    state.loaded.base = "ok";
+
+    for (var i = 0; i < SOURCES.length; i++) {
+      if (!SOURCES[i].preloaded) state.pending++;
+    }
+
+    renderTabs();
+    renderGrid();
+    syncLegacyTiles();
+
+    loadSources(legacyTiles).then(function (missing) {
+      for (var j = 0; j < missing.length; j++) {
+        logLine("Liste " + missing[j].label + " indisponible (" + missing[j].file + ")", "error");
+      }
+    });
+  }
+
+  init();
+})();
+</script>
+
+</body>
+</html>
