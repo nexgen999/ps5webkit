@@ -833,7 +833,6 @@
 
 <!-- Original Scripts -->
 <script src="./src/firmware.js"></script>
-<script src="../payloads.js?v=1"></script>
 <script src="./src/main.js"></script>
 <script src="./src/rop.js"></script>
 <script src="./src/utils/syscalls.js"></script>
@@ -852,18 +851,11 @@
     { id: "utility", label: "Utility" }
   ];
 
-  /* Fichiers de payloads.
-     - payloads-data.js est généré par payloads_editor.py : il fournit les
-       listes principales et les sous-listes, et remplace les fichiers codés
-       en dur ci-dessous.
-     - payloads1.js / payloads2.js restent lus si payloads-data.js est absent.
-     - Un fichier au format historique (window.PAYLOAD_TILES = [...]) reste
-       accepté : ses payloads deviennent une sous-liste de sa catégorie. */
+  /* Une seule source : payloads-data.js, généré par payloads_editor.py.
+     La page n'a besoin d'aucun autre fichier de listes. Une liste plate
+     posée sur window.PAYLOAD_TILES reste acceptée et sert de repli. */
   var SOURCES = [
-    { id: "model", label: "Listes éditées", category: "linux", file: "../payloads-data.js", bust: true },
-    { id: "base", label: "Linux Loader", category: "linux", file: "../payloads.js?v=1", preloaded: true },
-    { id: "linux", label: "Linux Loader", category: "linux", file: "../payloads1.js?v=1" },
-    { id: "extra", label: "HEN / Utility", category: "utility", file: "../payloads2.js?v=1" }
+    { id: "model", label: "Listes éditées", category: "linux", file: "../payloads-data.js", bust: true }
   ];
 
   var CATEGORY_KEY = "relapse.payloadCategory";
@@ -929,7 +921,7 @@
     return total;
   }
 
-  /* API utilisée par payloads1.js, payloads2.js, ... */
+  /* API de déclaration des listes (window.registerPayloadGroup, ...). */
   window.registerPayloadGroup = function (group) {
     if (!group) return;
     var tiles = normalizeTiles(group.tiles);
@@ -1235,8 +1227,8 @@
     }
 
     return chain.then(function () {
-      /* Repli : sans fichier de sous-listes, l'ancienne liste plate de
-         payloads.js alimente "Linux Loader". */
+      /* Repli : sans modèle édité, une liste plate posée sur
+         window.PAYLOAD_TILES alimente "Linux Loader". */
       var missing = [];
       for (var i = 0; i < SOURCES.length; i++) {
         if (state.loaded[SOURCES[i].id] === "error") missing.push(SOURCES[i]);
@@ -1260,9 +1252,8 @@
     var stored = readStored();
     state.active = categoryById(stored) ? stored : CATEGORIES[0].id;
 
-    /* main.js a déjà consommé payloads.js : sa liste plate sert de repli. */
+    /* Liste plate éventuellement fournie par un ancien fichier de payloads. */
     var legacyTiles = normalizeTiles(window.PAYLOAD_TILES);
-    state.loaded.base = "ok";
 
     for (var i = 0; i < SOURCES.length; i++) {
       if (!SOURCES[i].preloaded) state.pending++;
@@ -1274,7 +1265,7 @@
 
     loadSources(legacyTiles).then(function (missing) {
       for (var j = 0; j < missing.length; j++) {
-        logLine("Liste " + missing[j].label + " indisponible (" + missing[j].file + ")", "error");
+        logLine("Listes indisponibles (" + missing[j].file + ") : lancez payloads_editor.py pour les générer", "error");
       }
     });
   }
