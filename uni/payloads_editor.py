@@ -146,14 +146,6 @@ def is_elf(payloads_dir: Path, name: str) -> bool:
 # Lecture / écriture
 # ---------------------------------------------------------------------------
 
-ARRAY_RE = re.compile(r"var\s+([A-Za-z0-9_$]+)\s*=\s*\[(.*?)\];", re.S)
-TILE_RE = re.compile(r'tile\(\s*"([^"]*)"\s*,\s*"([^"]*)"\s*(?:,\s*"([^"]*)")?\s*\)')
-REGISTER_RE = re.compile(r"registerPayloadGroup\(\s*\{(.*?)\}\s*\)\s*;", re.S)
-LEGACY_TILE_RE = re.compile(
-    r'\{\s*"title":\s*"([^"]*)"\s*,\s*"name":\s*"([^"]*)"\s*,\s*"key"'
-)
-
-
 def normalize_model(data) -> dict:
     if not isinstance(data, dict):
         raise ModelError("Le modèle n'est pas un objet JSON.")
@@ -199,83 +191,22 @@ def normalize_model(data) -> dict:
     return model
 
 
-def parse_js_registrations(paths) -> list:
-    """Relit des listes écrites à la main (payloads1.js, payloads2.js, ...)."""
-    arrays = {}
-    found = []
-    for path in paths:
-        path = Path(path)
-        if not path.is_file():
-            continue
-        text = path.read_text(encoding="utf-8", errors="replace")
-        for var_name, body in ARRAY_RE.findall(text):
-            arrays[var_name] = [
-                new_tile(title, name, desc)
-                for title, name, desc in TILE_RE.findall(body)
-            ]
-        for block in REGISTER_RE.findall(text):
-            category = re.search(r'category:\s*"([^"]*)"', block)
-            group_id = re.search(r'id:\s*"([^"]*)"', block)
-            label = re.search(r'label:\s*"([^"]*)"', block)
-            tiles_var = re.search(r"tiles:\s*([A-Za-z0-9_$]+)", block)
-            found.append({
-                "category": category.group(1) if category else "linux",
-                "id": group_id.group(1) if group_id else "",
-                "label": label.group(1) if label else "",
-                "tiles": list(arrays.get(tiles_var.group(1) if tiles_var else "", [])),
-            })
-    return found
-
-
-def parse_legacy_payloads_js(path: Path) -> list:
-    path = Path(path)
-    if not path.is_file():
-        return []
-    text = path.read_text(encoding="utf-8", errors="replace")
-    return [new_tile(title, name) for title, name in LEGACY_TILE_RE.findall(text)]
-
-
 def seed_model(root: Path, payloads_dir: Path) -> dict:
-    """Premier lancement : reprend les listes existantes puis les fichiers ELF."""
+    """Premier lancement : les trois listes principales et les ELF du dossier.
+
+    Les fichiers de payloads/ arrivent dans « Linux Loader › À classer » ;
+    ils se répartissent ensuite depuis l'éditeur.
+    """
     model = blank_model()
+    for cat_id, label in DEFAULT_CATEGORY_LABELS.items():
+        ensure_category(model, cat_id, label)
 
-    for registration in parse_js_registrations([root / "payloads1.js", root / "payloads2.js"]):
-        if not registration["tiles"]:
-            continue
-        category = ensure_category(
-            model,
-            registration["category"],
-            DEFAULT_CATEGORY_LABELS.get(
-                registration["category"], registration["category"].title()
-            ),
-        )
-        groups_of(category).append({
-            "id": registration["id"] or slugify(registration["label"]),
-            "label": registration["label"] or registration["id"] or "Payloads",
-            "tiles": registration["tiles"],
-        })
-
-    if not categories(model):
-        category = ensure_category(model, "linux", DEFAULT_CATEGORY_LABELS["linux"])
-        groups_of(category).append({
-            "id": "tous",
-            "label": "Tous les payloads",
-            "tiles": parse_legacy_payloads_js(root / "payloads.js"),
-        })
-
-    # Ordre des onglets demandé : HEN Loader, Linux Loader, Utility.
-    order = {cat_id: index for index, cat_id in enumerate(DEFAULT_CATEGORY_LABELS)}
-    categories(model).sort(
-        key=lambda item: (order.get(item.get("id"), len(order)), item.get("label", ""))
-    )
-
-    listed = {tile.get("name") for tile in all_tiles(model)}
-    extra = [name for name in scan_elf_files(payloads_dir) if name not in listed]
-    if extra and categories(model):
-        groups_of(categories(model)[0]).append({
-            "id": "non-classe",
-            "label": "Fichiers non classés",
-            "tiles": [new_tile(Path(name).stem, name) for name in extra],
+    files = scan_elf_files(payloads_dir)
+    if files:
+        groups_of(find_category(model, "linux")).append({
+            "id": "a-classer",
+            "label": "À classer",
+            "tiles": [new_tile(Path(name).stem, name) for name in files],
         })
 
     return model
@@ -302,7 +233,7 @@ def load_model(paths: "Paths") -> tuple:
                 except ValueError:
                     pass
 
-    return seed_model(paths.root, paths.payloads), "liste existante (payloads1.js / payloads2.js)"
+    return seed_model(paths.root, paths.payloads), "nouveau modèle depuis payloads/"
 
 
 JS_HEADER = """/* Généré par payloads_editor.py — ne pas modifier à la main.
