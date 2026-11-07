@@ -283,11 +283,10 @@ function buildPayloadMenu() {
     }
     if (grid.children.length) return view;
 
+    /* Sans liste plate, le menu est construit par le script inline de
+       index.html à partir de payloads-data.js. */
     const tiles = window.PAYLOAD_TILES || [];
-    if (!tiles.length) {
-        log("no payload list (payloads.js missing)", "error");
-        return null;
-    }
+    if (!tiles.length) return null;
 
     for (const t of tiles) {
         const a = document.createElement("a");
