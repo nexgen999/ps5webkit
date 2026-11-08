@@ -40,6 +40,17 @@ window.PAYLOAD_MODEL = {
       "label": "Linux Loader",
       "groups": [
         {
+          "id": "bazzite-deck",
+          "label": "Bazzite-Deck",
+          "tiles": [
+            {
+              "title": "bazzite-bootc-loader-v2.7.3",
+              "name": "bazzite-bootc-loader-v2.7.3.elf",
+              "desc": ""
+            }
+          ]
+        },
+        {
           "id": "autres",
           "label": "Autres loaders",
           "tiles": [
