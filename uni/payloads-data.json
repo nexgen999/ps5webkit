@@ -34,20 +34,106 @@
       ]
     },
     {
-      "id": "linux",
-      "label": "Linux Loader",
+      "id": "kstuff-shadowmountplus",
+      "label": "Kstuff - ShadowMountPlus",
       "groups": [
         {
-          "id": "bazzite-deck",
-          "label": "Bazzite-Deck",
+          "id": "kstuff",
+          "label": "Kstuff",
           "tiles": [
             {
-              "title": "bazzite-bootc-loader-v2.7.3",
-              "name": "bazzite-bootc-loader-v2.7.3.elf",
+              "title": "kstuff",
+              "name": "kstuff.elf",
+              "desc": ""
+            },
+            {
+              "title": "kstuff1.13-fpkg-dr-test7-restmode",
+              "name": "kstuff1.13-fpkg-dr-test7-restmode.elf",
               "desc": ""
             }
           ]
         },
+        {
+          "id": "shadowmountplus",
+          "label": "ShadowMountPlus",
+          "tiles": [
+            {
+              "title": "shadowmountplus_v1.7b11",
+              "name": "shadowmountplus_v1.7b11.elf",
+              "desc": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "utility",
+      "label": "Utility",
+      "groups": [
+        {
+          "id": "auto-installer",
+          "label": "Auto Installer",
+          "tiles": [
+            {
+              "title": "webkit-autoloader-installer_v0.7.1",
+              "name": "webkit-autoloader-installer_v0.7.1.elf",
+              "desc": ""
+            },
+            {
+              "title": "Host-PSM-pooP2JB-v1.2.0-instala-pldmgr-en",
+              "name": "Host-PSM-pooP2JB-v1.2.0-instala-pldmgr-en.elf",
+              "desc": ""
+            },
+            {
+              "title": "Host-PSM-pooP2JB-v1.2.0-instala-onionhen-en",
+              "name": "Host-PSM-pooP2JB-v1.2.0-instala-onionhen-en.elf",
+              "desc": ""
+            }
+          ]
+        },
+        {
+          "id": "network",
+          "label": "Network",
+          "tiles": [
+            {
+              "title": "nanodns",
+              "name": "nanodns.elf",
+              "desc": ""
+            },
+            {
+              "title": "PS5 SMB",
+              "name": "ps5-smbd.elf",
+              "desc": "PS5 SMB"
+            },
+            {
+              "title": "zftpd-ps5-v1.7.0",
+              "name": "zftpd-ps5-v1.7.0.elf",
+              "desc": ""
+            },
+            {
+              "title": "zftpd-ps5-zhttp-v1.7.0",
+              "name": "zftpd-ps5-zhttp-v1.7.0.elf",
+              "desc": ""
+            }
+          ]
+        },
+        {
+          "id": "file-manager",
+          "label": "File Manager",
+          "tiles": [
+            {
+              "title": "web-file-mgr-v1.13-rc2",
+              "name": "web-file-mgr-v1.13-rc2.elf",
+              "desc": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "linux",
+      "label": "Linux Loader",
+      "groups": [
         {
           "id": "autres",
           "label": "Autres loaders",
@@ -164,79 +250,21 @@
       ]
     },
     {
-      "id": "utility",
-      "label": "Utility",
+      "id": "bazzite-deck-loader",
+      "label": "Bazzite Deck Loader",
       "groups": [
         {
-          "id": "auto-installer",
-          "label": "Auto Installer",
+          "id": "bazzite-deck",
+          "label": "bazzite deck",
           "tiles": [
             {
-              "title": "webkit-autoloader-installer_v0.7.0-dev-3a34c3b",
-              "name": "webkit-autoloader-installer_v0.7.0-dev-3a34c3b.elf",
+              "title": "bazzite-bootc-loader-v2.7.3",
+              "name": "bazzite-bootc-loader-v2.7.3.elf",
               "desc": ""
             },
             {
-              "title": "Host-PSM-pooP2JB-v1.2.0-instala-pldmgr-en",
-              "name": "Host-PSM-pooP2JB-v1.2.0-instala-pldmgr-en.elf",
-              "desc": ""
-            },
-            {
-              "title": "Host-PSM-pooP2JB-v1.2.0-instala-onionhen-en",
-              "name": "Host-PSM-pooP2JB-v1.2.0-instala-onionhen-en.elf",
-              "desc": ""
-            }
-          ]
-        },
-        {
-          "id": "network",
-          "label": "Network",
-          "tiles": [
-            {
-              "title": "nanodns",
-              "name": "nanodns.elf",
-              "desc": ""
-            },
-            {
-              "title": "PS5 SMB",
-              "name": "ps5-smbd.elf",
-              "desc": "PS5 SMB"
-            },
-            {
-              "title": "zftpd-ps5-v1.7.0",
-              "name": "zftpd-ps5-v1.7.0.elf",
-              "desc": ""
-            },
-            {
-              "title": "zftpd-ps5-zhttp-v1.7.0",
-              "name": "zftpd-ps5-zhttp-v1.7.0.elf",
-              "desc": ""
-            }
-          ]
-        },
-        {
-          "id": "kstuff",
-          "label": "kstuff",
-          "tiles": [
-            {
-              "title": "kstuff",
-              "name": "kstuff.elf",
-              "desc": ""
-            },
-            {
-              "title": "kstuff1.13-fpkg-dr-test7-restmode",
-              "name": "kstuff1.13-fpkg-dr-test7-restmode.elf",
-              "desc": ""
-            }
-          ]
-        },
-        {
-          "id": "shadowmountplus",
-          "label": "ShadowMountPlus",
-          "tiles": [
-            {
-              "title": "shadowmountplus_v1.7b11",
-              "name": "shadowmountplus_v1.7b11.elf",
+              "title": "bazzite-bootc-loader-v2.8",
+              "name": "bazzite-bootc-loader-v2.8.elf",
               "desc": ""
             }
           ]
