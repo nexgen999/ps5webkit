@@ -141,11 +141,6 @@ window.PAYLOAD_MODEL = {
           "label": "Autres loaders",
           "tiles": [
             {
-              "title": "Loader 9.40 - all",
-              "name": "ps5-linux-loader-9.40-all_Arksama.elf",
-              "desc": "Arksama"
-            },
-            {
               "title": "Loader 11.60",
               "name": "ps5-linux-loader-11.60_sajadsrc.elf",
               "desc": "sajadsrc"
