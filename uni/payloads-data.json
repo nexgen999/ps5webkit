@@ -75,8 +75,8 @@
           "label": "Auto Installer",
           "tiles": [
             {
-              "title": "webkit-autoloader-installer_v0.7.1",
-              "name": "webkit-autoloader-installer_v0.7.1.elf",
+              "title": "webkit-autoloader-installer_v0.8.3",
+              "name": "webkit-autoloader-installer_v0.8.3.elf",
               "desc": ""
             },
             {
