@@ -261,8 +261,8 @@ window.PAYLOAD_MODEL = {
           "label": "bazzite deck",
           "tiles": [
             {
-              "title": "bazzite-bootc-loader-v2.7.3",
-              "name": "bazzite-bootc-loader-v2.7.3.elf",
+              "title": "bazzite-bootc-loader-v3.0",
+              "name": "bazzite-bootc-loader-v3.0.elf",
               "desc": ""
             },
             {
