@@ -27,11 +27,6 @@ window.PAYLOAD_MODEL = {
               "desc": ""
             },
             {
-              "title": "launcher5_v2.5.1.2",
-              "name": "launcher5_v2.5.1.2.elf",
-              "desc": ""
-            },
-            {
               "title": "OnionHEN",
               "name": "OnionHEN.elf",
               "desc": ""
