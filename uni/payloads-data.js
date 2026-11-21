@@ -27,6 +27,11 @@ window.PAYLOAD_MODEL = {
               "desc": ""
             },
             {
+              "title": "launcher5_v2.5.1.2",
+              "name": "launcher5_v2.5.1.2.elf",
+              "desc": ""
+            },
+            {
               "title": "OnionHEN",
               "name": "OnionHEN.elf",
               "desc": ""
@@ -72,13 +77,19 @@ window.PAYLOAD_MODEL = {
       "id": "utility",
       "label": "Utility",
       "groups": [
-        {
-          "id": "auto-installer",
-          "label": "Auto Installer",
-          "tiles": [
             {
-              "title": "webkit-autoloader-installer_v0.7.1",
-              "name": "webkit-autoloader-installer_v0.7.1.elf",
+              "title": "webkit-autoloader-installer_v0.8.3",
+              "name": "webkit-autoloader-installer_v0.8.3.elf",
+              "desc": ""
+            },
+            {
+              "title": "Host-PSM-ReLapse-v1.5.2-instala-host-en",
+              "name": "Host-PSM-ReLapse-v1.5.2-instala-host-en.elf",
+              "desc": ""
+            },
+            {
+              "title": "Host-PSM-ReLapse-v1.5.2-instala-host-pt",
+              "name": "Host-PSM-ReLapse-v1.5.2-instala-host-pt.elf",
               "desc": ""
             },
             {
