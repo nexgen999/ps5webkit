@@ -72,19 +72,18 @@ window.PAYLOAD_MODEL = {
       "id": "utility",
       "label": "Utility",
       "groups": [
+        {
+          "id": "auto-installer",
+          "label": "Auto Installer",
+          "tiles": [
+            {
+              "title": "webkit-autoloader-installer_v0.7.1",
+              "name": "webkit-autoloader-installer_v0.7.1.elf",
+              "desc": ""
+            },
             {
               "title": "webkit-autoloader-installer_v0.8.3",
               "name": "webkit-autoloader-installer_v0.8.3.elf",
-              "desc": ""
-            },
-            {
-              "title": "Host-PSM-ReLapse-v1.5.2-instala-host-en",
-              "name": "Host-PSM-ReLapse-v1.5.2-instala-host-en.elf",
-              "desc": ""
-            },
-            {
-              "title": "Host-PSM-ReLapse-v1.5.2-instala-host-pt",
-              "name": "Host-PSM-ReLapse-v1.5.2-instala-host-pt.elf",
               "desc": ""
             },
             {
@@ -95,6 +94,16 @@ window.PAYLOAD_MODEL = {
             {
               "title": "Host-PSM-pooP2JB-v1.2.0-instala-onionhen-en",
               "name": "Host-PSM-pooP2JB-v1.2.0-instala-onionhen-en.elf",
+              "desc": ""
+            },
+            {
+              "title": "Host-PSM-ReLapse-v1.5.2-instala-host-en",
+              "name": "Host-PSM-ReLapse-v1.5.2-instala-host-en.elf",
+              "desc": ""
+            },
+            {
+              "title": "Host-PSM-ReLapse-v1.5.2-instala-host-pt",
+              "name": "Host-PSM-ReLapse-v1.5.2-instala-host-pt.elf",
               "desc": ""
             }
           ]
@@ -261,13 +270,18 @@ window.PAYLOAD_MODEL = {
           "label": "bazzite deck",
           "tiles": [
             {
-              "title": "bazzite-bootc-loader-v3.0",
-              "name": "bazzite-bootc-loader-v3.0.elf",
+              "title": "bazzite-bootc-loader-v2.7.3",
+              "name": "bazzite-bootc-loader-v2.7.3.elf",
               "desc": ""
             },
             {
               "title": "bazzite-bootc-loader-v2.8",
               "name": "bazzite-bootc-loader-v2.8.elf",
+              "desc": ""
+            },
+            {
+              "title": "bazzite-bootc-loader-v3.0",
+              "name": "bazzite-bootc-loader-v3.0.elf",
               "desc": ""
             }
           ]
