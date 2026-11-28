@@ -52,6 +52,11 @@ window.PAYLOAD_MODEL = {
               "title": "kstuff1.13-fpkg-dr-test7-restmode",
               "name": "kstuff1.13-fpkg-dr-test7-restmode.elf",
               "desc": ""
+            },
+            {
+              "title": "kstuff-1.15-dr-test4",
+              "name": "kstuff-1.15-dr-test4.elf",
+              "desc": ""
             }
           ]
         },
@@ -62,6 +67,11 @@ window.PAYLOAD_MODEL = {
             {
               "title": "shadowmountplus_v1.7b11",
               "name": "shadowmountplus_v1.7b11.elf",
+              "desc": ""
+            },
+            {
+              "title": "shadowmountplus_v1.7b12",
+              "name": "shadowmountplus_v1.7b12.elf",
               "desc": ""
             }
           ]
