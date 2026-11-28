@@ -115,6 +115,11 @@ window.PAYLOAD_MODEL = {
               "title": "Host-PSM-ReLapse-v1.5.2-instala-host-pt",
               "name": "Host-PSM-ReLapse-v1.5.2-instala-host-pt.elf",
               "desc": ""
+            },
+            {
+              "title": "webkit-autoloader-installer_v0.8.4",
+              "name": "webkit-autoloader-installer_v0.8.4.elf",
+              "desc": ""
             }
           ]
         },
@@ -140,6 +145,16 @@ window.PAYLOAD_MODEL = {
             {
               "title": "zftpd-ps5-zhttp-v1.7.0",
               "name": "zftpd-ps5-zhttp-v1.7.0.elf",
+              "desc": ""
+            },
+            {
+              "title": "zftpd-ps5-v1.7.1",
+              "name": "zftpd-ps5-v1.7.1.elf",
+              "desc": ""
+            },
+            {
+              "title": "zftpd-ps5-zhttp-v1.7.1",
+              "name": "zftpd-ps5-zhttp-v1.7.1.elf",
               "desc": ""
             }
           ]
@@ -292,6 +307,11 @@ window.PAYLOAD_MODEL = {
             {
               "title": "bazzite-bootc-loader-v3.0",
               "name": "bazzite-bootc-loader-v3.0.elf",
+              "desc": ""
+            },
+            {
+              "title": "bazzite-bootc-loader-v3.0.4",
+              "name": "bazzite-bootc-loader-v3.0.4.elf",
               "desc": ""
             }
           ]
